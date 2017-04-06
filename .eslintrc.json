@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": true,
+        "amd": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "google"
+    ],
+    "rules": {
+        "no-var": [
+        "warn"
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "max-len": [
+            "warn",
+            120,
+            {"ignoreComments": true}
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "comma-dangle": [
+            "error",
+            "never"
+        ]
+    }
+}

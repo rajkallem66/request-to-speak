@@ -1,0 +1,30 @@
+{
+  "name": "request-to-speak",
+  "version": "1.0.0",
+  "description": "request to speak at a public meeting.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsperry/request-to-speak.git"
+  },
+  "author": "Guy Sperry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gsperry/request-to-speak/issues"
+  },
+  "homepage": "https://github.com/gsperry/request-to-speak#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.1",
+    "eslint-plugin-requirejs": "^3.1.1",
+    "gulp": "^3.9.1",
+    "gulp-durandal": "^1.1.7",
+    "gulp-eslint": "^3.0.1",
+    "require-dir": "^0.3.1",
+    "run-sequence": "^1.2.2"
+  }
+}
