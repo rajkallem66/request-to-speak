@@ -24,7 +24,21 @@
     "gulp": "^3.9.1",
     "gulp-durandal": "^1.1.7",
     "gulp-eslint": "^3.0.1",
+    "gulp-nodemon": "^2.2.1",
     "require-dir": "^0.3.1",
     "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "errorhandler": "^1.5.0",
+    "express": "^4.15.2",
+    "faye-websocket": "^0.11.1",
+    "http": "0.0.0",
+    "method-override": "^2.3.8",
+    "morgan": "^1.8.1",
+    "mssql": "^4.0.1",
+    "path": "^0.12.7",
+    "primus": "^7.0.0",
+    "serve-favicon": "^2.4.2"
   }
 }

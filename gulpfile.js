@@ -7,6 +7,13 @@ var paths = {
         "index.js",
         "client/app/main.js",
         "client/app/viewmodels/*.js"
+    ],
+    app: [
+        "client/ping.html",
+        "client/index.html",
+        "client/app/main.js",
+        "client/app/viewmodels/*.js",
+        "client/app/views/*.html"
     ]
 };
 
@@ -21,8 +28,38 @@ gulp.task("eslint", function() {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task("serve", ["eslint"], function() {
+var browserSync = require("browser-sync").create();
+gulp.task("browser-sync", function() {
+    browserSync.init(null, {
+        baseDir: "./client",
+        proxy: {
+            target: "http://localhost:3000",
+            ws: true
+        },
+        open: false,
+        port: 7000
+    });
 
+    gulp.watch(paths.app).on("change", browserSync.reload);
 });
 
-gulp.task("default", ["serve"]);
+var nodemon = require("gulp-nodemon");
+gulp.task("nodemon", function(cb) {
+    var started = false;
+
+    nodemon({
+        script: "index.js"
+    }).on("start", function() {
+        if (!started) {
+            cb();
+            started = true;
+        }
+    });
+});
+
+var runSequence = require("run-sequence");
+gulp.task("serve", function(cb) {
+    runSequence("eslint", "browser-sync", cb);
+});
+
+gulp.task("default", ["browser-sync"]);

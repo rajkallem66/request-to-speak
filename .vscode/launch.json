@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Dev Serve",
+            "configurations": ["nodemon","Gulp Serve", "Launch","Launch ping"]
+        }
+    ],
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Gulp Serve",
+            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+            "args": [
+                "serve"
+            ]
+        },
+        {
+            "name": "Launch ping",
+            "type": "chrome",
+            "request": "launch",
+            "sourceMaps": false,
+            "url": "http://localhost:7000/ping.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "name": "Launch",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:7000/#realtime",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "nodemon",
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--debug=5858"
+            ],
+            "program": "${workspaceRoot}/index.js",
+            "restart": true,
+            "port": 5858,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}

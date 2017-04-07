@@ -15,12 +15,12 @@ var app = express();
 var Primus = require("primus");
 
 app.set("port", process.env.PORT || 3000);
-app.use(favicon(__dirname + "/public/favicon.ico"));
+app.use(favicon(__dirname + "/client/favicon.ico"));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(methodOverride());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "client")));
 
 if("development" === app.get("env")) {
     app.use(errorHandler());
