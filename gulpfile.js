@@ -1,3 +1,4 @@
+/* global process __dirname:true */
 var gulp = require("gulp");
 var requireDir = require("require-dir");
 
@@ -14,6 +15,9 @@ var paths = {
         "client/app/main.js",
         "client/app/viewmodels/*.js",
         "client/app/views/*.html"
+    ],
+    test: [
+        "test/dev"
     ]
 };
 
@@ -60,6 +64,17 @@ gulp.task("nodemon", function(cb) {
 var runSequence = require("run-sequence");
 gulp.task("serve", function(cb) {
     runSequence("eslint", "browser-sync", cb);
+});
+
+gulp.task("test", function(cb) {
+    var KarmaServer = require("karma").Server;
+    new KarmaServer({
+        configFile: __dirname + "/karma.conf.js",
+        singleRun: true
+    }, function(exitCode) {
+        cb();
+        process.exit(exitCode);
+    }).start();
 });
 
 gulp.task("default", ["browser-sync"]);
