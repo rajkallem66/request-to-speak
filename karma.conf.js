@@ -18,6 +18,7 @@ module.exports = function (config) {
             'test/test-main.js',
             { pattern: 'test/**/*spec.js', included: false },
             { pattern: 'client/kiosk/viewmodels/*.js', included: false },
+            { pattern: 'client/wall/viewmodels/*.js', included: false },
             { pattern: 'client/lib/**/*.js', included: false }
         ],
 
@@ -30,7 +31,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'client/kiosk/viewmodels/*.js': ['coverage']
+            'client/kiosk/viewmodels/*.js': ['coverage'],
+            'client/wall/viewmodels/*.js': ['coverage']
         },
 
 

@@ -23,12 +23,11 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
     system.debug(true);
     // >>excludeEnd("build");
 
-    app.title = "Durandal Starter Kit";
+    app.title = "Request To Speak";
 
     app.configurePlugins({
         router: true,
-        dialog: true,
-        observable: true
+        dialog: true
     });
 
     app.start().then(function() {
@@ -37,6 +36,6 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
         viewLocator.useConvention();
 
         // Show the app by setting the root view model for our application with a transition.
-        app.setRoot("viewmodels/shell", "entrance");
+        app.setRoot("viewmodels/wall", "entrance");
     });
 });

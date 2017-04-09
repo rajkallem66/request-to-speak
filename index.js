@@ -28,25 +28,15 @@ if("development" === app.get("env")) {
 
 var server = http.createServer(app);
 var primus = new Primus(server, {transformer: "faye"});
-var kiosks = [];
 
 server.listen(app.get("port"), function() {
     console.log("Express server listening on port " + app.get("port"));
 });
 
-primus.on("connection", function(spark) {
-    if(spark.query === "kiosk") {
-        kiosks.push(spark);
-    }
-    console.log("New connection.");
-    spark.on("data", function(message) {
-        console.log("Message received %s.", message);
+var rtsApi = require("./app/rts-api");
+var api = rtsApi(primus);
 
-        if(message == "ping") {
-            primus.write({reply: "pong"});
-        }
-    });
-});
+console.log(api.version);
 
 // SQL Connection
 var sql = require("mssql");
@@ -54,18 +44,18 @@ var sql = require("mssql");
 sql.connect("mssql://sql-solr:78yhS0NpfxLbrU!T@heron.saccounty.net/sire").then(function() {
     console.log("connected!!!");
     // Query
-    var query = "SELECT TOP 10 meet.meet_id, meet.meet_type, meet.meet_date, item.item_id, item.caption, page.page_id, " +
+/*    var query = "SELECT TOP 10 meet.meet_id, meet.meet_type, meet.meet_date, item.item_id, item.caption, page.page_id, " +
     "page.subdir, page.page_description, page.orig_extens, vault.vault_path FROM [sire].[alpha].[ans_meetings] " +
     "meet INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id INNER JOIN [alpha].[published_meetings_Page] " +
     "page ON item.item_id = page.item_id INNER JOIN [sire].[alpha].[published_meetings_Doc] doc ON doc.meet_id = meet.meet_id " +
     "INNER JOIN [alpha].[ans_vaults] vault ON vault.vault_id = doc.vault_id ORDER BY vault.vault_path, page.subdir";
-
-    new sql.Request().query(query).then(function(recordset) {
+*/
+/*    new sql.Request().query(query).then(function(recordset) {
         console.dir(recordset);
     }).catch(function(err) {
         console.log(err);
     });
-
+*/
     // Stored Procedure
 
 /*    new sql.Request()

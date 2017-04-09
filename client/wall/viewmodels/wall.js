@@ -1,23 +1,11 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "knockout", "primus"], function(http, app, ko, Primus) {
     return {
-        firstName: "",
-        lastName: "",
-        official: false,
-        agency: "",
-        item: "",
-        subTopic: "",
-        stance: "",
-        notes: "",
-        phone: "",
-        email: "",
-        address: "",
-
-        messages: ko.observableArray([]),
+        requests: ko.observableArray([]),
         primus: null,
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
-            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=kiosk");
+            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=wall");
 
             this.primus.on("open", function() {
                 console.log("Connection established.");
@@ -31,8 +19,6 @@ define(["plugins/http", "durandal/app", "knockout", "primus"], function(http, ap
         canDeactivate: function() {
             // the router's activator calls this function to see if it can leave the screen
             return app.showMessage("Are you sure you want to leave this page?", "Navigate", ["Yes", "No"]);
-        },
-        submitRequest: function() {
         }
     };
 });

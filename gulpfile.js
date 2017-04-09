@@ -6,15 +6,19 @@ var paths = {
     js: [
         "gulpfile.js",
         "index.js",
-        "client/app/main.js",
-        "client/app/viewmodels/*.js"
+        "app/*.js",
+        "client/*/main.js",
+        "client/*/viewmodels/*.js"
     ],
     app: [
         "client/ping.html",
         "client/index.html",
-        "client/app/main.js",
-        "client/app/viewmodels/*.js",
-        "client/app/views/*.html"
+        "client/chair.html",
+        "client/kiosk.html",
+        "client/wall.html",
+        "client/*/main.js",
+        "client/*/viewmodels/*.js",
+        "client/*/views/*.html"
     ],
     test: [
         "test/dev"

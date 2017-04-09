@@ -18,6 +18,7 @@ require.config({
 
     paths: {
         "kiosk": "client/kiosk/viewmodels/kiosk",
+        "wall": "client/wall/viewmodels/wall",
         "text": "client/lib/require/text",
         "durandal": "client/lib/durandal/js",
         "plugins": "client/lib/durandal/js/plugins",

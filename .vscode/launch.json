@@ -3,17 +3,18 @@
     "compounds": [
         {
             "name": "Dev Serve",
-            "configurations": ["nodemon","Gulp Serve", "Launch","Launch ping"]
+            "configurations": ["nodemon","Gulp BrowserSync", "Launch Wall", "Launch Admin"],
+            "preLaunchTask": "eslint"
         }
     ],
     "configurations": [
         {
             "type": "node",
             "request": "launch",
-            "name": "Gulp Serve",
+            "name": "Gulp BrowserSync",
             "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
             "args": [
-                "serve"
+                "browser-sync"
             ]
         },
         {
@@ -25,7 +26,14 @@
             "webRoot": "${workspaceRoot}/client"
         },
         {
-            "name": "Launch",
+            "name": "Launch Wall",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:7000/wall.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "name": "Launch Admin",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:7000/#realtime",
