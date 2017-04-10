@@ -1,9 +1,11 @@
 <section>
-    <h2 data-bind="text: displayName"></h2>
     <div class="row" data-bind="foreach: messages">
         <div class="col-sm-6 col-md-3">
             <span href="#" class="thumbnail" data-bind="text: message">
             </span>
         </div>
+    </div>
+    <div>
+        <button data-bind="click: submitRequest">submit</input>
     </div>
 </section>

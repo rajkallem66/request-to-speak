@@ -49,7 +49,7 @@ function setupPrimus(primus) {
                 wallSpark = null;
                 notifyAdmins({"messageType": "device", "message": {"deviceType": "wall", "event": "disconnected"}});
             } else {
-                //wall out of sync!!!
+                // wall out of sync!!!
             }
             break;
         case "admin":

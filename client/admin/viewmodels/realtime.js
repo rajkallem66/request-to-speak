@@ -25,8 +25,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                     case "device":
                         this.deviceMessage(data.message);
                         break;
-                    
-                    case "initialize": 
+                    case "initialize":
                         this.applyData(data.message);
                         break;
                     }
@@ -64,6 +63,9 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             this.connectedAdmins = data.connectedAdmins;
             this.connectedKiosks = data.connectedKiosks;
             this.connectedChairs = data.connectedChairs;
+        },
+        startMeeting: function() {
+            
         }
     };
 });

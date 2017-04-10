@@ -33,48 +33,23 @@ server.listen(app.get("port"), function() {
     console.log("Express server listening on port " + app.get("port"));
 });
 
-var rtsApi = require("./app/rts-api");
-var api = rtsApi(primus);
+var rtsWsApi = require("./app/rts-ws-api")(primus);
+console.log("RTS WS API Version: " + rtsWsApi.version);
 
-console.log(api.version);
+var rtsSqlApi = require("./app/rts-sql-api")("mssql://sql-solr:78yhS0NpfxLbrU!T@heron.saccounty.net/sire");
+console.log("RTS SQL API Version: " + rtsSqlApi.version);
 
-// SQL Connection
-var sql = require("mssql");
-
-sql.connect("mssql://sql-solr:78yhS0NpfxLbrU!T@heron.saccounty.net/sire").then(function() {
-    console.log("connected!!!");
-    // Query
-/*    var query = "SELECT TOP 10 meet.meet_id, meet.meet_type, meet.meet_date, item.item_id, item.caption, page.page_id, " +
-    "page.subdir, page.page_description, page.orig_extens, vault.vault_path FROM [sire].[alpha].[ans_meetings] " +
-    "meet INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id INNER JOIN [alpha].[published_meetings_Page] " +
-    "page ON item.item_id = page.item_id INNER JOIN [sire].[alpha].[published_meetings_Doc] doc ON doc.meet_id = meet.meet_id " +
-    "INNER JOIN [alpha].[ans_vaults] vault ON vault.vault_id = doc.vault_id ORDER BY vault.vault_path, page.subdir";
-*/
-/*    new sql.Request().query(query).then(function(recordset) {
-        console.dir(recordset);
-    }).catch(function(err) {
-        console.log(err);
-    });
-*/
-    // Stored Procedure
-
-/*    new sql.Request()
-    .input('input_parameter', sql.Int, value)
-    .output('output_parameter', sql.VarChar(50))
-    .execute('procedure_name').then(function(recordsets) {
-        console.dir(recordsets);
-    }).catch(function(err) {
-        // ... execute error checks
-    });
-*/
-    // ES6 Tagged template literals (experimental)
-
-    // sql.query`select * from mytable where id = ${value}`.then(function(recordset) {
-    //     console.dir(recordset);
-    // }).catch(function(err) {
-    //     // ... query error checks
-    // });
-}).catch(function(err) {
-    // ... connect error checks
-    console.log(err);
+app.post("/request", function(req, res) {
+    var firstName = req.body.firstName;
+    var request = req.body;
+    console.log("First name = " + firstName);
+    res.end("yes");
+    rtsSqlApi.addRequest(request);
+    rtsWsApi.addRequest(request);
+});
+app.post("/addMeeting", function(req, res) {
+    var meeting = req.body;
+    console.log("Meeting ID = " + meeting.meetingId);
+    res.end("yes");
+    rtsSqlApi.addMeeting(request);
 });

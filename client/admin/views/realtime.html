@@ -1,9 +1,10 @@
 <section>
     <h2 data-bind="text: displayName"></h2>
     <div>
-        <span><span>connected kiosks: </span><span data-bind="text: connectedKiosks"></span></span>
-        <span><span>wall connected: </span><span data-bind="text: wallConnected"></span></span>
-        <span><span>admins connected: </span><span data-bind="text: connectedAdmins"></span></span>
+        <span><span>connected kiosks: </span><span data-bind="text: connectedKiosks"></span></span><br>
+        <span><span>wall connected: </span><span data-bind="text: wallConnected"></span></span><br>
+        <span><span>admins connected: </span><span data-bind="text: connectedAdmins"></span></span><br>
+        <button data-bind="click: startMeeting">start</input>
     </div>
     <div class="row" data-bind="foreach: messages">
         <div class="col-sm-6 col-md-3">
