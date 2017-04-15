@@ -1,11 +1,11 @@
 <section>
     <div class="row" data-bind="foreach: messages">
         <div class="col-sm-6 col-md-3">
-            <span href="#" class="thumbnail" data-bind="text: message">
+            <span data-bind="text: message">
             </span>
         </div>
     </div>
     <div>
-        <button data-bind="click: submitRequest">submit</input>
+        <button data-bind="click: submitRequest, enable: isMeetingActive">submit</input>
     </div>
 </section>

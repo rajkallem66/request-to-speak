@@ -2,7 +2,11 @@
 define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
     return {
         request: null,
-        meetingId: "",
+        meeting: {
+            meetingId: "",
+            timeToSpeak: 0,
+        },
+
         isSubmitting: false,
         isMeetingActive: false,
         isKioskConnected: false,
@@ -25,7 +29,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             this.primus.on("data", function(data) {
                 console.log(data);
 
-                this.messages.push({message: "Message received: " + data.message});
+                this.messages.push({message: "Message received: " + data.messageType});
                 switch(data.messageType) {
                 case "meeting":
                     if(data.message.event === "started") {
@@ -33,19 +37,35 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                     } else {
                         this.endMeeting();
                     }
+                    break;
+                case "initialize":
+                    this.applyData(data.message.meetingData);
+                    break;
                 }
             }.bind(this));
         },
+        applyData: function(meetingData){
+            console.log("Intializing ")
+            this.meeting.meetingId = meetingData.meetingId;
+            this.meeting.meetingName = meetingData.meetingName;
+            if(meetingData.meetingId){
+                this.isMeetingActive = true;
+                this.request = this.newRequest();
+            } else {
+                this.isMeetingActive = false;
+            }
+        },
         startMeeting: function(meetingData) {
             console.log("Meeting started.");
+            this.meeting.meetingId = meetingData.meetingId;
+            this.meeting.timeToSpeak = meetingData.defaultTimeToSpeak
             this.isMeetingActive = true;
-            this.meetingId = meetingData.meetingId;
             this.request = this.newRequest();
         },
         endMeeting: function() {
             console.log("Meeting ended.");
             this.isMeetingActive = false;
-            this.meetingId = "";
+            this.meeting.meetingId = "";
             this.request = this.newRequest();
         },
         submitRequest: function() {
@@ -63,18 +83,20 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         },
         newRequest: function() {
             return {
+                meetingId: this.meeting.meetingId,
                 firstName: "",
                 lastName: "",
                 official: false,
                 agency: "",
                 item: "",
+                offAgenda: false,
                 subTopic: "",
                 stance: "",
                 notes: "",
                 phone: "",
                 email: "",
                 address: "",
-                meetingId: this.meetingId
+                timeToSpeak: this.meeting.timeToSpeak
             };
         }
     };

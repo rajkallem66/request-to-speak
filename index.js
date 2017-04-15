@@ -1,6 +1,8 @@
 /* global __dirname, require, process */
-/* eslint no-console: "off" */
 "use strict";
+var winston = require("winston");
+var config = require("config");
+winston.level = config.get("RTS.log.level");
 
 var express = require("express");
 var favicon = require("serve-favicon");
@@ -25,31 +27,45 @@ app.use(express.static(path.join(__dirname, "client")));
 if("development" === app.get("env")) {
     app.use(errorHandler());
 }
-
+ 
 var server = http.createServer(app);
-var primus = new Primus(server, {transformer: "faye"});
+var transformer = config.get("RTS.wsTransformer");
+var primus = new Primus(server, {transformer: transformer});
 
 server.listen(app.get("port"), function() {
-    console.log("Express server listening on port " + app.get("port"));
+    winston.info("Express server listening on port " + app.get("port"));
 });
 
-var rtsWsApi = require("./app/rts-ws-api")(primus);
-console.log("RTS WS API Version: " + rtsWsApi.version);
+var rtsWsApi = require("./app/rts-ws-api")(primus, winston);
+winston.info("RTS WS API Version: " + rtsWsApi.version);
 
-var rtsSqlApi = require("./app/rts-sql-api")("mssql://sql-solr:78yhS0NpfxLbrU!T@heron.saccounty.net/sire");
-console.log("RTS SQL API Version: " + rtsSqlApi.version);
+var dbApi = config.get("RTS.dbApi");
+var dbConfig = config.get("RTS.dbConfig");
+
+// You can create your own API for Cassandra, Mongo, Oracle, etc. Just adhere to the interface.
+var rtsDbApi = require(dbApi)(dbConfig, winston);
+winston.info("RTS DB API Type: " + rtsDbApi.dbType);
+winston.info("RTS DB API Version: " + rtsDbApi.version);
 
 app.post("/request", function(req, res) {
-    var firstName = req.body.firstName;
     var request = req.body;
-    console.log("First name = " + firstName);
-    res.end("yes");
-    rtsSqlApi.addRequest(request);
+    winston.info("Adding request from: " + req._remoteAddress);
+    winston.debug("Request data.", request);
+    rtsDbApi.addRequest(request);
     rtsWsApi.addRequest(request);
+    res.end("yes");
 });
+
 app.post("/addMeeting", function(req, res) {
     var meeting = req.body;
-    console.log("Meeting ID = " + meeting.meetingId);
+    winston.info("Adding meeting id: " + meeting.meetingId);
+    rtsDbApi.addMeeting(meeting);
     res.end("yes");
-    rtsSqlApi.addMeeting(request);
+});
+
+app.post("/startMeeting", function(req, res) {
+    var meeting = req.body;
+    winston.info("Starting meeeting id: " + meeting.meetingId);
+    rtsWsApi.startMeeting(meeting);
+    res.end("yes");
 });

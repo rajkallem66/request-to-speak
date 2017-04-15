@@ -17,7 +17,7 @@ define(["plugins/http", "durandal/app", "knockout", "primus"], function(http, ap
         primus: null,
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
-            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=chair");
+            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=board");
 
             this.primus.on("open", function() {
                 console.log("Connection established.");

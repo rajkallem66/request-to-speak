@@ -36,6 +36,6 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
         viewLocator.useConvention();
 
         // Show the app by setting the root view model for our application with a transition.
-        app.setRoot("viewmodels/chair", "entrance");
+        app.setRoot("viewmodels/board", "entrance");
     });
 });

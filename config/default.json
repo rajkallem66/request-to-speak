@@ -1,0 +1,13 @@
+{
+    "RTS": {
+        "wsTransformer": "faye",
+        "dbApi": "./app/rts-sql-api",
+        "dbConfig": {
+            "server": "crane.saccounty.net",
+            "database": "RTS",
+            "user": "sql-rtswebservice",
+            "password": "stored locally",
+            "port": 1433
+        }
+    }
+}

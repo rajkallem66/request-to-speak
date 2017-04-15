@@ -6,7 +6,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         wallConnected: false,
         connectedKiosks: 0,
         connectedAdmins: 0,
-        connectedChairs: 0,
+        connectedBoards: 0,
 
         primus: null,
         activate: function() {
@@ -27,6 +27,8 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                         break;
                     case "initialize":
                         this.applyData(data.message);
+                        break;
+                    case "meeting":
                         break;
                     }
                 } else {
@@ -50,8 +52,8 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             case "kiosk":
                 this.connectedKiosks = message.count;
                 break;
-            case "chair":
-                this.connectedChairs = message.count;
+            case "board":
+                this.connectedBoards = message.count;
                 break;
             case "admin":
                 this.connectedAdmins = message.count;
@@ -62,10 +64,18 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             this.wallConnected = data.wallConnected;
             this.connectedAdmins = data.connectedAdmins;
             this.connectedKiosks = data.connectedKiosks;
-            this.connectedChairs = data.connectedChairs;
+            this.connectedBoards = data.connectedBoards;
         },
         startMeeting: function() {
-            
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", {
+                "meetingId": 12,
+                "meetingName": "The first one",
+                "defaultTimeToSpeak": 2
+            }).then(function() {
+                console.log("Start meeting successfully submitted.");
+            }, function() {
+                // do error stuff
+            });
         }
     };
 });

@@ -1,9 +1,13 @@
 /* global module,require*/
-/* eslint no-console: "off" */
+var winston = null;
+var meeting = {
+    meetingId: "",
+    defaultTimeToSpeak: ""
+};
 var wallSpark = null;
 var adminSparks = [];
 var kioskSparks = [];
-var chairSparks = [];
+var boardSparks = [];
 
 /**
  * Function to attach to Primus events
@@ -15,31 +19,37 @@ function setupPrimus(primus) {
             switch(spark.query.clientType) {
             case "kiosk":
                 kioskSparks.push(spark);
-                notifyAdmins({"messageType": "device", "message": {"deviceType": "kiosk", "event": "connected", "count": kioskSparks.length}});
+                notify("admins", {"messageType": "device", "message": {"deviceType": "kiosk", "event": "connected", "count": kioskSparks.length}});
+                initializeKiosk(spark);
                 break;
             case "wall":
                 wallSpark = spark;
-                notifyAdmins({"messageType": "device", "message": {"deviceType": "wall", "event": "connected"}});
+                notify("admins", {"messageType": "device", "message": {"deviceType": "wall", "event": "connected"}});
                 break;
-            case "chair":
-                chairSparks.push(spark);
-                notifyAdmins({"messageType": "device", "message": {"deviceType": "chair", "event": "connected", "count": chairSparks.length}});
+            case "board":
+                boardSparks.push(spark);
+                notify("admins", {"messageType": "device", "message": {"deviceType": "board", "event": "connected", "count": boardSparks.length}});
                 break;
             case "admin":
                 adminSparks.push(spark);
-                notifyAdmins({"messageType": "device", "message": {"deviceType": "admin", "event": "connected", "count": adminSparks.length}});
+                notify("admins", {"messageType": "device", "message": {"deviceType": "admin", "event": "connected", "count": adminSparks.length}});
                 initializeAdmin(spark);
                 break;
+            default:
+                // bad client.
             }
-        }
-        console.log("New connection.");
-        spark.on("data", function(message) {
-            console.log("Message received %s.", message);
+            winston.info("New connection.", { 
+                type: spark.query.clientType,
+                identity: spark.id
+            });
+            spark.on("data", function(message) {
+                console.log("Message received %s.", message);
 
-            if(message == "ping") {
-                primus.write({reply: "pong"});
-            }
-        });
+                if(message == "ping") {
+                    primus.write({reply: "pong"});
+                }
+            });
+        }
     });
 
     primus.on("disconnection", function(spark) {
@@ -47,7 +57,7 @@ function setupPrimus(primus) {
         case "wall":
             if(spark === wallSpark) {
                 wallSpark = null;
-                notifyAdmins({"messageType": "device", "message": {"deviceType": "wall", "event": "disconnected"}});
+                notify("admins", {"messageType": "device", "message": {"deviceType": "wall", "event": "disconnected"}});
             } else {
                 // wall out of sync!!!
             }
@@ -56,19 +66,19 @@ function setupPrimus(primus) {
             adminSparks = adminSparks.filter(function(adminSpark) {
                 return adminSpark.id !== spark.id;
             });
-            notifyAdmins({"messageType": "device", "message": {"deviceType": "admin", "event": "disconnected", "count": adminSparks.length}});
+            notify("admins", {"messageType": "device", "message": {"deviceType": "admin", "event": "disconnected", "count": adminSparks.length}});
             break;
         case "kiosk":
             kioskSparks = kioskSparks.filter(function(kioskSpark) {
                 return kioskSpark.id !== spark.id;
             });
-            notifyAdmins({"messageType": "device", "message": {"deviceType": "kiosk", "event": "disconnected", "count": kioskSparks.length}});
+            notify("admins", {"messageType": "device", "message": {"deviceType": "kiosk", "event": "disconnected", "count": kioskSparks.length}});
             break;
-        case "chair":
-            chairSparks = chairSparks.filter(function(chairSpark) {
-                return chairSpark.id !== spark.id;
+        case "board":
+            boardSparks = boardSparks.filter(function(boardSpark) {
+                return boardSpark.id !== spark.id;
             });
-            notifyAdmins({"messageType": "device", "message": {"deviceType": "chair", "event": "disconnected", "count": chairSparks.length}});
+            notify("admins", {"messageType": "device", "message": {"deviceType": "board", "event": "disconnected", "count": boardSparks.length}});
             break;
         }
     });
@@ -76,10 +86,32 @@ function setupPrimus(primus) {
 
 /**
  * Send data message to all connected admins
+ * @param {String} group - group to notify.
  * @param {Message} data - object to send to admin sparks.
  */
-function notifyAdmins(data) {
-    adminSparks.forEach(function(spark) {
+function notify(group, data) {
+    var sparks = [];
+    switch(group) {
+    case "kiosks" :
+        sparks.push.apply(sparks, kioskSparks);
+        break;
+    case "admins":
+        sparks.push.apply(sparks, adminSparks);
+        break;
+    case "all":
+        if(wallSpark) {
+            sparks.push(wallSpark);
+        }
+        sparks.push.apply(sparks, kioskSparks);
+        sparks.push.apply(sparks, adminSparks);
+        sparks.push.apply(sparks, boardSparks);
+        break;
+    case "watchers":
+        sparks.push.apply(sparks, adminSparks);
+        sparks.push.apply(sparks, boardSparks);
+        break;
+    }
+    sparks.forEach(function(spark) {
         spark.write(data);
     });
 }
@@ -94,8 +126,21 @@ function initializeAdmin(spark) {
         "message": {
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
-            "connectedChairs": chairSparks.length,
+            "connectedBoards": boardSparks.length,
             "wallConnected": (wallSpark !== null)
+        }
+    });
+}
+
+/**
+ *
+ * @param {Spark} spark - newly connected kiosk spark.
+ */
+function initializeKiosk(spark) {
+    spark.write({
+        "messageType": "initialize",
+        "message": {
+            "meetingData": meeting
         }
     });
 }
@@ -106,15 +151,39 @@ function initializeAdmin(spark) {
  * @param {Request} request
  */
 function addRequest(request) {
-    console.log(request);
+    notify("watchers", {
+        "messageType": "request",
+        "message": {
+            "event": "add",
+            "request": request
+        }
+    });
 }
 
-module.exports = function(primus) {
-    this.primus = primus;
+/**
+ * Starts a meeting by sending event to everyone.
+ * @param {String} meetingId
+ */
+function startMeeting(newMeeting) {
+    meeting = newMeeting;
+
+    notify("all", {
+        "messageType": "meeting",
+        "message": {
+            "event": "started",
+            "meetingData": meeting
+        }
+    });
+}
+
+module.exports = function(primus, logger) {
+    winston = logger;
+
     setupPrimus(primus);
 
     return {
         version: "1.0",
-        addRequest: addRequest
+        addRequest: addRequest,
+        startMeeting: startMeeting
     };
 };

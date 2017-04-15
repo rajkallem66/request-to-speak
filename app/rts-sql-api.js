@@ -1,19 +1,29 @@
 /* global module,require*/
-/* eslint no-console: "off" */
 
 // SQL Connection
 var sql = require("mssql");
-var connectString = "";
+var config = null;
+var logger = null;
+var pool = null;
 
 /**
  * initialize SQL connection.
  */
 function setupSql() {
-    sql.connect(connectString).then(function() {
-        console.log("connected!!!");
+    sql.connect(this.config).then(function(p) {
+        pool = p;
+    }).then(function(result) {
+        if(result) {
+            console.dir(result);
+        }
     }).catch(function(err) {
-        // ... connect error checks
-        console.log(err);
+        // ... error checks
+        console.log("Error?: " + err);
+    });
+
+    sql.on("error", function(err) {
+        // ... error handler
+        console.log("On Error?: " + err);
     });
 }
 
@@ -50,20 +60,71 @@ function setupSql() {
     // });
 
 /**
- * Add request to database.
- * @param {Request} request - Request to add to db
+ * Insert new request into database.
+ * @param {Request} newRequest
  */
-function addRequest(request) {
-    console.log(request.meetingId);
+function insertRequest(newRequest) {
+    // Query
+
+    //     return pool.request()
+    //     .input('input_parameter', sql.Int, value)
+    //     .query('select * from mytable where id = @input_parameter')
+    // }).then(result => {
+    // console.dir(recordset);
+
+
+    var transaction = new sql.Transaction(pool);
+    transaction.begin().then(function() {
+        var request = new sql.Request(transaction);
+        // use params!!!
+        var query = "Insert into Request (meetingId,firstName,lastName,official,agency,item,offAgenda,subTopic,stance,notes,phone,email,address,timeToSpeak) ";
+        query += "values ('" + newRequest.meetingId + "',";
+        query += "'" + newRequest.firstName + "',";
+        query += "'" + newRequest.lastName + "',";
+        query += "'" + newRequest.official + "',";
+        query += "'" + newRequest.agency + "',";
+        query += "'" + newRequest.item + "',";
+        query += "'" + newRequest.offAgenda + "',";
+        query += "'" + newRequest.subTopic + "',";
+        query += "'" + newRequest.stance + "',";
+        query += "'" + newRequest.notes + "',";
+        query += "'" + newRequest.phone + "',";
+        query += "'" + newRequest.email + "',";
+        query += "'" + newRequest.address + "',";
+        query += "'" + newRequest.timeToSpeak + "')";
+        console.log("Statement: " + query);
+        request.query(query).then(function() {
+            transaction.commit().then(function(recordSet) {
+                console.log(recordSet);
+            }).catch(function(err) {
+                console.log("Error in Transaction Commit " + err);
+            });
+        }).catch(function(err) {
+            console.log("Error in Transaction Begin " + err);
+        });
+    }).catch(function(err) {
+        console.log(err);
+    });
 }
 
-module.exports = function(connectString) {
-    this.connectString = connectString;
-    // setupSql();
+module.exports = function(config, logger) {
+    // config is delivered frozen and this causes problems in mssql. So, just copy over.
+    this.config = {
+        server: config.server,
+        database: config.database,
+        user: config.user,
+        password: config.password,
+        port: config.port
+    };
+
+    this.logger = logger;
+
+    setupSql();
 
     return {
         version: "1.0",
-        addRequest: addRequest,
+        dbType: "Microsoft SQL Server",
+        addRequest: insertRequest,
         setupSql: setupSql
     };
 };
