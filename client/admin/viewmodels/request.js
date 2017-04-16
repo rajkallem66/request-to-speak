@@ -1,7 +1,7 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
     return {
-        displayName: "Realtime",
+        displayName: "Request",
         messages: [],
         wallConnected: false,
         connectedKiosks: 0,

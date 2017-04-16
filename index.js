@@ -69,3 +69,7 @@ app.post("/startMeeting", function(req, res) {
     rtsWsApi.startMeeting(meeting);
     res.end("yes");
 });
+
+app.get("/meeting", function() {
+
+});

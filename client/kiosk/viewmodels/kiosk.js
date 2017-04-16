@@ -50,8 +50,8 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             console.log("Intializing ");
             this.meeting.meetingId = meetingData.meetingId;
             this.meeting.meetingName = meetingData.meetingName;
-            this.meeting.confirmationDuration = meetingData.confirmationDuration
-            this.meeting.defaultTimeToSpeak = meetingData.defaultTimeToSpeak
+            this.meeting.confirmationDuration = meetingData.confirmationDuration;
+            this.meeting.defaultTimeToSpeak = meetingData.defaultTimeToSpeak;
             if(meetingData.meetingId) {
                 this.isMeetingActive = true;
                 this.request = this.newRequest();
@@ -62,7 +62,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         endMeeting: function() {
             console.log("Meeting ended.");
             this.isMeetingActive = false;
-            this.meeting = this.newMeeting(); 
+            this.meeting = this.newMeeting();
             this.request = this.newRequest();
         },
         submitRequest: function() {

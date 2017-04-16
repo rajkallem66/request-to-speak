@@ -177,8 +177,8 @@ function startMeeting(newMeeting) {
     });
 }
 
-module.exports = function(primus, logger) {
-    this.logger = logger;
+module.exports = function(primus, log) {
+    logger = log;
 
     setupPrimus(primus);
 

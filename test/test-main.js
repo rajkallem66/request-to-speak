@@ -17,6 +17,8 @@ require.config({
     baseUrl: '/base',
 
     paths: {
+        "requestAdmin": "client/admin/viewmodels/request",
+        "meetingAdmin": "client/admin/viewmodels/meeting",
         "kiosk": "client/kiosk/viewmodels/kiosk",
         "wall": "client/wall/viewmodels/wall",
         "text": "client/lib/require/text",

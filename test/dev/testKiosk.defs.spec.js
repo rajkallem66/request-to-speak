@@ -3,7 +3,8 @@ define(["kiosk"], function(kiosk) {
     describe("Kiosk ViewModel definitions.", function() {
         "use strict";
 
-        var a = require("kiosk");
+        //var a = require("kiosk");
+        var a = kiosk;
 
         describe("Kiosk definitions.", function() {
             it("should define activate as a Function", function() {
