@@ -76,22 +76,23 @@ function insertRequest(newRequest) {
     var transaction = new sql.Transaction(pool);
     transaction.begin().then(function() {
         var request = new sql.Request(transaction);
-        // use params!!!
+
+        request.input("meetingId", newRequest.meetingId);
+        request.input("firstName",newRequest.firstName);
+        request.input("lastName", newRequest.lastName);
+        request.input("official", newRequest.official);
+        request.input("agency", newRequest.agency);
+        request.input("item", newRequest.item);
+        request.input("offAgenda", newRequest.offAgenda);
+        request.input("subTopic", newRequest.subTopic);
+        request.input("stance", newRequest.stance);
+        request.input("notes", newRequest.notes);
+        request.input("phone", newRequest.phone);
+        request.input("email", newRequest.email);
+        request.input("address", newRequest.address);
+        request.input("timeToSpeak", newRequest.timeToSpeak);
         var query = "Insert into Request (meetingId,firstName,lastName,official,agency,item,offAgenda,subTopic,stance,notes,phone,email,address,timeToSpeak) ";
-        query += "values ('" + newRequest.meetingId + "',";
-        query += "'" + newRequest.firstName + "',";
-        query += "'" + newRequest.lastName + "',";
-        query += "'" + newRequest.official + "',";
-        query += "'" + newRequest.agency + "',";
-        query += "'" + newRequest.item + "',";
-        query += "'" + newRequest.offAgenda + "',";
-        query += "'" + newRequest.subTopic + "',";
-        query += "'" + newRequest.stance + "',";
-        query += "'" + newRequest.notes + "',";
-        query += "'" + newRequest.phone + "',";
-        query += "'" + newRequest.email + "',";
-        query += "'" + newRequest.address + "',";
-        query += "'" + newRequest.timeToSpeak + "')";
+        query += "values (@meetingId,@firstName,@lastName,@official,@agency,@item,@offAgenda,@subTopic,@stance,@notes,@phone,@email,@address,@timeToSpeak)";
         console.log("Statement: " + query);
         request.query(query).then(function() {
             transaction.commit().then(function(recordSet) {
