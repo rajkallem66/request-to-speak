@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "client")));
 if("development" === app.get("env")) {
     app.use(errorHandler());
 }
- 
+
 var server = http.createServer(app);
 var transformer = config.get("RTS.wsTransformer");
 var primus = new Primus(server, {transformer: transformer});

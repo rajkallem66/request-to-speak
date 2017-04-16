@@ -1,5 +1,6 @@
 /* global module,require*/
-var winston = null;
+/* eslint prefer-spread: "off" */
+var logger = null;
 var meeting = {
     meetingId: "",
     defaultTimeToSpeak: ""
@@ -38,12 +39,12 @@ function setupPrimus(primus) {
             default:
                 // bad client.
             }
-            winston.info("New connection.", { 
+            logger.info("New connection.", {
                 type: spark.query.clientType,
                 identity: spark.id
             });
             spark.on("data", function(message) {
-                console.log("Message received %s.", message);
+                logger.info("Message received %s.", message);
 
                 if(message == "ping") {
                     primus.write({reply: "pong"});
@@ -93,18 +94,18 @@ function notify(group, data) {
     var sparks = [];
     switch(group) {
     case "kiosks" :
-        sparks.push.apply(sparks, kioskSparks);
+        sparks = kioskSparks;
         break;
     case "admins":
-        sparks.push.apply(sparks, adminSparks);
+        sparks = adminSparks;
         break;
     case "all":
-        if(wallSpark) {
-            sparks.push(wallSpark);
-        }
         sparks.push.apply(sparks, kioskSparks);
         sparks.push.apply(sparks, adminSparks);
         sparks.push.apply(sparks, boardSparks);
+        if(wallSpark) {
+            sparks.push(wallSpark);
+        }
         break;
     case "watchers":
         sparks.push.apply(sparks, adminSparks);
@@ -162,7 +163,7 @@ function addRequest(request) {
 
 /**
  * Starts a meeting by sending event to everyone.
- * @param {String} meetingId
+ * @param {Meeting} newMeeting
  */
 function startMeeting(newMeeting) {
     meeting = newMeeting;
@@ -177,7 +178,7 @@ function startMeeting(newMeeting) {
 }
 
 module.exports = function(primus, logger) {
-    winston = logger;
+    this.logger = logger;
 
     setupPrimus(primus);
 

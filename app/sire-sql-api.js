@@ -1,4 +1,5 @@
 /* global module,require*/
+/* eslint no-console: "off" */
 
 // SQL Connection
 var sql = require("mssql");
@@ -14,7 +15,7 @@ function setupSql(config) {
         pool = p;
     }).then(function(result) {
         if(result) {
-            logger.info("SQL Connected.", result);
+            console.dir(result);
         }
     }).catch(function(err) {
         // ... error checks
@@ -23,10 +24,16 @@ function setupSql(config) {
 
     sql.on("error", function(err) {
         // ... error handler
-        logger.error(err);
+        console.log("On Error?: " + err);
     });
 }
 
+/**
+ * get list of future meetings from SIRE.
+ */
+function getMeetings() {
+    pool.connect();
+}
 // Query
 /*    var query = "SELECT TOP 10 meet.meet_id, meet.meet_type, meet.meet_date, item.item_id, item.caption, page.page_id, " +
     "page.subdir, page.page_description, page.orig_extens, vault.vault_path FROM [sire].[alpha].[ans_meetings] " +
@@ -61,9 +68,9 @@ function setupSql(config) {
 
 /**
  * Insert new request into database.
- * @param {Request} newRequest
+ * @param {Request} newMeeting
  */
-function insertRequest(newRequest) {
+function insertMeeting(newMeeting) {
     // Query
 
     //     return pool.request()
@@ -71,40 +78,6 @@ function insertRequest(newRequest) {
     //     .query('select * from mytable where id = @input_parameter')
     // }).then(result => {
     // console.dir(recordset);
-
-    var transaction = new sql.Transaction(pool);
-    transaction.begin().then(function() {
-        var request = new sql.Request(transaction);
-
-        request.input("meetingId", newRequest.meetingId);
-        request.input("firstName", newRequest.firstName);
-        request.input("lastName", newRequest.lastName);
-        request.input("official", newRequest.official);
-        request.input("agency", newRequest.agency);
-        request.input("item", newRequest.item);
-        request.input("offAgenda", newRequest.offAgenda);
-        request.input("subTopic", newRequest.subTopic);
-        request.input("stance", newRequest.stance);
-        request.input("notes", newRequest.notes);
-        request.input("phone", newRequest.phone);
-        request.input("email", newRequest.email);
-        request.input("address", newRequest.address);
-        request.input("timeToSpeak", newRequest.timeToSpeak);
-        var query = "Insert into Request (meetingId,firstName,lastName,official,agency,item,offAgenda,subTopic,stance,notes,phone,email,address,timeToSpeak) ";
-        query += "values (@meetingId,@firstName,@lastName,@official,@agency,@item,@offAgenda,@subTopic,@stance,@notes,@phone,@email,@address,@timeToSpeak)";
-        logger.debug("Statement: " + query);
-        request.query(query).then(function() {
-            transaction.commit().then(function(recordSet) {
-                logger.debug("Commit result.", recordSet);
-            }).catch(function(err) {
-                logger.error("Error in Transaction Commit." + err);
-            });
-        }).catch(function(err) {
-            logger.error("Error in Transaction Begin." + err);
-        });
-    }).catch(function(err) {
-        logger.error(err);
-    });
 }
 
 module.exports = function(cfg, logger) {
@@ -124,7 +97,7 @@ module.exports = function(cfg, logger) {
     return {
         version: "1.0",
         dbType: "Microsoft SQL Server",
-        addRequest: insertRequest,
-        setupSql: setupSql
+        addMeeting: insertMeeting,
+        getMeetings: getMeetings
     };
 };

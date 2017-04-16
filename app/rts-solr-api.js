@@ -10,16 +10,16 @@ var logger = null;
  * @param {Request} newRequest
  */
 function insertRequest(newRequest) {
-    client.add(newRequest, function(err,obj){
-        if(err){
-            console.log(err);
-        }else{
-            console.log(obj);
-            client.softCommit(function(err,res){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log(res);
+    client.add(newRequest, function(err, obj) {
+        if(err) {
+            logger.error(err);
+        } else {
+            logger.info(obj);
+            client.softCommit(function(err, res) {
+                if(err) {
+                    logger.error(err);
+                } else {
+                    logger.info(res);
                 }
             });
         }
@@ -27,7 +27,6 @@ function insertRequest(newRequest) {
 }
 
 module.exports = function(config, logger) {
-
     this.logger = logger;
 
     client = solr.createClient(config);
@@ -35,6 +34,6 @@ module.exports = function(config, logger) {
     return {
         version: "1.0",
         dbType: "Apache Solr",
-        addRequest: insertRequest,
+        addRequest: insertRequest
     };
 };

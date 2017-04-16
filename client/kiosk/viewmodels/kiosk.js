@@ -4,7 +4,9 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         request: null,
         meeting: {
             meetingId: "",
-            timeToSpeak: 0,
+            meetingName: "",
+            confirmationDuration: 0,
+            defaultTimeToSpeak: 0
         },
 
         isSubmitting: false,
@@ -33,39 +35,34 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                 switch(data.messageType) {
                 case "meeting":
                     if(data.message.event === "started") {
-                        this.startMeeting(data.message.meetingData);
+                        this.applyMeetingData(data.message.meetingData);
                     } else {
                         this.endMeeting();
                     }
                     break;
                 case "initialize":
-                    this.applyData(data.message.meetingData);
+                    this.applyMeetingData(data.message.meetingData);
                     break;
                 }
             }.bind(this));
         },
-        applyData: function(meetingData){
-            console.log("Intializing ")
+        applyMeetingData: function(meetingData) {
+            console.log("Intializing ");
             this.meeting.meetingId = meetingData.meetingId;
             this.meeting.meetingName = meetingData.meetingName;
-            if(meetingData.meetingId){
+            this.meeting.confirmationDuration = meetingData.confirmationDuration
+            this.meeting.defaultTimeToSpeak = meetingData.defaultTimeToSpeak
+            if(meetingData.meetingId) {
                 this.isMeetingActive = true;
                 this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
             }
         },
-        startMeeting: function(meetingData) {
-            console.log("Meeting started.");
-            this.meeting.meetingId = meetingData.meetingId;
-            this.meeting.timeToSpeak = meetingData.defaultTimeToSpeak
-            this.isMeetingActive = true;
-            this.request = this.newRequest();
-        },
         endMeeting: function() {
             console.log("Meeting ended.");
             this.isMeetingActive = false;
-            this.meeting.meetingId = "";
+            this.meeting = this.newMeeting(); 
             this.request = this.newRequest();
         },
         submitRequest: function() {
@@ -96,7 +93,22 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                 phone: "",
                 email: "",
                 address: "",
-                timeToSpeak: this.meeting.timeToSpeak
+                timeToSpeak: this.meeting.defaultTimeToSpeak
+            };
+        },
+        additionalRequest: function() {
+            this.request.item = "";
+            this.request.offAgenda = false;
+            this.request.subTopic = "";
+            this.request.stance = "";
+            this.request.notes = "";
+        },
+        newMeeting: function() {
+            return {
+                meetingId: "",
+                meetingName: "",
+                confirmationDuration: 0,
+                defaultTimeToSpeak: 0
             };
         }
     };
