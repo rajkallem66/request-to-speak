@@ -15,4 +15,7 @@
             <button data-bind="click: submitRequest, enable: isMeetingActive">submit</input>
         </div>
     </div>
+    <div data-bind="visible: !isKioskConnected">
+        <span>Please stand by. Server connection disrupted.</span>
+    </div>
 </section>

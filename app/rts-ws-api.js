@@ -122,6 +122,7 @@ function initializeAdmin(spark) {
     spark.write({
         "messageType": "initialize",
         "message": {
+            "meeting": meeting,
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
             "connectedBoards": boardSparks.length,

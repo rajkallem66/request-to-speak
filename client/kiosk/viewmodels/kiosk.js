@@ -18,12 +18,18 @@ define(["plugins/http", "durandal/app", "plugins/observable", "primus"], functio
             this.primus.on("open", function() {
                 console.log("Connection established.");
                 this.isKioskConnected = true;
-            });
-            this.primus.on("open", function() {
+            }.bind(this));
+            this.primus.on('reconnect timeout', function (err, opts) {
+                console.log('Timeout expired: %s', err.message);
+            }.bind(this));
+            this.primus.on("error", function() {
                 console.log("Connection lost.");
                 this.isKioskConnected = false;
-            });
-
+            }.bind(this));
+            this.primus.on("end", function() {
+                console.log("Connection ended.");
+                this.isKioskConnected = false;
+            }.bind(this));
             this.primus.on("data", function(data) {
                 console.log(data);
 
@@ -99,7 +105,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "primus"], functio
         },
     };
     observable(ret, 'selectedItem').subscribe(function(value){
-        if(this.request.item !== undefined) {
+        if(value !== undefined) {
             this.request.item = value.itemName;
             this.request.timeToSpeak = value.defaultTimeToSpeak;
         }

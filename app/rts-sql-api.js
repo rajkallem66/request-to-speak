@@ -107,7 +107,7 @@ function insertRequest(newRequest) {
     });
 }
 
-module.exports = function(cfg, logger) {
+module.exports = function(cfg, log) {
     // config is delivered frozen and this causes problems in mssql. So, just copy over.
     var config = {
         server: cfg.server,
@@ -117,7 +117,7 @@ module.exports = function(cfg, logger) {
         port: cfg.port
     };
 
-    this.logger = logger;
+    logger = log;
 
     setupSql(config);
 
