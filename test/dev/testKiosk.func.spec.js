@@ -63,8 +63,8 @@ define(["kiosk"], function(kiosk) {
                 a.applyMeetingData(testKioskActiveMeetingData());
                 a.request = testKioskRequestData();
                 a.endMeeting();
-                expect(a.meeting.meetingId).toBe("");
-                expect(a.request.firstName).toBe("");
+                expect(a.meeting).toEqual({});
+                expect(a.request).toEqual({});
                 expect(a.isMeetingActive).toBe(false);
             });
 

@@ -118,21 +118,5 @@ define(["kiosk"], function(kiosk) {
                 expect(r.timeToSpeak).toBeDefined();
             });
         });
-        
-        describe("Meeting definitions.", function() {
-            var m = a.meeting;
-
-            it("should define meetingId", function() {
-                expect(m.meetingId).toBeDefined();
-            });
-
-            it("should define confirmationDuration", function() {
-                expect(m.confirmationDuration).toBeDefined();
-            });
-
-            it("should define defaultTimeToSpeak", function() {
-                expect(m.defaultTimeToSpeak).toBeDefined();
-            });
-        });
     });
 });

@@ -42,8 +42,8 @@ function addRequest(newRequest) {
     });
 }
 
-module.exports = function(config, logger) {
-    this.logger = logger;
+module.exports = function(config, log) {
+    logger = log;
 
     client = solr.createClient(config);
 

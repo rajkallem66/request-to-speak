@@ -45,11 +45,6 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.applyData).toBeDefined();
                 expect(a.applyData).toEqual(jasmine.any(Function));
             });
-
-            it("should define startMeeting as a Function.", function() {
-                expect(a.startMeeting).toBeDefined();
-                expect(a.startMeeting).toEqual(jasmine.any(Function));
-            });
         });
     });
 });

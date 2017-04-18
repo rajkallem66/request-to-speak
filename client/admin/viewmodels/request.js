@@ -3,6 +3,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
     return {
         displayName: "Request",
         messages: [],
+        isMeetingActive: false,
         wallConnected: false,
         connectedKiosks: 0,
         connectedAdmins: 0,
@@ -38,7 +39,9 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         },
         canDeactivate: function() {
             // the router's activator calls this function to see if it can leave the screen
-            return app.showMessage("Are you sure you want to leave this page?", "Navigate", ["Yes", "No"]);
+            if(this.isMeetingActive) {
+                return app.showMessage("There is an active meeting. Are you sure you want to leave this page?", "Navigate", ["Yes", "No"]);
+            }
         },
         deviceMessage: function(message) {
             switch(message.deviceType) {
@@ -61,21 +64,11 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             }
         },
         applyData: function(data) {
+            this.isMeetingActive = true;
             this.wallConnected = data.wallConnected;
             this.connectedAdmins = data.connectedAdmins;
             this.connectedKiosks = data.connectedKiosks;
             this.connectedBoards = data.connectedBoards;
-        },
-        startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", {
-                "meetingId": 12,
-                "meetingName": "The first one",
-                "defaultTimeToSpeak": 2
-            }).then(function() {
-                console.log("Start meeting successfully submitted.");
-            }, function() {
-                // do error stuff
-            });
         }
     };
 });

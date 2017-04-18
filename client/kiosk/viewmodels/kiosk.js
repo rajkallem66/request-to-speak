@@ -1,13 +1,9 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
-    return {
-        request: null,
-        meeting: {
-            meetingId: "",
-            meetingName: "",
-            confirmationDuration: 0,
-            defaultTimeToSpeak: 0
-        },
+define(["plugins/http", "durandal/app", "plugins/observable", "primus"], function(http, app, observable, Primus) {
+    var ret = {
+        request: {},
+        meeting: {},
+        selectedItem: {},
 
         isSubmitting: false,
         isMeetingActive: false,
@@ -48,27 +44,25 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         },
         applyMeetingData: function(meetingData) {
             console.log("Intializing ");
-            this.meeting.meetingId = meetingData.meetingId;
-            this.meeting.meetingName = meetingData.meetingName;
-            this.meeting.confirmationDuration = meetingData.confirmationDuration;
-            this.meeting.defaultTimeToSpeak = meetingData.defaultTimeToSpeak;
             if(meetingData.meetingId) {
                 this.isMeetingActive = true;
                 this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
             }
+            this.meeting = meetingData;
         },
         endMeeting: function() {
             console.log("Meeting ended.");
             this.isMeetingActive = false;
-            this.meeting = this.newMeeting();
-            this.request = this.newRequest();
+            this.meeting = {};
+            this.request = {};
         },
         submitRequest: function() {
             this.isSubmitting = true;
             var self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
+                self.isSubmitting = false;
                 self.confirmSubmission();
             }, function() {
                 // do error stuff
@@ -93,7 +87,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                 phone: "",
                 email: "",
                 address: "",
-                timeToSpeak: this.meeting.defaultTimeToSpeak
+                timeToSpeak: 0
             };
         },
         additionalRequest: function() {
@@ -103,13 +97,13 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             this.request.stance = "";
             this.request.notes = "";
         },
-        newMeeting: function() {
-            return {
-                meetingId: "",
-                meetingName: "",
-                confirmationDuration: 0,
-                defaultTimeToSpeak: 0
-            };
-        }
     };
+    observable(ret, 'selectedItem').subscribe(function(value){
+        if(this.request.item !== undefined) {
+            this.request.item = value.itemName;
+            this.request.timeToSpeak = value.defaultTimeToSpeak;
+        }
+    }.bind(ret));
+
+    return ret;
 });

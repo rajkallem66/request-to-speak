@@ -1,10 +1,7 @@
 /* global module,require*/
 /* eslint prefer-spread: "off" */
 var logger = null;
-var meeting = {
-    meetingId: "",
-    defaultTimeToSpeak: ""
-};
+var meeting = {};
 var wallSpark = null;
 var adminSparks = [];
 var kioskSparks = [];

@@ -1,11 +1,18 @@
 <section>
-    <div class="row" data-bind="foreach: messages">
-        <div class="col-sm-6 col-md-3">
-            <span data-bind="text: message">
-            </span>
+    <div data-bind="visible: isMeetingActive">
+        <div class="row" data-bind="foreach: messages">
+            <div class="col-sm-6 col-md-3">
+                <span data-bind="text: message">
+                </span>
+            </div>
         </div>
-    </div>
-    <div>
-        <button data-bind="click: submitRequest, enable: isMeetingActive">submit</input>
+        <div>
+            <select data-bind="options: meeting.items,
+            optionsText: 'itemName',
+            value: selectedItem,"></select>
+        </div>
+        <div>
+            <button data-bind="click: submitRequest, enable: isMeetingActive">submit</input>
+        </div>
     </div>
 </section>
