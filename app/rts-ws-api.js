@@ -2,6 +2,7 @@
 /* eslint prefer-spread: "off" */
 var logger = null;
 var meeting = {};
+var displayRequests = [];
 var wallSpark = null;
 var adminSparks = [];
 var kioskSparks = [];
@@ -90,6 +91,9 @@ function setupPrimus(primus) {
 function notify(group, data) {
     var sparks = [];
     switch(group) {
+    case "wall": 
+        sparks.push(wallSpark);
+        break;
     case "kiosks" :
         sparks = kioskSparks;
         break;
@@ -175,6 +179,20 @@ function startMeeting(newMeeting) {
     });
 }
 
+/**
+ * Send updated list of requests to the wall
+ * @param {array of requests} requests 
+ */
+function refreshWall(requests) {
+    displayRequests = requests;
+    notify("wall", {
+        "messageType": "refresh",
+        "mesage": {
+            "requests": requests
+        }
+    });
+}
+
 module.exports = function(primus, log) {
     logger = log;
 
@@ -183,6 +201,7 @@ module.exports = function(primus, log) {
     return {
         version: "1.0",
         addRequest: addRequest,
-        startMeeting: startMeeting
+        startMeeting: startMeeting,
+        refreshWall: refreshWall
     };
 };

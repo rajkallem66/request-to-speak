@@ -70,6 +70,13 @@ app.post("/startMeeting", function(req, res) {
     res.end("yes");
 });
 
+app.post("/refreshWall", function(req, res) {
+    var requests = req.body;
+    winston.info("Refreshing display wall.");
+    rtsWsApi.refreshWall(requests);
+    res.end("yes");
+});
+
 app.get("/meeting", function() {
 
 });

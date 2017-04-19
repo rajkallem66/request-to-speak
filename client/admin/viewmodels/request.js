@@ -3,6 +3,8 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
     return {
         displayName: "Request",
         messages: [],
+        requests: [],
+        isAdminConnected: false,
         isMeetingActive: false,
         wallConnected: false,
         connectedKiosks: 0,
@@ -17,8 +19,23 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
 
                 this.primus.on("open", function() {
                     console.log("Connection established.");
+                    this.isAdminConnected = true;
                 });
-
+                this.primus.on('reconnect timeout', function (err, opts) {
+                    console.log('Timeout expired: %s', err.message);
+                }.bind(this));
+                this.primus.on('reconnect', function (err, opts) {
+                    console.log('Reconnecting.', err.message);
+                    this.isAdminConnected = false;
+                }.bind(this));
+                this.primus.on('reconnected', function (err, opts) {
+                    console.log('Reconnected.', err.message);
+                    this.isAdminConnected = true;
+                }.bind(this));
+                this.primus.on("end", function() {
+                    console.log("Connection ended.");
+                    this.isKioskConnected = false;
+                }.bind(this));
                 this.primus.on("data", function(data) {
                     console.log(data);
                     this.messages.push({message: "Message received: " + data.messageType});
@@ -31,7 +48,10 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                             this.applyData(data.message);
                             break;
                         case "meeting":
-
+                            this.meetingMessage(data.message);                        
+                            break;
+                        case "request":
+                            this.requestMessage(data.message);                        
                             break;
                         }
                     } else {
@@ -66,6 +86,18 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             case "admin":
                 this.connectedAdmins = message.count;
                 break;
+            }
+        },
+        meetingMessage: function(message) {
+            this.meeting = message.meetingData;
+            this.isMeetingActive = (this.meeting.meetingId !== undefined);
+        },
+        requestMessage: function(message) {
+            switch(message.event) {
+            case "add":
+                this.requests.push(message.request);
+                break;
+            case "remove":
             }
         },
         applyData: function(data) {

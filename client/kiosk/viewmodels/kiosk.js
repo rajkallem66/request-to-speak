@@ -22,9 +22,13 @@ define(["plugins/http", "durandal/app", "plugins/observable", "primus"], functio
             this.primus.on('reconnect timeout', function (err, opts) {
                 console.log('Timeout expired: %s', err.message);
             }.bind(this));
-            this.primus.on("error", function() {
-                console.log("Connection lost.");
+            this.primus.on('reconnect', function (err, opts) {
+                console.log('Reconnecting', err.message);
                 this.isKioskConnected = false;
+            }.bind(this));
+            this.primus.on('reconnected', function (err, opts) {
+                console.log('Reconnecting', err.message);
+                this.isKioskConnected = true;
             }.bind(this));
             this.primus.on("end", function() {
                 console.log("Connection ended.");
