@@ -8,7 +8,8 @@ var paths = {
         "index.js",
         "app/*.js",
         "client/*/main.js",
-        "client/*/viewmodels/*.js"
+        "client/*/viewmodels/*.js",
+        "test/**/*.js"
     ],
     app: [
         "client/ping.html",

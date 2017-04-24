@@ -11,6 +11,19 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.activate).toEqual(jasmine.any(Function));
             });
 
+            it("should define requests as an Array", function() {
+                expect(a.requests).toBeDefined();
+                expect(a.requests).toEqual(jasmine.any(Array));
+            });
+
+            it("should define isAdminConnected", function() {
+                expect(a.isAdminConnected).toBeDefined();
+            });
+
+            it("should define isMeetingActive", function() {
+                expect(a.isMeetingActive).toBeDefined();
+            });
+
             it("should define wallConnected", function() {
                 expect(a.wallConnected).toBeDefined();
             });
@@ -39,6 +52,16 @@ define(["requestAdmin"], function(requestAdmin) {
             it("should define deviceMessage as a Function.", function() {
                 expect(a.deviceMessage).toBeDefined();
                 expect(a.deviceMessage).toEqual(jasmine.any(Function));
+            });
+
+            it("should define meetingMessage as a Function.", function() {
+                expect(a.meetingMessage).toBeDefined();
+                expect(a.meetingMessage).toEqual(jasmine.any(Function));
+            });
+
+            it("should define requestMessage as a Function.", function() {
+                expect(a.requestMessage).toBeDefined();
+                expect(a.requestMessage).toEqual(jasmine.any(Function));
             });
 
             it("should define applyData as a Function.", function() {

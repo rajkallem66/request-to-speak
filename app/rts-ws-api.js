@@ -91,7 +91,7 @@ function setupPrimus(primus) {
 function notify(group, data) {
     var sparks = [];
     switch(group) {
-    case "wall": 
+    case "wall":
         sparks.push(wallSpark);
         break;
     case "kiosks" :
@@ -181,7 +181,7 @@ function startMeeting(newMeeting) {
 
 /**
  * Send updated list of requests to the wall
- * @param {array of requests} requests 
+ * @param {array of requests} requests
  */
 function refreshWall(requests) {
     displayRequests = requests;

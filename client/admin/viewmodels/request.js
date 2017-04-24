@@ -3,6 +3,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
     return {
         displayName: "Request",
         messages: [],
+        meeting: {},
         requests: [],
         isAdminConnected: false,
         isMeetingActive: false,
@@ -10,31 +11,33 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
         connectedKiosks: 0,
         connectedAdmins: 0,
         connectedBoards: 0,
-
         primus: null,
+        createPrimus: function(url) {
+            return new Primus(url);
+        },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             if(this.primus === null || this.primus.online !== true) {
-                this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=admin");
+                this.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=admin");
 
                 this.primus.on("open", function() {
                     console.log("Connection established.");
                     this.isAdminConnected = true;
-                });
-                this.primus.on('reconnect timeout', function (err, opts) {
-                    console.log('Timeout expired: %s', err.message);
                 }.bind(this));
-                this.primus.on('reconnect', function (err, opts) {
-                    console.log('Reconnecting.', err.message);
+                this.primus.on("reconnect timeout", function(err, opts) {
+                    console.log("Timeout expired: %s", err.message);
+                });
+                this.primus.on("reconnect", function(err, opts) {
+                    console.log("Reconnecting.", err.message);
                     this.isAdminConnected = false;
                 }.bind(this));
-                this.primus.on('reconnected', function (err, opts) {
-                    console.log('Reconnected.', err.message);
+                this.primus.on("reconnected", function(err, opts) {
+                    console.log("Reconnected.", err.message);
                     this.isAdminConnected = true;
                 }.bind(this));
                 this.primus.on("end", function() {
                     console.log("Connection ended.");
-                    this.isKioskConnected = false;
+                    this.isAdminConnected = false;
                 }.bind(this));
                 this.primus.on("data", function(data) {
                     console.log(data);
@@ -48,10 +51,10 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                             this.applyData(data.message);
                             break;
                         case "meeting":
-                            this.meetingMessage(data.message);                        
+                            this.meetingMessage(data.message);
                             break;
                         case "request":
-                            this.requestMessage(data.message);                        
+                            this.requestMessage(data.message);
                             break;
                         }
                     } else {

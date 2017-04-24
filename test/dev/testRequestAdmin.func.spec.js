@@ -4,6 +4,7 @@ define(["requestAdmin"], function(requestAdmin) {
         "use strict";
         function requestAdminMeetingData() {
             return {
+                meeting: {},
                 wallConnected: true,
                 connectedAdmins: 1,
                 connectedKiosks: 1,
@@ -61,6 +62,7 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.connectedAdmins).toBe(0);
                 expect(a.connectedBoards).toBe(0);
             });
+
             it("deviceMessage should set admin count for admin device type event.", function() {
                 expect(a.wallConnected).toBe(false);
                 expect(a.connectedKiosks).toBe(0);
@@ -85,6 +87,7 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.connectedAdmins).toBe(0);
                 expect(a.connectedBoards).toBe(0);
             });
+
             it("deviceMessage should set board count for board device type event.", function() {
                 expect(a.wallConnected).toBe(false);
                 expect(a.connectedKiosks).toBe(0);
@@ -109,6 +112,7 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.connectedAdmins).toBe(0);
                 expect(a.connectedBoards).toBe(0);
             });
+
             it("applyData should set all counts and wall status.", function() {
                 expect(a.wallConnected).toBe(false);
                 expect(a.connectedKiosks).toBe(0);

@@ -8,8 +8,8 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                 http.get("RTS meetings").then(function() {
 
                 });
-            });
-*/        },
+            });*/
+        },
         mergeMeetings: function(agendaSystem, rtsMeetings) {
 
         },
@@ -24,7 +24,7 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             return {
                 meetingId: "12",
                 meetingName: "The twelfth one",
-                items:[
+                items: [
                     {
                         itemId: "100",
                         itemName: "1",

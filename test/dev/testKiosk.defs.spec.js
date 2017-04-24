@@ -3,7 +3,7 @@ define(["kiosk"], function(kiosk) {
     describe("Kiosk ViewModel definitions.", function() {
         "use strict";
 
-        //var a = require("kiosk");
+        // var a = require("kiosk");
         var a = kiosk;
 
         describe("Kiosk definitions.", function() {
@@ -20,6 +20,11 @@ define(["kiosk"], function(kiosk) {
                 expect(a.meeting).toBeDefined();
             });
 
+            it("should define selectedItem", function() {
+                expect(a.selectedItem).toBeDefined();
+                expect(a.selectedItem).toEqual(jasmine.any(Object));
+            });
+
             it("should define isSubmitting", function() {
                 expect(a.isSubmitting).toBeDefined();
             });
@@ -32,9 +37,18 @@ define(["kiosk"], function(kiosk) {
                 expect(a.isKioskConnected).toBeDefined();
             });
 
+            it("should define primus", function() {
+                expect(a.primus).toBeDefined();
+            });
+
             it("should define applyMeetingData as a Function.", function() {
                 expect(a.applyMeetingData).toBeDefined();
                 expect(a.applyMeetingData).toEqual(jasmine.any(Function));
+            });
+
+            it("should define createPrimus as a Function.", function() {
+                expect(a.createPrimus).toBeDefined();
+                expect(a.createPrimus).toEqual(jasmine.any(Function));
             });
 
             it("should define endMeeting as a Function.", function() {

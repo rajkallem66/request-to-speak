@@ -1,9 +1,9 @@
 /* global jasmine, describe, beforeEach, it, expect, require */
-define(["kiosk"], function(kiosk) {
+define(["kiosk", "plugins/http"], function(kiosk, http) {
     describe("Kiosk ViewModel functions.", function() {
         "use strict";
 
-        function testKioskRequestData(){
+        function testKioskRequestData() {
             return {
                 firstName: "John",
                 lastName: "Doe",
@@ -18,29 +18,35 @@ define(["kiosk"], function(kiosk) {
                 email: "johndoe@gmail.com",
                 address: "123 A st Sacramento CA, 95811",
                 timeToSpeak: 3
-            }
-        };
-        function testKioskActiveMeetingData(){
+            };
+        }
+
+        function testKioskActiveMeetingData() {
             return {
                 meetingId: 12,
                 meetingName: "The first one",
                 confirmationDuration: 5,
                 defaultTimeToSpeak: 2
-            }
-        };
+            };
+        }
 
-        function testKioskInactiveMeetingData(){
+        function testKioskInactiveMeetingData() {
             return {
                 meetingId: "",
                 meetingName: "",
                 confirmationDuration: 0,
                 defaultTimeToSpeak: 0
-            }
-        };
+            };
+        }
 
         var a = require("kiosk");
 
         describe("Kiosk functions.", function() {
+            xit("createPrimus should create a useable Primus object.", function() {
+                var p = a.createPrimus("");
+                expect(p).toEqual(jasmine.any(Object));
+            });
+
             it("applyMeetingData should set proper values for inactive meeting.", function() {
                 a.applyMeetingData(testKioskInactiveMeetingData());
                 expect(a.meeting.meetingId).toBe("");
@@ -84,6 +90,38 @@ define(["kiosk"], function(kiosk) {
                 expect(a.request.email).toBe("johndoe@gmail.com");
                 expect(a.request.address).toBe("123 A st Sacramento CA, 95811");
                 expect(a.request.timeToSpeak).toBe(3);
+            });
+        });
+        describe("Request submission.", function() {
+            var u;
+            var r;
+            var c;
+            beforeAll(function() {
+                spyOn(http, "post").and.callFake(function(url, request) {
+                    u = url;
+                    r = request;
+                    return {
+                        then: function(cb) {
+                            c = cb;
+                        }
+                    };
+                });
+                spyOn(a, "confirmSubmission");
+            });
+
+            it("submitRequest should post request object to server.", function() {
+                a.request = a.newRequest();
+                a.submitRequest();
+                expect(http.post).toHaveBeenCalled();
+                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "request");
+                expect(r).toBe(a.request);
+                expect(a.isSubmitting).toBe(true);
+            });
+
+            it("should show confirmation and set up the kiosk after submission.", function() {
+                c();
+                expect(a.isSubmitting).toBe(false);
+                expect(a.confirmSubmission).toHaveBeenCalled();
             });
         });
     });

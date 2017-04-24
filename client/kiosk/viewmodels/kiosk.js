@@ -4,30 +4,31 @@ define(["plugins/http", "durandal/app", "plugins/observable", "primus"], functio
         request: {},
         meeting: {},
         selectedItem: {},
-
         isSubmitting: false,
         isMeetingActive: false,
         isKioskConnected: false,
-
         messages: [],
         primus: null,
+        createPrimus: function(url) {
+            return new Primus(url);
+        },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
-            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=kiosk");
+            this.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=kiosk");
 
             this.primus.on("open", function() {
                 console.log("Connection established.");
                 this.isKioskConnected = true;
             }.bind(this));
-            this.primus.on('reconnect timeout', function (err, opts) {
-                console.log('Timeout expired: %s', err.message);
-            }.bind(this));
-            this.primus.on('reconnect', function (err, opts) {
-                console.log('Reconnecting', err.message);
+            this.primus.on("reconnect timeout", function(err, opts) {
+                console.log("Timeout expired: %s", err.message);
+            });
+            this.primus.on("reconnect", function(err, opts) {
+                console.log("Reconnecting", err.message);
                 this.isKioskConnected = false;
             }.bind(this));
-            this.primus.on('reconnected', function (err, opts) {
-                console.log('Reconnecting', err.message);
+            this.primus.on("reconnected", function(err, opts) {
+                console.log("Reconnecting", err.message);
                 this.isKioskConnected = true;
             }.bind(this));
             this.primus.on("end", function() {
@@ -106,9 +107,9 @@ define(["plugins/http", "durandal/app", "plugins/observable", "primus"], functio
             this.request.subTopic = "";
             this.request.stance = "";
             this.request.notes = "";
-        },
+        }
     };
-    observable(ret, 'selectedItem').subscribe(function(value){
+    observable(ret, "selectedItem").subscribe(function(value) {
         if(value !== undefined) {
             this.request.item = value.itemName;
             this.request.timeToSpeak = value.defaultTimeToSpeak;

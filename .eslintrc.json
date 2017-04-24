@@ -1,7 +1,9 @@
 {
+    "plugins": ["jasmine"],
     "env": {
         "browser": true,
-        "amd": true
+        "amd": true,
+        "jasmine": true
     },
     "extends": [
         "eslint:recommended",
