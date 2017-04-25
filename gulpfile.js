@@ -1,6 +1,6 @@
 /* global process __dirname:true */
 var gulp = require("gulp");
-var requireDir = require("require-dir");
+//var requireDir = require("require-dir");
 
 var paths = {
     js: [
@@ -27,9 +27,18 @@ var paths = {
 };
 
 // Require all tasks in the 'gulp' folder.
-requireDir("./gulp", {recurse: false});
+// requireDir("./gulp", {recurse: false});
 
 var eslint = require("gulp-eslint");
+var reporter = require("eslint-bamboo-formatter");
+
+gulp.task("lint", function() {
+    return gulp.src(paths.js)
+        .pipe(eslint())
+        .pipe(eslint.format(reporter))
+        .pipe(eslint.failAfterError());
+});
+
 gulp.task("eslint", function() {
     gulp.src(paths.js)
         .pipe(eslint())
