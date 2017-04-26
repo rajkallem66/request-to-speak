@@ -1,6 +1,6 @@
 /* global process __dirname:true */
 var gulp = require("gulp");
-//var requireDir = require("require-dir");
+// var requireDir = require("require-dir");
 
 var paths = {
     js: [

@@ -3,41 +3,35 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
     describe("Kiosk ViewModel functions.", function() {
         "use strict";
 
-        function testKioskRequestData() {
-            return {
-                firstName: "John",
-                lastName: "Doe",
-                official: true,
-                agency: "USA",
-                item: "1",
-                offAgenda: true,
-                subTopic: "Homelessness",
-                stance: "In Support",
-                notes: "I'm in support of this.",
-                phone: "916-555-1234",
-                email: "johndoe@gmail.com",
-                address: "123 A st Sacramento CA, 95811",
-                timeToSpeak: 3
-            };
-        }
+        var requestData = {
+            firstName: "John",
+            lastName: "Doe",
+            official: true,
+            agency: "USA",
+            item: "1",
+            offAgenda: true,
+            subTopic: "Homelessness",
+            stance: "In Support",
+            notes: "I'm in support of this.",
+            phone: "916-555-1234",
+            email: "johndoe@gmail.com",
+            address: "123 A st Sacramento CA, 95811",
+            timeToSpeak: 3
+        };
 
-        function testKioskActiveMeetingData() {
-            return {
-                meetingId: 12,
-                meetingName: "The first one",
-                confirmationDuration: 5,
-                defaultTimeToSpeak: 2
-            };
-        }
+        var activeMeetingData = {
+            meetingId: 12,
+            meetingName: "The first one",
+            confirmationDuration: 5,
+            defaultTimeToSpeak: 2
+        };
 
-        function testKioskInactiveMeetingData() {
-            return {
-                meetingId: "",
-                meetingName: "",
-                confirmationDuration: 0,
-                defaultTimeToSpeak: 0
-            };
-        }
+        var inactiveMeetingData = {
+            meetingId: "",
+            meetingName: "",
+            confirmationDuration: 0,
+            defaultTimeToSpeak: 0
+        };
 
         var a = require("kiosk");
 
@@ -48,7 +42,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
             });
 
             it("applyMeetingData should set proper values for inactive meeting.", function() {
-                a.applyMeetingData(testKioskInactiveMeetingData());
+                a.applyMeetingData(inactiveMeetingData);
                 expect(a.meeting.meetingId).toBe("");
                 expect(a.meeting.meetingName).toBe("");
                 expect(a.meeting.confirmationDuration).toBe(0);
@@ -57,7 +51,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
             });
 
             it("applyMeetingData should set proper values for active meeting.", function() {
-                a.applyMeetingData(testKioskActiveMeetingData());
+                a.applyMeetingData(activeMeetingData);
                 expect(a.meeting.meetingId).toBe(12);
                 expect(a.meeting.meetingName).toBe("The first one");
                 expect(a.meeting.confirmationDuration).toBe(5);
@@ -66,8 +60,8 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
             });
 
             it("endMeeting should set proper values to end meeting.", function() {
-                a.applyMeetingData(testKioskActiveMeetingData());
-                a.request = testKioskRequestData();
+                a.applyMeetingData(activeMeetingData);
+                a.request = requestData;
                 a.endMeeting();
                 expect(a.meeting).toEqual({});
                 expect(a.request).toEqual({});
@@ -75,7 +69,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
             });
 
             it("additionalRequest should clear specific values for additional request.", function() {
-                a.request = testKioskRequestData();
+                a.request = requestData;
                 a.additionalRequest();
                 expect(a.request.firstName).toBe("John");
                 expect(a.request.lastName).toBe("Doe");

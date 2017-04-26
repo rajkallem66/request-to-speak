@@ -24,6 +24,7 @@ function setupPrimus(primus) {
             case "wall":
                 wallSpark = spark;
                 notify("admins", {"messageType": "device", "message": {"deviceType": "wall", "event": "connected"}});
+                initializeWall(spark);
                 break;
             case "board":
                 boardSparks.push(spark);
@@ -181,7 +182,7 @@ function startMeeting(newMeeting) {
 
 /**
  * Send updated list of requests to the wall
- * @param {array of requests} requests
+ * @param {Object} requests
  */
 function refreshWall(requests) {
     displayRequests = requests;
@@ -189,6 +190,18 @@ function refreshWall(requests) {
         "messageType": "refresh",
         "mesage": {
             "requests": requests
+        }
+    });
+}
+
+/**
+ * initialize wall state.
+ */
+function initializeWall() {
+    notify("wall", {
+        "messageType": "initialize",
+        "mesage": {
+            "requests": displayRequests
         }
     });
 }

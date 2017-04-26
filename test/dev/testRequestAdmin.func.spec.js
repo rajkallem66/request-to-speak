@@ -2,15 +2,16 @@
 define(["requestAdmin"], function(requestAdmin) {
     describe("Request Admin ViewModel functions.", function() {
         "use strict";
-        function requestAdminMeetingData() {
-            return {
-                meeting: {},
-                wallConnected: true,
-                connectedAdmins: 1,
-                connectedKiosks: 1,
-                connectedBoards: 1
-            };
-        }
+        /**
+         * get test data
+         */
+        var testData = {
+            meeting: {},
+            wallConnected: true,
+            connectedAdmins: 1,
+            connectedKiosks: 1,
+            connectedBoards: 1
+        };
 
         var a = requestAdmin;
 
@@ -118,7 +119,7 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.connectedKiosks).toBe(0);
                 expect(a.connectedAdmins).toBe(0);
                 expect(a.connectedBoards).toBe(0);
-                a.applyData(requestAdminMeetingData());
+                a.applyData(testData);
                 expect(a.wallConnected).toBe(true);
                 expect(a.connectedKiosks).toBe(1);
                 expect(a.connectedAdmins).toBe(1);

@@ -110,6 +110,6 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
             this.connectedAdmins = data.connectedAdmins;
             this.connectedKiosks = data.connectedKiosks;
             this.connectedBoards = data.connectedBoards;
-        },
+        }
     };
 });
