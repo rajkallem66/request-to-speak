@@ -36,11 +36,6 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
         var a = require("kiosk");
 
         describe("Kiosk functions.", function() {
-            xit("createPrimus should create a useable Primus object.", function() {
-                var p = a.createPrimus("");
-                expect(p).toEqual(jasmine.any(Object));
-            });
-
             it("applyMeetingData should set proper values for inactive meeting.", function() {
                 a.applyMeetingData(inactiveMeetingData);
                 expect(a.meeting.meetingId).toBe("");

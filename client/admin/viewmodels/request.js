@@ -1,66 +1,20 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
+define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
     return {
-        displayName: "Request",
+        isConnected: false,
+        isMeetingActive: false,
         messages: [],
         meeting: {},
         requests: [],
-        isAdminConnected: false,
-        isMeetingActive: false,
         wallConnected: false,
         connectedKiosks: 0,
         connectedAdmins: 0,
         connectedBoards: 0,
         primus: null,
-        createPrimus: function(url) {
-            return new Primus(url);
-        },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             if(this.primus === null || this.primus.online !== true) {
-                this.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=admin");
-
-                this.primus.on("open", function() {
-                    console.log("Connection established.");
-                    this.isAdminConnected = true;
-                }.bind(this));
-                this.primus.on("reconnect timeout", function(err, opts) {
-                    console.log("Timeout expired: %s", err.message);
-                });
-                this.primus.on("reconnect", function(err, opts) {
-                    console.log("Reconnecting.", err.message);
-                    this.isAdminConnected = false;
-                }.bind(this));
-                this.primus.on("reconnected", function(err, opts) {
-                    console.log("Reconnected.", err.message);
-                    this.isAdminConnected = true;
-                }.bind(this));
-                this.primus.on("end", function() {
-                    console.log("Connection ended.");
-                    this.isAdminConnected = false;
-                }.bind(this));
-                this.primus.on("data", function(data) {
-                    console.log(data);
-                    this.messages.push({message: "Message received: " + data.messageType});
-                    if(data.messageType) {
-                        switch (data.messageType) {
-                        case "device":
-                            this.deviceMessage(data.message);
-                            break;
-                        case "initialize":
-                            this.applyData(data.message);
-                            break;
-                        case "meeting":
-                            this.meetingMessage(data.message);
-                            break;
-                        case "request":
-                            this.requestMessage(data.message);
-                            break;
-                        }
-                    } else {
-                        console.log(JSON.stringify(data));
-                    }
-                }.bind(this));
+                event.setupPrimus(this, "admin");
             }
         },
         canDeactivate: function() {

@@ -1,16 +1,26 @@
 /* global jasmine, describe, beforeEach, it, expect, require */
-define(["requestAdmin"], function(requestAdmin) {
-    describe("Request Admin Primus features.", function() {
+define(["eventHandler"], function(event) {
+    describe("eventHandler Primus features.", function() {
         "use strict";
-        var a = requestAdmin;
+        var a = event;
         var p = {
             handlers: []
         };
+        var v = {
+            isConnected: false,
+            messsages: [],
+            primus: null,
+            initializeMessage: function() {},
+            deviceMessage: function() {},
+            meetingMessage: function() {},
+            requestMessage: function() {},
+            refreshMessage: function() {}
+        }
         p.on = function(name, cb) {
             this.handlers.push({name: name, cb: cb});
         }.bind(p);
 
-        describe("Request Admin attach primus calls.", function() {
+        describe("eventHandler attach primus calls.", function() {
             beforeAll(function() {
                 spyOn(a, "createPrimus").and.callFake(function(url) {
                     return p;
@@ -18,7 +28,7 @@ define(["requestAdmin"], function(requestAdmin) {
 
                 spyOn(p, "on").and.callThrough();
 
-                a.activate();
+                a.setupPrimus(v, "");
             });
             afterAll(function() {
                 a.primus = null;
@@ -26,74 +36,65 @@ define(["requestAdmin"], function(requestAdmin) {
             });
 
             it("creates a useful Primus", function() {
-                expect(a.primus).toEqual(jasmine.any(Object));
-                expect(a.primus.on).toEqual(jasmine.any(Function));
+                expect(v.primus).toEqual(jasmine.any(Object));
+                expect(v.primus.on).toEqual(jasmine.any(Function));
             });
 
             it("calls the on function 6 times.", function() {
-                expect(a.primus.on.calls.count()).toBe(6);
+                expect(v.primus.on.calls.count()).toBe(6);
                 expect(p.handlers.length).toBe(6);
             });
 
             it("registers proper functionality on open", function() {
                 var open = p.handlers[0];
                 expect(open.name).toBe("open");
-                a.isAdminConnected = false;
+                v.isConnected = false;
                 open.cb();
-                expect(a.isAdminConnected).toBe(true);
+                expect(v.isConnected).toBe(true);
             });
 
             it("registers proper functionality on reconnect", function() {
                 var reconnect = p.handlers[2];
                 expect(reconnect.name).toBe("reconnect");
-                a.isAdminConnected = true;
+                v.isConnected = true;
                 reconnect.cb("");
-                expect(a.isAdminConnected).toBe(false);
+                expect(v.isConnected).toBe(false);
             });
 
             it("registers proper functionality on reconnected", function() {
                 var reconnected = p.handlers[3];
                 expect(reconnected.name).toBe("reconnected");
-                a.isAdminConnected = false;
+                v.isConnected = false;
                 reconnected.cb("");
-                expect(a.isAdminConnected).toBe(true);
+                expect(v.isConnected).toBe(true);
             });
 
             it("registers proper functionality on end", function() {
                 var end = p.handlers[4];
                 expect(end.name).toBe("end");
-                a.isAdminConnected = true;
+                v.isConnected = true;
                 end.cb();
-                expect(a.isAdminConnected).toBe(false);
+                expect(v.isConnected).toBe(false);
             });
         });
-        describe("request admin attach data function.", function() {
+        describe("eventHandler attach data function.", function() {
             beforeEach(function() {
                 spyOn(a, "createPrimus").and.callFake(function(url) {
                     return p;
                 });
 
                 spyOn(p, "on").and.callThrough();
-                spyOn(a, "deviceMessage");
-                spyOn(a, "meetingMessage");
-                spyOn(a, "applyData");
-                spyOn(a, "requestMessage");
+                spyOn(v, "initializeMessage");
+                spyOn(v, "deviceMessage");
+                spyOn(v, "meetingMessage");
+                spyOn(v, "requestMessage");
+                spyOn(v, "refreshMessage");
 
-                a.activate();
+                a.setupPrimus(v, "");
             });
             afterEach(function() {
                 a.primus = null;
                 p.handlers = [];
-            });
-
-            it("registers functionality for device messages", function() {
-                var data = p.handlers[5];
-                expect(data.name).toBe("data");
-                data.cb({
-                    messageType: "device",
-                    message: {}
-                });
-                expect(a.deviceMessage).toHaveBeenCalled();
             });
 
             it("registers functionality for initialize messages", function() {
@@ -103,7 +104,17 @@ define(["requestAdmin"], function(requestAdmin) {
                     messageType: "initialize",
                     message: {}
                 });
-                expect(a.applyData).toHaveBeenCalled();
+                expect(v.initializeMessage).toHaveBeenCalled();
+            });
+
+            it("registers functionality for device messages", function() {
+                var data = p.handlers[5];
+                expect(data.name).toBe("data");
+                data.cb({
+                    messageType: "device",
+                    message: {}
+                });
+                expect(v.deviceMessage).toHaveBeenCalled();
             });
 
             it("registers functionality for meeting messages", function() {
@@ -113,7 +124,7 @@ define(["requestAdmin"], function(requestAdmin) {
                     messageType: "meeting",
                     message: {}
                 });
-                expect(a.meetingMessage).toHaveBeenCalled();
+                expect(v.meetingMessage).toHaveBeenCalled();
             });
 
             it("registers functionality for request messages", function() {
@@ -123,7 +134,17 @@ define(["requestAdmin"], function(requestAdmin) {
                     messageType: "request",
                     message: {}
                 });
-                expect(a.requestMessage).toHaveBeenCalled();
+                expect(v.requestMessage).toHaveBeenCalled();
+            });
+
+            it("registers functionality for refresh messages", function() {
+                var data = p.handlers[5];
+                expect(data.name).toBe("data");
+                data.cb({
+                    messageType: "refresh",
+                    message: {}
+                });
+                expect(v.refreshMessage).toHaveBeenCalled();
             });
         });
     });

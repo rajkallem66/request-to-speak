@@ -18,6 +18,7 @@ module.exports = function (config) {
             'test/test-main.js',
             { pattern: 'test/**/*spec.js', included: false },
             { pattern: 'client/admin/viewmodels/*.js', included: false },
+            { pattern: 'client/board/viewmodels/*.js', included: false },
             { pattern: 'client/kiosk/viewmodels/*.js', included: false },
             { pattern: 'client/wall/viewmodels/*.js', included: false },
             { pattern: 'client/lib/**/*.js', included: false }

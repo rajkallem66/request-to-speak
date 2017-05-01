@@ -1,38 +1,33 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "knockout", "primus"], function(http, app, ko, Primus) {
-    return {
-        firstName: "",
-        lastName: "",
-        official: false,
-        agency: "",
-        item: "",
-        subTopic: "",
-        stance: "",
-        notes: "",
-        phone: "",
-        email: "",
-        address: "",
-
-        messages: ko.observableArray([]),
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], function(http, app, observable, event) {
+    var ret = {
+        isConnected: false,
+        isMeetingActive: false,
+        requests: [],
+        messages: [],
         primus: null,
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
-            this.primus = new Primus(location.href.replace(location.hash, "") + "?clientType=board");
-
-            this.primus.on("open", function() {
-                console.log("Connection established.");
-            });
-
-            this.primus.on("data", function(data) {
-                console.log(data);
-                this.messages.push({message: "Message received: " + data.reply});
-            }.bind(this));
+            if(this.primus === null || this.primus.online !== true) {
+                event.setupPrimus(this, "board");
+            }
         },
-        canDeactivate: function() {
-            // the router's activator calls this function to see if it can leave the screen
-            return app.showMessage("Are you sure you want to leave this page?", "Navigate", ["Yes", "No"]);
+        applyMeetingData: function(meetingData) {
+            console.log("Intializing ");
+            if(meetingData.meetingId) {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
+            this.requests = meetingData.requests;
         },
-        submitRequest: function() {
+        endMeeting: function() {
+            console.log("Meeting ended.");
+            this.isMeetingActive = false;
+            this.meeting = {};
+            this.requests = [];
         }
     };
+
+    return ret;
 });

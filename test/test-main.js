@@ -20,6 +20,7 @@ require.config({
         "requestAdmin": "client/admin/viewmodels/request",
         "meetingAdmin": "client/admin/viewmodels/meeting",
         "kiosk": "client/kiosk/viewmodels/kiosk",
+        "board": "client/board/viewmodels/board",
         "wall": "client/wall/viewmodels/wall",
         "text": "client/lib/require/text",
         "durandal": "client/lib/durandal/js",
@@ -28,7 +29,8 @@ require.config({
         "knockout": "client/lib/knockout/knockout-3.4.0",
         "bootstrap": "client/lib/bootstrap/js/bootstrap",
         "jquery": "client/lib/jquery/jquery-1.9.1",
-        "primus": "client/lib/primus/primus"
+        "primus": "client/lib/primus/primus",
+        "eventHandler": "client/lib/rts/eventHandler"
     },
     shim: {
         "bootstrap": {

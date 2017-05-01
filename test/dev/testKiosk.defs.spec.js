@@ -33,8 +33,8 @@ define(["kiosk"], function(kiosk) {
                 expect(a.isMeetingActive).toBeDefined();
             });
 
-            it("should define isKioskConnected", function() {
-                expect(a.isKioskConnected).toBeDefined();
+            it("should define isConnected", function() {
+                expect(a.isConnected).toBeDefined();
             });
 
             it("should define primus", function() {
@@ -44,11 +44,6 @@ define(["kiosk"], function(kiosk) {
             it("should define applyMeetingData as a Function.", function() {
                 expect(a.applyMeetingData).toBeDefined();
                 expect(a.applyMeetingData).toEqual(jasmine.any(Function));
-            });
-
-            it("should define createPrimus as a Function.", function() {
-                expect(a.createPrimus).toBeDefined();
-                expect(a.createPrimus).toEqual(jasmine.any(Function));
             });
 
             it("should define endMeeting as a Function.", function() {

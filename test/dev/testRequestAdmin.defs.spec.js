@@ -16,8 +16,8 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.requests).toEqual(jasmine.any(Array));
             });
 
-            it("should define isAdminConnected", function() {
-                expect(a.isAdminConnected).toBeDefined();
+            it("should define isConnected", function() {
+                expect(a.isConnected).toBeDefined();
             });
 
             it("should define isMeetingActive", function() {
