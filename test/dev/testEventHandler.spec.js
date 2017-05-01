@@ -15,7 +15,7 @@ define(["eventHandler"], function(event) {
             meetingMessage: function() {},
             requestMessage: function() {},
             refreshMessage: function() {}
-        }
+        };
         p.on = function(name, cb) {
             this.handlers.push({name: name, cb: cb});
         }.bind(p);

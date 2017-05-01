@@ -35,8 +35,7 @@ var reporter = require("eslint-bamboo-formatter");
 gulp.task("lint", function() {
     return gulp.src(paths.js)
         .pipe(eslint())
-        .pipe(eslint.format(reporter))
-        .pipe(eslint.failAfterError());
+        .pipe(eslint.format(reporter));
 });
 
 gulp.task("eslint", function() {
@@ -91,4 +90,4 @@ gulp.task("test", function(cb) {
     }).start();
 });
 
-gulp.task("default", ["browser-sync"]);
+gulp.task("default", ["nodemon", "browser-sync"]);
