@@ -69,9 +69,8 @@ app.post("/startMeeting", function(req, res) {
 });
 
 app.post("/refreshWall", function(req, res) {
-    var requests = req.body;
     winston.info("Refreshing display wall.");
-    rtsWsApi.refreshWall(requests);
+    rtsWsApi.refreshWall();
     res.end("yes");
 });
 

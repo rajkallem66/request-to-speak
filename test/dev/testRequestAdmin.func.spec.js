@@ -114,12 +114,12 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.connectedBoards).toBe(0);
             });
 
-            it("applyData should set all counts and wall status.", function() {
+            it("initializeMessage should set all counts and wall status.", function() {
                 expect(a.wallConnected).toBe(false);
                 expect(a.connectedKiosks).toBe(0);
                 expect(a.connectedAdmins).toBe(0);
                 expect(a.connectedBoards).toBe(0);
-                a.applyData(testData);
+                a.initializeMessage(testData);
                 expect(a.wallConnected).toBe(true);
                 expect(a.connectedKiosks).toBe(1);
                 expect(a.connectedAdmins).toBe(1);

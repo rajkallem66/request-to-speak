@@ -19,9 +19,28 @@ define(["wall"], function(wall) {
                 expect(a.isConnected).toBeDefined();
             });
 
+            it("should define isMeetingActive", function() {
+                expect(a.isMeetingActive).toBeDefined();
+            });
+
             it("should define activate as a Function", function() {
                 expect(a.activate).toBeDefined();
                 expect(a.activate).toEqual(jasmine.any(Function));
+            });
+
+            it("should define initializeMessage as a Function", function() {
+                expect(a.initializeMessage).toBeDefined();
+                expect(a.initializeMessage).toEqual(jasmine.any(Function));
+            });
+
+            it("should define meetingMessage as a Function", function() {
+                expect(a.meetingMessage).toBeDefined();
+                expect(a.meetingMessage).toEqual(jasmine.any(Function));
+            });
+
+            it("should define refreshMessage as a Function", function() {
+                expect(a.refreshMessage).toBeDefined();
+                expect(a.refreshMessage).toEqual(jasmine.any(Function));
             });
         });
     });

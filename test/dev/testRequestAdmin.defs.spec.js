@@ -64,9 +64,9 @@ define(["requestAdmin"], function(requestAdmin) {
                 expect(a.requestMessage).toEqual(jasmine.any(Function));
             });
 
-            it("should define applyData as a Function.", function() {
-                expect(a.applyData).toBeDefined();
-                expect(a.applyData).toEqual(jasmine.any(Function));
+            it("should define initializeMessage as a Function.", function() {
+                expect(a.initializeMessage).toBeDefined();
+                expect(a.initializeMessage).toEqual(jasmine.any(Function));
             });
         });
     });

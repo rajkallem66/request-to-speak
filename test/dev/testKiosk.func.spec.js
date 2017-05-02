@@ -20,44 +20,51 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
         };
 
         var activeMeetingData = {
-            meetingId: 12,
-            meetingName: "The first one",
-            confirmationDuration: 5,
-            defaultTimeToSpeak: 2
+            event: "started",
+            meetingData: {
+                meetingId: 12,
+                meetingName: "The first one",
+                confirmationDuration: 5,
+                items: [
+                    {
+                        itemId: "100",
+                        itemName: "1",
+                        defaultTimeToSpeak: 2
+                    }
+                ]
+            }
+        };
+
+        var endedMeetingData = {
+            event: "ended",
+            meetingData: {}
         };
 
         var inactiveMeetingData = {
-            meetingId: "",
-            meetingName: "",
-            confirmationDuration: 0,
-            defaultTimeToSpeak: 0
         };
 
         var a = require("kiosk");
 
         describe("Kiosk functions.", function() {
-            it("applyMeetingData should set proper values for inactive meeting.", function() {
-                a.applyMeetingData(inactiveMeetingData);
-                expect(a.meeting.meetingId).toBe("");
-                expect(a.meeting.meetingName).toBe("");
-                expect(a.meeting.confirmationDuration).toBe(0);
-                expect(a.meeting.defaultTimeToSpeak).toBe(0);
+            it("meetingMessage should set proper values for inactive meeting.", function() {
+                a.meetingMessage(inactiveMeetingData);
+                expect(a.meeting.meetingId).toBe(undefined);
+                expect(a.meeting.meetingName).toBe(undefined);
+                expect(a.meeting.confirmationDuration).toBe(undefined);
                 expect(a.isMeetingActive).toBe(false);
             });
 
-            it("applyMeetingData should set proper values for active meeting.", function() {
-                a.applyMeetingData(activeMeetingData);
+            it("meetingMessage should set proper values for active meeting.", function() {
+                a.meetingMessage(activeMeetingData);
                 expect(a.meeting.meetingId).toBe(12);
                 expect(a.meeting.meetingName).toBe("The first one");
                 expect(a.meeting.confirmationDuration).toBe(5);
-                expect(a.meeting.defaultTimeToSpeak).toBe(2);
+                expect(a.meeting.items.length).toBe(1);
                 expect(a.isMeetingActive).toBe(true);
             });
 
-            it("endMeeting should set proper values to end meeting.", function() {
-                a.applyMeetingData(activeMeetingData);
-                a.request = requestData;
-                a.endMeeting();
+            it("meetingMessage should set proper values for ended meeting.", function() {
+                a.meetingMessage(endedMeetingData);
                 expect(a.meeting).toEqual({});
                 expect(a.request).toEqual({});
                 expect(a.isMeetingActive).toBe(false);

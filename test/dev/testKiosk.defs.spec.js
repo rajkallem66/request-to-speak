@@ -41,14 +41,9 @@ define(["kiosk"], function(kiosk) {
                 expect(a.primus).toBeDefined();
             });
 
-            it("should define applyMeetingData as a Function.", function() {
-                expect(a.applyMeetingData).toBeDefined();
-                expect(a.applyMeetingData).toEqual(jasmine.any(Function));
-            });
-
-            it("should define endMeeting as a Function.", function() {
-                expect(a.endMeeting).toBeDefined();
-                expect(a.endMeeting).toEqual(jasmine.any(Function));
+            it("should define meetingMessage as a Function.", function() {
+                expect(a.meetingMessage).toBeDefined();
+                expect(a.meetingMessage).toEqual(jasmine.any(Function));
             });
 
             it("should define submitRequest as a Function.", function() {

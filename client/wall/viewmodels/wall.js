@@ -2,6 +2,7 @@
 define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Primus) {
     return {
         isConnected: false,
+        isMeetingActive: false,
         requests: [],
         messages: [],
         primus: null,
@@ -10,6 +11,25 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Pri
             if(this.primus === null || this.primus.online !== true) {
                 event.setupPrimus(this, "wall");
             }
+        },
+        initializeMessage: function(message) {
+            if(message.meeting.meetingId !== undefined) {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
+            this.requests = message.requests;
+        },
+        meetingMessage: function() {
+            if(message.event === "started") {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
+            requests = [];
+        },
+        refreshMessage: function(message) {
+            this.requests = message.requests;
         }
     };
 });

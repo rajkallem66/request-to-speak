@@ -1,6 +1,7 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
     return {
+        displayName: "request",
         isConnected: false,
         isMeetingActive: false,
         messages: [],
@@ -45,9 +46,26 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
                 break;
             }
         },
-        meetingMessage: function(message) {
-            this.meeting = message.meetingData;
+        initializeMessage: function(message) {
+            if(message.meeting.meetingId !== undefined) {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
+            this.meeting = message.meeting;
             this.isMeetingActive = (this.meeting.meetingId !== undefined);
+            this.wallConnected = message.wallConnected;
+            this.connectedAdmins = message.connectedAdmins;
+            this.connectedKiosks = message.connectedKiosks;
+            this.connectedBoards = message.connectedBoards;
+        },
+        meetingMessage: function(message) {
+            if(message.event === "started") {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
+            this.meeting = message.meetingData;
         },
         requestMessage: function(message) {
             switch(message.event) {
@@ -56,14 +74,6 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
                 break;
             case "remove":
             }
-        },
-        applyData: function(data) {
-            this.meeting = data.meeting;
-            this.isMeetingActive = (this.meeting.meetingId !== undefined);
-            this.wallConnected = data.wallConnected;
-            this.connectedAdmins = data.connectedAdmins;
-            this.connectedKiosks = data.connectedKiosks;
-            this.connectedBoards = data.connectedBoards;
         }
     };
 });

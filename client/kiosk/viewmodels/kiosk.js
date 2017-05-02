@@ -15,21 +15,21 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 event.setupPrimus(this, "kiosk");
             }
         },
-        applyMeetingData: function(meetingData) {
-            console.log("Intializing ");
-            if(meetingData.meetingId) {
+        meetingMessage: function(message) {
+            console.log("Meeting message");
+            if(message.event === "started") {
                 this.isMeetingActive = true;
+                this.meeting = message.meetingData;
                 this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
+                this.meeting = {};
+                this.request = {};
             }
-            this.meeting = meetingData;
         },
-        endMeeting: function() {
-            console.log("Meeting ended.");
-            this.isMeetingActive = false;
-            this.meeting = {};
-            this.request = {};
+        initializeMessage: function(message) {
+            console.log("Initializing kiosk");
+            this.meeting = message.meetingData;
         },
         submitRequest: function() {
             this.isSubmitting = true;

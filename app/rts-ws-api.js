@@ -2,6 +2,7 @@
 /* eslint prefer-spread: "off" */
 var logger = null;
 var meeting = {};
+var requests = [];
 var displayRequests = [];
 var wallSpark = null;
 var adminSparks = [];
@@ -149,12 +150,26 @@ function initializeKiosk(spark) {
     });
 }
 
+/**
+ * initialize wall state.
+ */
+function initializeWall() {
+    notify("wall", {
+        "messageType": "initialize",
+        "mesage": {
+            "meeting": meeting,
+            "requests": displayRequests
+        }
+    });
+}
+
 // Public functions
 /**
  * Adds a request to the live meeting.
  * @param {Request} request
  */
 function addRequest(request) {
+    requests.push(request);
     notify("watchers", {
         "messageType": "request",
         "message": {
@@ -182,25 +197,16 @@ function startMeeting(newMeeting) {
 
 /**
  * Send updated list of requests to the wall
- * @param {Object} requests
  */
-function refreshWall(requests) {
-    displayRequests = requests;
+function refreshWall() {
+    displayRequests = requests.filter(function(r) {
+        r.approvedForDisplay === true;
+    });
+
     notify("wall", {
         "messageType": "refresh",
         "mesage": {
-            "requests": requests
-        }
-    });
-}
-
-/**
- * initialize wall state.
- */
-function initializeWall() {
-    notify("wall", {
-        "messageType": "initialize",
-        "mesage": {
+            "meeting": meeting,
             "requests": displayRequests
         }
     });
