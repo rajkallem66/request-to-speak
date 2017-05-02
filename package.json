@@ -46,7 +46,6 @@
     "express": "^4.15.2",
     "faye-websocket": "^0.11.1",
     "http": "0.0.0",
-    "method-override": "^2.3.8",
     "morgan": "^1.8.1",
     "mssql": "^4.0.1",
     "path": "^0.12.7",

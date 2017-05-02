@@ -8,7 +8,6 @@ var express = require("express");
 var favicon = require("serve-favicon");
 var morgan = require("morgan");
 var bodyParser = require("body-parser");
-var methodOverride = require("method-override");
 var errorHandler = require("errorhandler");
 var http = require("http");
 var path = require("path");
@@ -21,7 +20,6 @@ app.use(favicon(__dirname + "/client/favicon.ico"));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(methodOverride());
 app.use(express.static(path.join(__dirname, "client")));
 
 if("development" === app.get("env")) {

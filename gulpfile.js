@@ -12,7 +12,6 @@ var paths = {
         "test/**/*.js"
     ],
     app: [
-        "client/ping.html",
         "client/index.html",
         "client/chair.html",
         "client/kiosk.html",
