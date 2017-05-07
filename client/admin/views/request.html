@@ -12,6 +12,9 @@
             <span data-bind="text: firstName">
             </span>
         </div>
+        <div>
+            <button data-bind="click: $parent.editRequest">edit</button>
+        </div>
     </div>
     <div class="row" data-bind="foreach: messages">
         <div class="col-sm-6 col-md-3">

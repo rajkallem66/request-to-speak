@@ -57,15 +57,22 @@ app.post("/request", function(req, res) {
 app.post("/addMeeting", function(req, res) {
     var meeting = req.body;
     winston.info("Adding meeting id: " + meeting.meetingId);
-    rtsDbApi.addMeeting(meeting);
-    res.end("yes");
+    rtsDbApi.addMeeting(meeting).then(function() {
+        res.end("success");
+    }, function(err) {
+        res.status(500).send(err);
+    });
 });
 
 app.post("/startMeeting", function(req, res) {
     var meeting = req.body;
     winston.info("Starting meeeting id: " + meeting.meetingId);
-    rtsWsApi.startMeeting(meeting);
-    res.end("yes");
+    rtsDbApi.startMeeting(meeting).then(function(data) {
+        rtsWsApi.startMeeting(meeting);
+        res.end("yes");
+    }, function(err) {
+        res.status(500).send(err);
+    });
 });
 
 app.post("/refreshWall", function(req, res) {
@@ -74,6 +81,23 @@ app.post("/refreshWall", function(req, res) {
     res.end("yes");
 });
 
-app.get("/meeting", function() {
+app.get("/meeting", function(req, res) {
+    winston.info("Retrieving meetings from database.");
+    rtsDbApi.getMeetings().then(function(data) {
+        res.send(data);
+    }, function(err) {
+        res.status(500).send(err);
+    });
+});
 
+// Sacramento County agenda management system access.
+var sireConfig = config.get("SIRE.dbConfig");
+var sireApi = require("./app/sire-sql-api")(sireConfig, winston);
+app.get("/sire/meeting", function(req, res) {
+    winston.info("Retrieving meetings from agenda management system.");
+    sireApi.getMeetings().then(function(data) {
+        res.send(data);
+    }, function(err) {
+        res.status(500).send(err);
+    });
 });

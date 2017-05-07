@@ -12,20 +12,28 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 event.setupPrimus(this, "board");
             }
         },
-        applyMeetingData: function(meetingData) {
-            console.log("Intializing ");
-            if(meetingData.meetingId) {
+        initializeMessage: function(message) {
+            if(message.meeting.meetingId !== undefined) {
                 this.isMeetingActive = true;
             } else {
                 this.isMeetingActive = false;
             }
-            this.requests = meetingData.requests;
+            this.requests = message.requests;
         },
-        endMeeting: function() {
-            console.log("Meeting ended.");
-            this.isMeetingActive = false;
-            this.meeting = {};
+        meetingMessage: function(message) {
+            if(message.event === "started") {
+                this.isMeetingActive = true;
+            } else {
+                this.isMeetingActive = false;
+            }
             this.requests = [];
+        },
+        requestMessage: function(message) {
+            if(message.event === "add") {
+                this.requests.push(message.request);
+            } else {
+                // remove request.
+            }
         }
     };
 

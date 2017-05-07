@@ -1,0 +1,13 @@
+<div style="background:white; width:300px">
+    <section>
+        <div data-bind="foreach: request">
+            <div>
+                <span data-bind="text=$data"></span><input type="text"></input>
+            </div>
+        </div>
+    </section>
+    <div>
+        <button data-bind="click: function () { save(); }">Save</button>
+        <button data-bind="click: function () { closeDialog(); }">Cancel</button>
+    </div>
+</div>

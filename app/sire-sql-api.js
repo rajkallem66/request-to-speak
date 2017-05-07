@@ -29,10 +29,48 @@ function setupSql(config) {
 }
 
 /**
- * get list of future meetings from SIRE.
+ * get meetings from agenda management system
+ * @return {Promise}
  */
 function getMeetings() {
-    pool.connect();
+    // pool.connect();
+    return new Promise(function(fulfill, reject) {
+        var data = [
+            {
+                meetingName: "Tuesday Board Meeting 01/01/2018",
+                meetingDate: "01/01/2018",
+                items: [
+                    {
+                        itemNumber: "1",
+                        itemName: "Sacramento County Budget Hearing"
+                    },
+                    {
+                        itemNumber: "2",
+                        itemName: "Homeless Shelter Funding"
+                    }
+                ]
+            },
+            {
+                meetingName: "Sacramento County Regional Sanitation District 01/03/2018",
+                meetingDate: "01/03/2018",
+                items: [
+                    {
+                        itemNumber: "1",
+                        itemName: "EchoWater Project Update"
+                    },
+                    {
+                        itemNumber: "2",
+                        itemName: "Operations Budget Hearing"
+                    },
+                    {
+                        itemNumber: "3",
+                        itemName: "A Meeting Item With A Really Long Title Addressing A Very Serious Topic Regarding A Few Former Resolutions And A Few Pending Policies With Several Interested Parties."
+                    }
+                ]
+            }
+        ];
+        fulfill(data);
+    });
 }
 // Query
 /*    var query = "SELECT TOP 10 meet.meet_id, meet.meet_type, meet.meet_date, item.item_id, item.caption, page.page_id, " +
@@ -66,20 +104,6 @@ function getMeetings() {
     //     // ... query error checks
     // });
 
-/**
- * Insert new request into database.
- * @param {Request} newMeeting
- */
-function insertMeeting(newMeeting) {
-    // Query
-
-    //     return pool.request()
-    //     .input('input_parameter', sql.Int, value)
-    //     .query('select * from mytable where id = @input_parameter')
-    // }).then(result => {
-    // console.dir(recordset);
-}
-
 module.exports = function(cfg, logger) {
     // config is delivered frozen and this causes problems in mssql. So, just copy over.
     var config = {
@@ -97,7 +121,6 @@ module.exports = function(cfg, logger) {
     return {
         version: "1.0",
         dbType: "Microsoft SQL Server",
-        addMeeting: insertMeeting,
         getMeetings: getMeetings
     };
 };

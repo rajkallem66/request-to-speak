@@ -1,23 +1,33 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
-    return {
+define(["plugins/http", "durandal/app", "plugins/router", "plugins/dialog", "dialog/import"],
+function(http, app, router, dialog, Import) {
+    var ret = {
         displayName: "Meeting",
+        activeMeeting: null,
         meetings: [],
+        selectedMeeting: null,
         activate: function() {
-/*            http.get("AgendaSystem meetings").then(function() {
-                http.get("RTS meetings").then(function() {
-
+            var self = this;
+            http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
+                self.meetings = response;
+                var startedMeetings = self.meetings.filter(function(meeting) {
+                    meeting.started === true;
                 });
-            });*/
-        },
-        mergeMeetings: function(agendaSystem, rtsMeetings) {
-
+                if(startedMeetings.length > 0) {
+                    app.showMessage("A meeting is active. You will not be able to edit the active meeting.");
+                    self.activeMeeting = startedMeetings[0];
+                }
+            }, function(err) {
+                app.showMessage("Unable to connect to database.");
+            });
         },
         startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", this.newMeeting()).then(function() {
-                console.log("Start meeting successfully submitted.");
-            }, function() {
-                // do error stuff
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", this.selectedMeeting).then(function() {
+                app.showMessage("Meeting started successfully.").then(function() {
+                    router.navigate("/request");
+                });
+            }, function(err) {
+                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
             });
         },
         newMeeting: function() {
@@ -47,6 +57,36 @@ define(["plugins/http", "durandal/app", "primus"], function(http, app, Primus) {
                     }
                 ]
             };
+        },
+        importMeeting: function() {
+            var self = this;
+            app.showDialog(new Import()).then(function(response) {
+                if(response !== undefined) {
+                    self.meetings.push(response);
+                    self.selectedMeeting = response;
+                }
+            }, function(err) {
+                // Do error stuff
+            });
+        },
+        saveMeeting: function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "addMeeting", this.selectedMeeting).then(function() {
+                console.log("Start meeting successfully submitted.");
+            }, function(err) {
+                app.showMessage("Unable to save meeting.\n" + JSON.stringify(err));
+            });
         }
     };
+    ret.selectMeeting = function(meeting) {
+        if(this.meetings.includes(this.selectedMeeting) === false) {
+            app.showMessage("This meeting has not been saved.");
+        }
+        if(meeting === this.activeMeeting) {
+            app.showMessage("The meeting you selected is active. You cannot edit an active meeting.");
+            return;
+        }
+        this.selectMeeting = meeting;
+    }.bind(ret);
+
+    return ret;
 });

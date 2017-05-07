@@ -6,19 +6,61 @@ var client = null;
 var logger = null;
 
 /**
- *
+ * adds a new meeting to the data store.
+ * @param {Meeting} meeting
+ * @return {Promise}
+ */
+function addMeeting(meeting) {
+    return new Promise(function(fulfill, reject) {
+        client.add([meeting], function(err, obj) {
+            if(err) {
+                logger.error(err);
+                reject(err);
+            } else {
+                logger.info(obj);
+                fulfill(obj);
+            }
+        });
+    });
+}
+
+/**
+ * sets the meeting started flag in the data store.
+ * @param {Meeting} meeting
+ * @return {Promise}
+ */
+function startMeeting(meeting) {
+    return new Promise(function(fulfill, reject) {
+        client.add({id: meeting.id, started: true}, function(err, obj) {
+            if(err) {
+                logger.error(err);
+                reject(err);
+            } else {
+                logger.info(obj);
+                fulfill(obj);
+            }
+        });
+    });
+}
+/**
+ * retrieve meetings from RTS database
+ *@return {Promise}
  */
 function getMeetings() {
-    var query = client.createQuery()
-        .q({type: "meeting"})
-        .start(0)
-        .rows(100);
-    client.search(query, function(err, obj) {
-        if(err) {
-            logger.info(err);
-        } else {
-            logger.error(obj);
-        }
+    return new Promise(function(fulfill, reject) {
+        var query = client.createQuery()
+            .q({type: "meeting"})
+            .start(0)
+            .rows(100);
+        client.search(query, function(err, obj) {
+            if(err) {
+                logger.error(err);
+                reject(err);
+            } else {
+                logger.info(obj);
+                fulfill(obj.response.docs);
+            }
+        });
     });
 }
 /**
@@ -50,7 +92,9 @@ module.exports = function(config, log) {
     return {
         version: "1.0",
         dbType: "Apache Solr",
+        addMeeting: addMeeting,
         addRequest: addRequest,
-        getMeetings: getMeetings
+        getMeetings: getMeetings,
+        startMeeting: startMeeting
     };
 };

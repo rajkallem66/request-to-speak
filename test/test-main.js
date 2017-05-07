@@ -30,7 +30,8 @@ require.config({
         "bootstrap": "client/lib/bootstrap/js/bootstrap",
         "jquery": "client/lib/jquery/jquery-1.9.1",
         "primus": "client/lib/primus/primus",
-        "eventHandler": "client/lib/rts/eventHandler"
+        "eventHandler": "client/lib/rts/eventHandler",
+        "dialog": "client/admin/viewmodels/dialog"
     },
     shim: {
         "bootstrap": {

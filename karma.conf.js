@@ -18,6 +18,7 @@ module.exports = function (config) {
             'test/test-main.js',
             { pattern: 'test/**/*spec.js', included: false },
             { pattern: 'client/admin/viewmodels/*.js', included: false },
+            { pattern: 'client/admin/viewmodels/dialog/*.js', included: false },
             { pattern: 'client/board/viewmodels/*.js', included: false },
             { pattern: 'client/kiosk/viewmodels/*.js', included: false },
             { pattern: 'client/wall/viewmodels/*.js', included: false },
@@ -34,6 +35,7 @@ module.exports = function (config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'client/admin/viewmodels/*.js': ['coverage'],
+            'client/admin/viewmodels/dialog/*.js': ['coverage'],
             'client/board/viewmodels/*.js': ['coverage'],
             'client/kiosk/viewmodels/*.js': ['coverage'],
             'client/wall/viewmodels/*.js': ['coverage']

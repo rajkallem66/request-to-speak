@@ -1,7 +1,7 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
+define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function(http, app, event, Edit) {
     return {
-        displayName: "request",
+        displayName: "Request",
         isConnected: false,
         isMeetingActive: false,
         messages: [],
@@ -17,6 +17,17 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
             if(this.primus === null || this.primus.online !== true) {
                 event.setupPrimus(this, "admin");
             }
+        },
+        editRequest: function(request) {
+            var self = this;
+            app.showDialog(new Edit(), request).then(function(response) {
+                if(response !== undefined) {
+                    self.meetings.push(response);
+                    self.selectedMeeting = response;
+                }
+            }, function(err) {
+                // Do error stuff
+            });
         },
         canDeactivate: function() {
             // the router's activator calls this function to see if it can leave the screen

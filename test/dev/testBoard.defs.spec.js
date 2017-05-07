@@ -28,14 +28,19 @@ define(["board"], function(board) {
                 expect(a.activate).toEqual(jasmine.any(Function));
             });
 
-            it("should define applyMeetingData as a Function.", function() {
-                expect(a.applyMeetingData).toBeDefined();
-                expect(a.applyMeetingData).toEqual(jasmine.any(Function));
+            it("should define initializeMessage as a Function.", function() {
+                expect(a.initializeMessage).toBeDefined();
+                expect(a.initializeMessage).toEqual(jasmine.any(Function));
             });
 
-            it("should define endMeeting as a Function.", function() {
-                expect(a.endMeeting).toBeDefined();
-                expect(a.endMeeting).toEqual(jasmine.any(Function));
+            it("should define meetingMessage as a Function.", function() {
+                expect(a.meetingMessage).toBeDefined();
+                expect(a.meetingMessage).toEqual(jasmine.any(Function));
+            });
+
+            it("should define requestMessage as a Function.", function() {
+                expect(a.requestMessage).toBeDefined();
+                expect(a.requestMessage).toEqual(jasmine.any(Function));
             });
         });
     });

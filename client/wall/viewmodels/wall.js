@@ -20,13 +20,13 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Pri
             }
             this.requests = message.requests;
         },
-        meetingMessage: function() {
+        meetingMessage: function(message) {
             if(message.event === "started") {
                 this.isMeetingActive = true;
             } else {
                 this.isMeetingActive = false;
             }
-            requests = [];
+            this.requests = [];
         },
         refreshMessage: function(message) {
             this.requests = message.requests;
