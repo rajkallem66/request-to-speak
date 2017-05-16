@@ -22,7 +22,7 @@ function(http, app, router, dialog, Import) {
             });
         },
         startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", this.selectedMeeting).then(function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", this.selectedMeeting).then(function(result) {
                 app.showMessage("Meeting started successfully.").then(function() {
                     router.navigate("/request");
                 });
@@ -78,14 +78,14 @@ function(http, app, router, dialog, Import) {
         }
     };
     ret.selectMeeting = function(meeting) {
-        if(this.meetings.includes(this.selectedMeeting) === false) {
+        if(this.selectedMeeting !== null && this.meetings.includes(this.selectedMeeting) === false) {
             app.showMessage("This meeting has not been saved.");
         }
         if(meeting === this.activeMeeting) {
             app.showMessage("The meeting you selected is active. You cannot edit an active meeting.");
             return;
         }
-        this.selectMeeting = meeting;
+        this.selectedMeeting = meeting;
     }.bind(ret);
 
     return ret;

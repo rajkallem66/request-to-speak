@@ -9,7 +9,8 @@ requirejs.config({
         "bootstrap": "../lib/bootstrap/js/bootstrap",
         "jquery": "../lib/jquery/jquery-1.9.1",
         "primus": "../primus/primus",
-        "eventHandler": "../lib/rts/eventHandler"
+        "eventHandler": "../lib/rts/eventHandler",
+        "classie": "../lib/rts/classie"
     },
     shim: {
         "bootstrap": {

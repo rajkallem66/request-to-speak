@@ -11,7 +11,7 @@ var pool = null;
  * @param {config} config
  */
 function setupSql(config) {
-    sql.connect(config).then(function(p) {
+/*    sql.connect(config).then(function(p) {
         pool = p;
     }).then(function(result) {
         if(result) {
@@ -26,7 +26,7 @@ function setupSql(config) {
         // ... error handler
         console.log("On Error?: " + err);
     });
-}
+*/}
 
 /**
  * get meetings from agenda management system

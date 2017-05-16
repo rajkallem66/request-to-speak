@@ -69,7 +69,7 @@ app.post("/startMeeting", function(req, res) {
     winston.info("Starting meeeting id: " + meeting.meetingId);
     rtsDbApi.startMeeting(meeting).then(function(data) {
         rtsWsApi.startMeeting(meeting);
-        res.end("yes");
+        res.send({message: "success"});
     }, function(err) {
         res.status(500).send(err);
     });
@@ -78,7 +78,7 @@ app.post("/startMeeting", function(req, res) {
 app.post("/refreshWall", function(req, res) {
     winston.info("Refreshing display wall.");
     rtsWsApi.refreshWall();
-    res.end("yes");
+    res.end();
 });
 
 app.get("/meeting", function(req, res) {

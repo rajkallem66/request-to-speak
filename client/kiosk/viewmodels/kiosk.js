@@ -1,15 +1,75 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], function(http, app, observable, event) {
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "classie"], 
+function(http, app, observable, event, classie) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
-        request: {},
+        request: {
+            official: ""
+        },
         meeting: {},
         selectedItem: {},
         isSubmitting: false,
         messages: [],
         primus: null,
+        attached: function() {
+				var formWrap = document.getElementById( 'fs-form-wrap' );
+
+				[].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+					var sfx = new SelectFx( el, {
+						stickyPlaceholder: false,
+						onChange: function(val){
+							document.querySelector('span.cs-placeholder').style.backgroundColor = val;
+						}
+					});
+				} );
+
+				new FForm( formWrap, {
+					onReview : function() {
+						classie.add( document.body, 'overview' ); 
+					}
+				} );
+
+            [].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+                // in case the input is already filled..
+                if( inputEl.value.trim() !== '' ) {
+                    classie.add( inputEl.parentNode, 'input--filled' );
+                }
+
+                // events:
+                inputEl.addEventListener( 'focus', onInputFocus );
+                inputEl.addEventListener( 'blur', onInputBlur );
+            } );
+
+            function onInputFocus( ev ) {
+                classie.add( ev.target.parentNode, 'input--filled' );
+            }
+
+            function onInputBlur( ev ) {
+                if( ev.target.value.trim() === '' ) {
+                    classie.remove( ev.target.parentNode, 'input--filled' );
+                }
+            }
+            
+            $('.showInput').hide();
+            $("input[id='q3a']").click(function () {
+                $('.showInput').show('fast');
+                $('#q3c').prop('required', true);
+            });
+            $("input[id='q3b']").click(function () {
+                $('.showInput').hide('fast');
+                $('#q3c').prop('required', false);
+            });           
+            
+            var maxLength = 250;
+            $('textarea').keyup(function() {
+                var length = $(this).val().length;
+                var length = maxLength-length;
+                $('#chars').text(length);
+            });
+        },
         activate: function() {
+            this.request = this.newRequest();
             // the router's activator calls this function and waits for it to complete before proceeding
             if(this.primus === null || this.primus.online !== true) {
                 event.setupPrimus(this, "kiosk");
@@ -30,6 +90,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
         initializeMessage: function(message) {
             console.log("Initializing kiosk");
             this.meeting = message.meetingData;
+            this.isMeetingActive = message.meetingData.active;
         },
         submitRequest: function() {
             this.isSubmitting = true;
@@ -46,7 +107,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             this.request = this.newRequest();
         },
         newRequest: function() {
-            return {
+            var req = {
                 meetingId: this.meeting.meetingId,
                 firstName: "",
                 lastName: "",
@@ -62,6 +123,19 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 address: "",
                 timeToSpeak: 0
             };
+            observable.defineProperty(req, "name", {
+                read: function () {
+                    return this.firstName + " " + this.lastName;
+                },
+                write: function (value) {
+                    var lastSpacePos = value.lastIndexOf(" ");
+                    if (lastSpacePos > 0) { // Ignore values with no space character
+                        this.firstName = value.substring(0, lastSpacePos); // Update "firstName"
+                        this.lastName = value.substring(lastSpacePos + 1); // Update "lastName"
+                    }
+                }
+            });
+            return req;
         },
         additionalRequest: function() {
             this.request.item = "";

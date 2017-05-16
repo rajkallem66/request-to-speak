@@ -58,20 +58,83 @@ function setupSql(config) {
     // }).catch(function(err) {
     //     // ... query error checks
     // });
+function addMeeting(meeting) {
+    return new Promise(function(fulfill, reject) {
+        var transaction = new sql.Transaction(pool);
+        transaction.begin().then(function() {
+            var request = new sql.Request(transaction);
+
+            request.input("meetingName", meeting.meetingName);
+            var query = "Insert into Meeting (meetingName) values (@meetingName)";
+            logger.debug("Statement: " + query);
+            request.query(query).then(function() {
+                transaction.commit().then(function(recordSet) {
+                    logger.debug("Commit result.", recordSet);
+                    fulfill();
+                }).catch(function(err) {
+                    logger.error("Error in Transaction Commit." + err);
+                    reject(err);
+                });
+            }).catch(function(err) {
+                logger.error("Error in Transaction Begin." + err);
+                reject(err);
+            });
+        }).catch(function(err) {
+            logger.error(err);
+            reject(err);
+        });
+    });
+}
+
+function getMeetings() {
+    return new Promise(function(fulfill, reject) {
+        var query = "SELECT meetingId, meetingName, active FROM Meeting";
+        logger.debug("Statement: " + query);
+        pool.request().query(query).then(function(result) {
+            logger.debug("Query result.", result.recordset);
+            fulfill(result.recordset);
+        },function(err) {
+            logger.error("Query error: " + err);
+            reject(err);
+        });
+    });
+}
+
+function startMeeting(meeting) {
+    return new Promise(function(fulfill, reject) {
+        var transaction = new sql.Transaction(pool);
+        transaction.begin().then(function() {
+            var request = new sql.Request(transaction);
+
+            request.input("meetingId", meeting.meetingId);
+            var query = "UPDATE Meeting set active = 1 where @meetingId = " + meeting.meetingId;
+            logger.debug("Statement: " + query);
+            request.query(query).then(function() {
+                transaction.commit().then(function(recordSet) {
+                    logger.debug("Commit result.", recordSet);
+                    fulfill();
+                }).catch(function(err) {
+                    logger.error("Error in Transaction Commit." + err);
+                    reject(err);
+                });
+            }).catch(function(err) {
+                logger.error("Error in Transaction Begin." + err);
+                reject(err);
+            });
+        }).catch(function(err) {
+            logger.error(err);
+            reject(err);
+        });
+    });
+}
+
 
 /**
  * Insert new request into database.
  * @param {Request} newRequest
  */
-function insertRequest(newRequest) {
+function addRequest(newRequest) {
     // Query
-
-    //     return pool.request()
-    //     .input('input_parameter', sql.Int, value)
-    //     .query('select * from mytable where id = @input_parameter')
-    // }).then(result => {
-    // console.dir(recordset);
-
     var transaction = new sql.Transaction(pool);
     transaction.begin().then(function() {
         var request = new sql.Request(transaction);
@@ -124,7 +187,10 @@ module.exports = function(cfg, log) {
     return {
         version: "1.0",
         dbType: "Microsoft SQL Server",
-        addRequest: insertRequest,
+        addRequest: addRequest,
+        addMeeting: addMeeting,
+        getMeetings: getMeetings,
+        startMeeting: startMeeting,
         setupSql: setupSql
     };
 };
