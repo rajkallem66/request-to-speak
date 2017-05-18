@@ -1,11 +1,10 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "classie"], 
-function(http, app, observable, event, classie) {
-    var ret = {
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "classie", "selectfx", "fform"],
+function(http, app, observable, event, classie, SelectFx, FForm) {
+    let ret = {
         isConnected: false,
         isMeetingActive: false,
         request: {
-            official: ""
         },
         meeting: {},
         selectedItem: {},
@@ -13,59 +12,38 @@ function(http, app, observable, event, classie) {
         messages: [],
         primus: null,
         attached: function() {
-				var formWrap = document.getElementById( 'fs-form-wrap' );
+            let formWrap = document.getElementById("fs-form-wrap");
 
-				[].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
-					var sfx = new SelectFx( el, {
-						stickyPlaceholder: false,
-						onChange: function(val){
-							document.querySelector('span.cs-placeholder').style.backgroundColor = val;
-						}
-					});
-				} );
+            Array.prototype.slice.call( document.querySelectorAll("select.cs-select") ).forEach( function(el) {
+                let sfx = new SelectFx( el, {
+                    stickyPlaceholder: false,
+                    onChange: function(val) {
+                        document.querySelector("span.cs-placeholder").style.backgroundColor = val;
+                    }
+                });
+            } );
 
-				new FForm( formWrap, {
-					onReview : function() {
-						classie.add( document.body, 'overview' ); 
-					}
-				} );
+            new FForm(formWrap, {
+                onReview: function() {
+                    classie.add(document.body, "overview");
+                }
+            });
 
-            [].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+            Array.prototype.slice.call( document.querySelectorAll("input.input__field")).forEach( function( inputEl ) {
                 // in case the input is already filled..
-                if( inputEl.value.trim() !== '' ) {
-                    classie.add( inputEl.parentNode, 'input--filled' );
+                if( inputEl.value.trim() !== "" ) {
+                    classie.add( inputEl.parentNode, "input--filled");
                 }
 
                 // events:
-                inputEl.addEventListener( 'focus', onInputFocus );
-                inputEl.addEventListener( 'blur', onInputBlur );
-            } );
-
-            function onInputFocus( ev ) {
-                classie.add( ev.target.parentNode, 'input--filled' );
-            }
-
-            function onInputBlur( ev ) {
-                if( ev.target.value.trim() === '' ) {
-                    classie.remove( ev.target.parentNode, 'input--filled' );
-                }
-            }
-            
-            $('.showInput').hide();
-            $("input[id='q3a']").click(function () {
-                $('.showInput').show('fast');
-                $('#q3c').prop('required', true);
-            });
-            $("input[id='q3b']").click(function () {
-                $('.showInput').hide('fast');
-                $('#q3c').prop('required', false);
-            });           
-            
-            var maxLength = 250;
-            $('textarea').keyup(function() {
-                var length = $(this).val().length;
-                var length = maxLength-length;
-                $('#chars').text(length);
+                inputEl.addEventListener("focus", function(ev) {
+                    classie.add(ev.target.parentNode, "input--filled");
+                });
+                inputEl.addEventListener("blur", function(ev) {
+                    if( ev.target.value.trim() === "") {
+                        classie.remove( ev.target.parentNode, "input--filled");
+                    }
+                });
             });
         },
         activate: function() {
@@ -90,11 +68,15 @@ function(http, app, observable, event, classie) {
         initializeMessage: function(message) {
             console.log("Initializing kiosk");
             this.meeting = message.meetingData;
-            this.isMeetingActive = message.meetingData.active;
+            if(message.meetingData.active !== undefined) {
+                this.isMeetingActive = message.meetingData.active;
+            } else {
+                this.isMeetingActive = false;
+            }
         },
         submitRequest: function() {
             this.isSubmitting = true;
-            var self = this;
+            let self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
                 self.isSubmitting = false;
                 self.confirmSubmission();
@@ -107,7 +89,7 @@ function(http, app, observable, event, classie) {
             this.request = this.newRequest();
         },
         newRequest: function() {
-            var req = {
+            let req = {
                 meetingId: this.meeting.meetingId,
                 firstName: "",
                 lastName: "",
@@ -124,11 +106,11 @@ function(http, app, observable, event, classie) {
                 timeToSpeak: 0
             };
             observable.defineProperty(req, "name", {
-                read: function () {
+                read: function() {
                     return this.firstName + " " + this.lastName;
                 },
-                write: function (value) {
-                    var lastSpacePos = value.lastIndexOf(" ");
+                write: function(value) {
+                    let lastSpacePos = value.lastIndexOf(" ");
                     if (lastSpacePos > 0) { // Ignore values with no space character
                         this.firstName = value.substring(0, lastSpacePos); // Update "firstName"
                         this.lastName = value.substring(lastSpacePos + 1); // Update "lastName"
@@ -151,6 +133,10 @@ function(http, app, observable, event, classie) {
             this.request.timeToSpeak = value.defaultTimeToSpeak;
         }
     }.bind(ret));
+
+    observable.defineProperty(ret, "notesCharsRemaining", function() {
+        return 250 - this.request.notes.length;
+    });
 
     return ret;
 });

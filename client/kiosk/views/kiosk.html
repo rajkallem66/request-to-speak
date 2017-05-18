@@ -27,10 +27,10 @@
 									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
 									</span>
 								</div>
-									<div class="showInput" style="display: none">
-										<input type="text" class="fs-anim-lower" id="q3c" placeholder="Agency Name">
-									</div>
-								</div>		
+								<div data-bind="style: { display: official === 'official' ? 'block' : 'none' }" class="showInput" style="display: none">
+									<input type="text" class="fs-anim-lower" id="q3c" placeholder="Agency Name">
+								</div>
+							</div>		
 						</li>
 						<li>
 							<div class="" id="subColumns">
@@ -86,9 +86,9 @@
 						</li>
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q4">Any notes you would like to share?</label>
-							<textarea class="fs-anim-lower" id="q4" name="q4" placeholder="Describe here" maxlength="250"></textarea>
+							<textarea data-bind="textInput: notes" class="fs-anim-lower" id="q4" name="q4" placeholder="Describe here" maxlength="250"></textarea>
 							<div class="fs-anim-lower countdown">
-								<span id="chars">250</span> characters remaining
+								<span data-bind="text: $parent.notesCharsRemaining"></span> characters remaining
 							</div>
 						</li>
 						<li class="optional fs-anim-upper">
@@ -110,9 +110,9 @@
 			</div><!-- /fs-form-wrap -->
 
 		</div><!-- /container -->
-		<div data-bind="visible: isMeetingActive===false" style="width:100%; height:100%; position:absolute">
+		<div data-bind="style: { display: isMeetingActive === true ? 'none' : 'block' }" style="display:none; width:100%; height:100%; position:absolute">
 		  <div class="glitch" role="document">
-				<span class="model-par">There is currently no active meeting.
+				<span class="model-par">There is currently <br> no active meeting.
 				
 				<br>
 				Thank you.
@@ -120,7 +120,7 @@
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 
-		<div data-bind="visible: isConnected===false" style="width:100%; height:100%; position:absolute">
+		<div data-bind="style: { display: isConnected === true ? 'none' : 'block' }" style="display:none; width:100%; height:100%; position:absolute">
 		  <div class="glitch" role="document">
 				<span class="model-par">Due to unexpected circumstances, this kiosk is temporarily out of service. Please check back later.
 				

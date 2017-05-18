@@ -8,6 +8,18 @@
             "user": "sql-rtswebservice",
             "password": "stored locally",
             "port": 1433
+        },
+        "log": {
+            "level": "debug"
+        }
+    },
+    "SIRE": {
+        "dbConfig": {
+            "server": "crane.saccounty.net",
+            "database": "SIRE",
+            "user": "sql-rtswebservice",
+            "password": "stored locally",
+            "port": 1433
         }
     }
 }

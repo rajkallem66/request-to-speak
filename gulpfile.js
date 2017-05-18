@@ -9,7 +9,8 @@ var paths = {
         "app/*.js",
         "client/*/main.js",
         "client/*/viewmodels/*.js",
-        "test/**/*.js"
+        "test/**/*.js",
+        "client/lib/rts/*.js"
     ],
     app: [
         "client/index.html",

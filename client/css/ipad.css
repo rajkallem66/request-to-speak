@@ -1947,9 +1947,9 @@ div.cs-skin-overlay {
   }
 }
 .glitch {
-  position: absolute;
+  position: fixed;
   left: 0;
-  top: -360px;
+  top: 0;
   right: 0;
   bottom: 0;
   color: #fff;
@@ -1991,4 +1991,7 @@ div.cs-skin-overlay {
   top: 35%;
   right: 10%;
   width: 800px;
+}
+.no-meeting,.no-workey {
+	display: block;
 }

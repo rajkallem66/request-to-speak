@@ -1,19 +1,19 @@
 /* global __dirname, require, process */
 "use strict";
-var winston = require("winston");
-var config = require("config");
+let winston = require("winston");
+let config = require("config");
 winston.level = config.get("RTS.log.level");
 
-var express = require("express");
-var favicon = require("serve-favicon");
-var morgan = require("morgan");
-var bodyParser = require("body-parser");
-var errorHandler = require("errorhandler");
-var http = require("http");
-var path = require("path");
+let express = require("express");
+let favicon = require("serve-favicon");
+let morgan = require("morgan");
+let bodyParser = require("body-parser");
+let errorHandler = require("errorhandler");
+let http = require("http");
+let path = require("path");
 
-var app = express();
-var Primus = require("primus");
+let app = express();
+let Primus = require("primus");
 
 app.set("port", process.env.PORT || 3000);
 app.use(favicon(__dirname + "/client/favicon.ico"));
@@ -26,27 +26,27 @@ if("development" === app.get("env")) {
     app.use(errorHandler());
 }
 
-var server = http.createServer(app);
-var transformer = config.get("RTS.wsTransformer");
-var primus = new Primus(server, {transformer: transformer});
+let server = http.createServer(app);
+let transformer = config.get("RTS.wsTransformer");
+let primus = new Primus(server, {transformer: transformer});
 
 server.listen(app.get("port"), function() {
     winston.info("Express server listening on port " + app.get("port"));
 });
 
-var rtsWsApi = require("./app/rts-ws-api")(primus, winston);
+let rtsWsApi = require("./app/rts-ws-api")(primus, winston);
 winston.info("RTS WS API Version: " + rtsWsApi.version);
 
-var dbApi = config.get("RTS.dbApi");
-var dbConfig = config.get("RTS.dbConfig");
+let dbApi = config.get("RTS.dbApi");
+let dbConfig = config.get("RTS.dbConfig");
 
 // You can create your own API for Cassandra, Mongo, Oracle, etc. Just adhere to the interface.
-var rtsDbApi = require(dbApi)(dbConfig, winston);
+let rtsDbApi = require(dbApi)(dbConfig, winston);
 winston.info("RTS DB API Type: " + rtsDbApi.dbType);
 winston.info("RTS DB API Version: " + rtsDbApi.version);
 
 app.post("/request", function(req, res) {
-    var request = req.body;
+    let request = req.body;
     winston.info("Adding request from: " + req._remoteAddress);
     winston.debug("Request data.", request);
     rtsDbApi.addRequest(request);
@@ -55,7 +55,7 @@ app.post("/request", function(req, res) {
 });
 
 app.post("/addMeeting", function(req, res) {
-    var meeting = req.body;
+    let meeting = req.body;
     winston.info("Adding meeting id: " + meeting.meetingId);
     rtsDbApi.addMeeting(meeting).then(function() {
         res.end("success");
@@ -65,7 +65,7 @@ app.post("/addMeeting", function(req, res) {
 });
 
 app.post("/startMeeting", function(req, res) {
-    var meeting = req.body;
+    let meeting = req.body;
     winston.info("Starting meeeting id: " + meeting.meetingId);
     rtsDbApi.startMeeting(meeting).then(function(data) {
         rtsWsApi.startMeeting(meeting);
@@ -91,11 +91,21 @@ app.get("/meeting", function(req, res) {
 });
 
 // Sacramento County agenda management system access.
-var sireConfig = config.get("SIRE.dbConfig");
-var sireApi = require("./app/sire-sql-api")(sireConfig, winston);
+let sireConfig = config.get("SIRE.dbConfig");
+let sireApi = require("./app/sire-sql-api")(sireConfig, winston);
 app.get("/sire/meeting", function(req, res) {
     winston.info("Retrieving meetings from agenda management system.");
     sireApi.getMeetings().then(function(data) {
+        res.send(data);
+    }, function(err) {
+        res.status(500).send(err);
+    });
+});
+
+app.get("/sire/item/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    winston.info("Retrieving items from agenda management system for meetingId: " + meetingId);
+    sireApi.getItems(meetingId).then(function(data) {
         res.send(data);
     }, function(err) {
         res.status(500).send(err);
