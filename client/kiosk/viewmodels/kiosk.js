@@ -1,9 +1,10 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "classie", "selectfx", "fform"],
-function(http, app, observable, event, classie, SelectFx, FForm) {
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"],
+function(http, app, observable, event) {
     let ret = {
         isConnected: false,
         isMeetingActive: false,
+        step: 0,
         request: {
         },
         meeting: {},
@@ -12,39 +13,6 @@ function(http, app, observable, event, classie, SelectFx, FForm) {
         messages: [],
         primus: null,
         attached: function() {
-            let formWrap = document.getElementById("fs-form-wrap");
-
-            Array.prototype.slice.call( document.querySelectorAll("select.cs-select") ).forEach( function(el) {
-                let sfx = new SelectFx( el, {
-                    stickyPlaceholder: false,
-                    onChange: function(val) {
-                        document.querySelector("span.cs-placeholder").style.backgroundColor = val;
-                    }
-                });
-            } );
-
-            new FForm(formWrap, {
-                onReview: function() {
-                    classie.add(document.body, "overview");
-                }
-            });
-
-            Array.prototype.slice.call( document.querySelectorAll("input.input__field")).forEach( function( inputEl ) {
-                // in case the input is already filled..
-                if( inputEl.value.trim() !== "" ) {
-                    classie.add( inputEl.parentNode, "input--filled");
-                }
-
-                // events:
-                inputEl.addEventListener("focus", function(ev) {
-                    classie.add(ev.target.parentNode, "input--filled");
-                });
-                inputEl.addEventListener("blur", function(ev) {
-                    if( ev.target.value.trim() === "") {
-                        classie.remove( ev.target.parentNode, "input--filled");
-                    }
-                });
-            });
         },
         activate: function() {
             this.request = this.newRequest();
@@ -73,6 +41,9 @@ function(http, app, observable, event, classie, SelectFx, FForm) {
             } else {
                 this.isMeetingActive = false;
             }
+        },
+        nextStep: function() {
+            this.step += 1;
         },
         submitRequest: function() {
             this.isSubmitting = true;

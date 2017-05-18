@@ -29,7 +29,7 @@ function setupSql(config) {
  */
 function getMeetings() {
     return new Promise(function(fulfill, reject) {
-        let query = "SELECT meet.meet_id as meetingId, meet.meet_type as meetingName, meet.meet_date as meetingDate " +
+        let query = "SELECT meet.meet_id as sireId, meet.meet_type as meetingName, meet.meet_date as meetingDate " +
         "FROM [sire].[alpha].[ans_meetings] meet " +
         "WHERE meet_date > dateadd(DAY, -1, getdate()) " +
         "ORDER by meetingDate asc";

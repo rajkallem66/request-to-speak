@@ -1,16 +1,16 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "plugins/router", "plugins/dialog", "dialog/import"],
 function(http, app, router, dialog, Import) {
-    var ret = {
+    let ret = {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
         selectedMeeting: null,
         activate: function() {
-            var self = this;
+            let self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
                 self.meetings = response;
-                var startedMeetings = self.meetings.filter(function(meeting) {
+                let startedMeetings = self.meetings.filter(function(meeting) {
                     meeting.started === true;
                 });
                 if(startedMeetings.length > 0) {
@@ -59,21 +59,43 @@ function(http, app, router, dialog, Import) {
             };
         },
         importMeeting: function() {
-            var self = this;
+            let self = this;
             app.showDialog(new Import()).then(function(response) {
                 if(response !== undefined) {
-                    self.meetings.push(response);
-                    self.selectedMeeting = response;
+                    // Make sure not already in list
+                    if(self.meetings.filter(function(m) {
+                        return m.sireId === response.sireId;
+                    }).length > 0) {
+                        // Ask to overwrite
+                        app.showMessage("You have unsaved data. Are you sure you want to close?", "Unsaved Data", ["Yes", "No"]).then(function(resp) {
+                            if(resp === "Yes") {
+                                self.addMeeting(response);
+                            }
+                        });
+                    } else {
+                        // Not in list. Add to list
+                        self.addMeeting(response);
+                    }
                 }
             }, function(err) {
                 // Do error stuff
             });
         },
         saveMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "addMeeting", this.selectedMeeting).then(function() {
-                console.log("Start meeting successfully submitted.");
+            http.put(location.href.replace(/[^/]*$/, "") + "meeting/" + this.selectedMeeting.meetingId, this.selectedMeeting).then(function() {
+                console.log("Meeting saved.");
             }, function(err) {
                 app.showMessage("Unable to save meeting.\n" + JSON.stringify(err));
+            });
+        },
+        addMeeting: function(meeting) {
+            let self = this;
+            http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function() {
+                self.meetings.push(meeting);
+                self.selectedMeeting = meeting;
+                console.log("Meeting added.");
+            }, function(err) {
+                app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
             });
         }
     };

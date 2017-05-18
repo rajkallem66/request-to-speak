@@ -54,10 +54,21 @@ app.post("/request", function(req, res) {
     res.end("yes");
 });
 
-app.post("/addMeeting", function(req, res) {
+app.post("/meeting", function(req, res) {
     let meeting = req.body;
     winston.info("Adding meeting id: " + meeting.meetingId);
     rtsDbApi.addMeeting(meeting).then(function() {
+        res.status(204).end();
+    }, function(err) {
+        res.status(500).send(err);
+    });
+});
+
+app.put("/meeting/:meetingId", function(req, res) {
+    let meeting = req.body;
+    let meetingId = req.params.meetingId;
+    winston.info("Adding meeting id: " + meeting.meetingId);
+    rtsDbApi.saveMeeting(meetingId, meeting).then(function() {
         res.end("success");
     }, function(err) {
         res.status(500).send(err);

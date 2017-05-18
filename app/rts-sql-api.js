@@ -22,25 +22,29 @@ function setupSql(config) {
     });
 }
 
+/**
+ * Adds a meeting to the RTS DB.
+ * @param {meeting} meeting
+ * @return {Promise}
+ */
 function addMeeting(meeting) {
     return new Promise(function(fulfill, reject) {
         let transaction = new sql.Transaction(pool);
         transaction.begin().then(function() {
-            let request = new sql.Request(transaction);
+            let request = new sql.Request();
 
+            if(meeting.sireId !== undefined) {
+                request.input("sireId", meeting.sireId);
+            }
             request.input("meetingName", meeting.meetingName);
-            let query = "Insert into Meeting (meetingName) values (@meetingName)";
-            logger.debug("Statement: " + query);
-            request.query(query).then(function() {
-                transaction.commit().then(function(recordSet) {
-                    logger.debug("Commit result.", recordSet);
-                    fulfill();
-                }).catch(function(err) {
-                    logger.error("Error in Transaction Commit." + err);
-                    reject(err);
-                });
+            request.input("meetingDate", meeting.meetingDate);
+            request.input("active", 0);
+            request.output("id");
+            request.execute("InsertMeeting").then(function(result) {
+                logger.debug("Commit result.", result);
+                fulfill(result);
             }).catch(function(err) {
-                logger.error("Error in Transaction Begin." + err);
+                logger.error("Error in stored procedure." + err);
                 reject(err);
             });
         }).catch(function(err) {

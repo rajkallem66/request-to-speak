@@ -16,7 +16,7 @@ define(["plugins/http", "plugins/dialog"], function(http, dialog) {
         }.bind(this),
         this.confirmSelection = function() {
             let self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" + this.selectedMeeting.meetingId).then(function(data) {
+            http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" + this.selectedMeeting.sireId).then(function(data) {
                 self.selectedMeeting.items = data;
                 dialog.close(self, self.selectedMeeting);
             }, function() {
