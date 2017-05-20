@@ -67,7 +67,7 @@ function(http, app, router, dialog, Import) {
                         return m.sireId === response.sireId;
                     }).length > 0) {
                         // Ask to overwrite
-                        app.showMessage("You have unsaved data. Are you sure you want to close?", "Unsaved Data", ["Yes", "No"]).then(function(resp) {
+                        app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?", "Meeting exists", ["Yes", "No"]).then(function(resp) {
                             if(resp === "Yes") {
                                 self.addMeeting(response);
                             }

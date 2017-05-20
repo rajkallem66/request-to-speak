@@ -29,34 +29,49 @@ function setupSql(config) {
  */
 function addMeeting(meeting) {
     return new Promise(function(fulfill, reject) {
-        let transaction = new sql.Transaction(pool);
-        transaction.begin().then(function() {
-            let request = new sql.Request();
+        let request = pool.request();
 
-            if(meeting.sireId !== undefined) {
-                request.input("sireId", meeting.sireId);
-            }
-            request.input("meetingName", meeting.meetingName);
-            request.input("meetingDate", meeting.meetingDate);
-            request.input("active", 0);
-            request.output("id");
-            request.execute("InsertMeeting").then(function(result) {
-                logger.debug("Commit result.", result);
-                fulfill(result);
-            }).catch(function(err) {
-                logger.error("Error in stored procedure." + err);
-                reject(err);
+        if(meeting.sireId !== undefined) {
+            request.input("sireId", meeting.sireId);
+        }
+        request.input("meetingName", meeting.meetingName);
+        request.input("meetingDate", meeting.meetingDate);
+        request.input("active", 0);
+        request.output("id");
+        request.execute("InsertMeeting").then(function(result) {
+            logger.debug("Commit result.", result);
+            let transaction = new sql.Transaction(pool);
+            transaction.begin().then(function() {
+                let promises = [];
+                meeting.items.forEach(function(item) {
+                    promises.push(itemRequest(result.id, item, transaction));
+                });
+                Promise.all(promises).then(function(ir) {
+                    fulfill(result);
+                }, function(ierr) {
+                    reject(ierr);
+                });
             });
         }).catch(function(err) {
-            logger.error(err);
+            logger.error("Error in stored procedure." + err);
             reject(err);
         });
     });
 }
 
+function itemRequest(meetingId, item, transaction) {
+    let request = new sql.Request(transaction);
+    request.input("meetingId", meetingId);
+    request.input("itemOrder", item.itemOrder);
+    request.input("itemName", item.itemName);
+    request.input("timeToSpeak", item.timeToSpeak);
+    let query = "INSERT INTO Item(meetingId,itemOrder, itemName, timeToSpeak) values(@meetingId, @itemOrder, @itemName, @timeToSpeak)";
+    return request.query(query);
+}
+
 function getMeetings() {
     return new Promise(function(fulfill, reject) {
-        let query = "SELECT meetingId, meetingName, active FROM Meeting";
+        let query = "SELECT meetingId, sireId, meetingName, active FROM Meeting";
         logger.debug("Statement: " + query);
         pool.request().query(query).then(function(result) {
             logger.debug("Query result.", result.recordset);

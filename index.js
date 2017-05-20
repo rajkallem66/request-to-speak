@@ -56,7 +56,7 @@ app.post("/request", function(req, res) {
 
 app.post("/meeting", function(req, res) {
     let meeting = req.body;
-    winston.info("Adding meeting id: " + meeting.meetingId);
+    winston.info("Adding meeting sireId: " + meeting.sireId);
     rtsDbApi.addMeeting(meeting).then(function() {
         res.status(204).end();
     }, function(err) {
@@ -67,7 +67,7 @@ app.post("/meeting", function(req, res) {
 app.put("/meeting/:meetingId", function(req, res) {
     let meeting = req.body;
     let meetingId = req.params.meetingId;
-    winston.info("Adding meeting id: " + meeting.meetingId);
+    winston.info("Updating meeting id: " + meeting.meetingId);
     rtsDbApi.saveMeeting(meetingId, meeting).then(function() {
         res.end("success");
     }, function(err) {
