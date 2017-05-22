@@ -10,10 +10,7 @@ requirejs.config({
         "jquery": "../lib/jquery/jquery-1.9.1",
         "primus": "../primus/primus",
         "eventHandler": "../lib/rts/eventHandler",
-        "modernizr": "../lib/rts/modernizr",
-        "classie": "../lib/rts/classie",
-        "selectfx": "../lib/rts/SelectFx",
-        "fform": "../lib/rts/FForm"
+        "modernizr": "../lib/rts/modernizr"
     },
     shim: {
         "bootstrap": {
