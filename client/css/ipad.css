@@ -61,25 +61,24 @@
 }
 
 .fsFormOverview {
-	padding: 0 8% 80px;
+	padding: 0 5% 180px;
 	width: 100%;
 	height: 100%;
-	background: rgba(112, 182, 255, 0.74);
+	background: rgba(112, 182, 255, 1);
 	color: #3b3f45;
 	z-index: 10000;
 }
 
-.fs-form-overview .fs-fields::before {
+.fsFormOverview .fs-fields::before {
 	display: block;
-	margin-bottom: 1em;
 	color: #3b3f45;
 	content: 'REVIEW / EDIT / SUBMIT';
-	font-weight: 700;
-	font-size: 1.85em;
+	font-weight: bold;
+	font-size: 1.25em;
 	text-transform: uppercase;
-	margin: 0 auto;
+	margin: 0px auto;
 	width: 100%;
-	text-align: center;
+	text-align: left;
 }
 
 /* Switch view animation (we hide the current view, switch the view class and show it again) */
@@ -121,6 +120,12 @@
 	visibility: hidden;
 }
 
+.fsFormFull .fs-fields > li {
+	position: absolute;
+	width: 100%;
+}
+
+
 .no-js .fsFormFull .fs-fields > li {
 	visibility: visible;
 }
@@ -159,9 +164,9 @@
 	list-style: none;
 }
 
-.fs-form-overview ol {
-	max-width: auto ;
-	topol:-0px;
+.fsFormOverview ol {
+	max-width: 960px;
+	top: 50px;
 }
 
 .fs-fields > li {
@@ -181,7 +186,7 @@
 	width: 100%;
 }
 
-.fs-form-overview .fs-fields > li,
+.fsFormOverview .fs-fields > li,
 .no-js .fs-form .fs-fields > li {
 	margin: 2em 0 3em;
 	padding: 0 1em 1em;
@@ -288,7 +293,7 @@
 	border-radius: 0;
 	clear: both;
 }
-.fs-form-overview li.optional:after{
+.fsFormOverview li.optional:after{
 	top:-55px;
 	left:-7px
 }
@@ -310,7 +315,7 @@ li.optional:after{
 	box-shadow: none; /* removes red shadow in FF*/
 }
 
-.fs-form-overview .fs-fields input {
+.fsFormOverview .fs-fields input {
 	border-bottom-color: transparent;
 	color: #1C619B;
 	background: #eee;
@@ -321,12 +326,12 @@ li.optional:after{
 	background-color: #ddd; /* Fixes chrome bug with placeholder */
 }
 
-.fs-form-overview .fs-fields input:focus {
+.fsFormOverview .fs-fields input:focus {
 	background-color: #eee; /* Fixes chrome bug with placeholder */
 }
 
-.fs-form-overview .fs-fields input {
-	font-size: 1.75em;
+.fsFormOverview .fs-fields input {
+	font-size: 1.25em;
 }
 
 .fs-fields .fs-radio-custom input[type="radio"] {
@@ -359,11 +364,11 @@ li.optional:after{
 	transition: color 0.3s;
 }
 
-.fs-form-overview .fs-fields > li .fs-radio-custom span {
+.fsFormOverview .fs-fields > li .fs-radio-custom span {
 	/* max-width: 140px; */
 }
 
-.fs-form-overview .fs-fields > li .fs-radio-custom span {
+.fsFormOverview .fs-fields > li .fs-radio-custom span {
 	font-size: 75%;
 }
 
@@ -378,15 +383,15 @@ li.optional:after{
 
 
 .fs-fields .fs-radio-custom label.radio-mobile::after {
-	background-image: url(../img/mobile.svg);
+	background-image: url(img/mobile.svg);
 }
 
 .fs-fields .fs-radio-custom label.radio-social::after {
-	background-image: url(../img/social.svg);
+	background-image: url(img/social.svg);
 }
 
 .fs-fields .fs-radio-custom label.radio-conversion::after {
-	background-image: url(../img/conversion.svg);
+	background-image: url(img/conversion.svg);
 }
 
 .fs-fields .fs-radio-custom label:hover::after,
@@ -403,7 +408,9 @@ li.optional:after{
 	transition: color, border, background 0.3s;
 }
 
-.fs-form-overview .officialLabel h2 {
+
+
+.fsFormOverview .officialLabel h2 {
 	padding-top:30px;
 	min-height:100px;
 }
@@ -420,7 +427,7 @@ li.optional:after{
 	resize: none;
 }
 
-.fs-form-overview .fs-fields textarea {
+.fsFormOverview .fs-fields textarea {
 	height: 100px;
 	color: #1C619B;
 }
@@ -429,7 +436,7 @@ li.optional:after{
 	outline: none;
 }
 
-.fs-form-overview .fs-fields textarea {
+.fsFormOverview .fs-fields textarea {
 	padding: 10px;
 	border-color: transparent;
 	background: #eee;
@@ -437,7 +444,7 @@ li.optional:after{
 	font-size: 1em;
 }
 
-.fs-form-overview .fs-fields textarea:focus {
+.fsFormOverview .fs-fields textarea:focus {
 	background: #eee;
 }
 
@@ -445,14 +452,14 @@ li.optional:after{
 	display: block;
 }
 
-.fs-form-overview .cs-skin-boxes > span {
+.fsFormOverview .cs-skin-boxes > span {
 	border-radius: 5px;
 	width: 90px;
 	height: 70px;
 	font-size: 0.8em;
 }
 
-.fs-form-overview .cs-skin-boxes > span::before {
+.fsFormOverview .cs-skin-boxes > span::before {
 
 	padding-top: 50px;
 	box-shadow: 0 20px 0 #292c30, inset 0 -5px #292c30;
@@ -460,7 +467,7 @@ li.optional:after{
 
 .fs-fields input.fs-mark {
 	padding-left: 1em;
-	background-image: url(../img/dollar.svg);
+	background-image: url(img/dollar.svg);
 	background-position: 0% 0.15em;
 	background-size: auto 75%;
 	background-repeat: no-repeat;
@@ -677,7 +684,7 @@ button.fs-continue {
 	color: #1C619B;
 }
 
-.fs-form-overview .fs-submit,
+.fsFormOverview .fs-submit,
 .no-js .fs-form .fs-submit  {
 	display: block;
 	/* width: 100%; */
@@ -688,18 +695,19 @@ button.fs-continue {
 	background: #ececec;
 }
 
-.fs-form-overview .fs-submit {
+.fsFormOverview .fs-submit {
 	border-color: #e4e4e4;
 	color: #1c619b;
-	font-size: 1.1em;
+	font-size: 1em;
 }
 
 button.fs-continue {
 	position: absolute;
-	right: 0px;
-	top: 2px;
+	right: -150px;
+	top: 22px;
 	margin: 0 40px 60px 0;
-	font-size: 1.5em;
+	font-size: 1em;
+	padding: 10px 30px;
 }
 
 button.fs-submit:hover,
@@ -779,6 +787,10 @@ button.fs-continue:hover {
 
 @keyframes animHideNext {
 	to { opacity: 0; -webkit-transform: translate3d(0,-500px,0); transform: translate3d(0,-500px,0); }
+
+
+
+
 }
 
 /* Show new li when navigating to next question */
@@ -870,7 +882,7 @@ input[type=text]::-ms-clear {
 		font-size: 2em;
 	}
 
-	.fs-form.fs-form-overview {
+	.fs-form.fsFormOverview {
 		top: 0;
 		right: 0;
 		padding: 1.5em 1em 8em 1em;
@@ -968,6 +980,7 @@ div.cs-select:focus {
 .cs-select span {
 	display: block;
 	position: relative;
+
 	cursor: pointer;
 	padding: .5em;
 	/* white-space: nowrap; */
@@ -1052,11 +1065,11 @@ div.cs-select:focus {
 .clearfix:after { clear: both; }
 
 html, body, .container {
-	height: 100%;
+	/* height: 100%; */
 }
 
 body {
-	background: #e1e1e1;
+	background: #f9f9f9;
 	color: #fff;
 	font-weight: 400;
 	font-size: 1em;
@@ -1131,7 +1144,7 @@ a:hover, a:focus {
  left: 50%;
 }
 
-div.cs-skin-overlay {
+.cs-skin-overlay {
 	background: transparent;
 	font-weight: 700;
 	max-width: 100%;
@@ -1142,9 +1155,9 @@ div.cs-skin-overlay {
 }
 
 @media screen and (max-width: 30em) {
-	div.cs-skin-overlay { font-size: 1em; }
+	.cs-skin-overlay { font-size: 1em; }
 }
-.fs-form-overview .cs-skin-overlay > span{
+.fsFormOverview .cs-skin-overlay > span{
 	background: #eee;
 	font-size:1.5em;
 }
@@ -1179,6 +1192,7 @@ div.cs-skin-overlay {
 	left: 0;
 	overflow: hidden;
 	overflow-y: auto;
+
 	background: rgba(255,255,255,0.96);
 	opacity: 0;
 	-webkit-transform: perspective(1000px) translate3d(0, 0, -200px);
@@ -1262,7 +1276,7 @@ div.cs-skin-overlay {
 	-webkit-transition-delay: 0s;
 	transition-delay: 0s;
 }
-.fs-form-overview .cs-skin-overlay li.cs-optgroup ul span{
+.fsFormOverview .cs-skin-overlay li.cs-optgroup ul span{
 	font-size:1em;
 }
 .cs-skin-overlay li.cs-optgroup ul span {
@@ -1351,7 +1365,7 @@ div.cs-skin-overlay {
 	transform: translate3d(74%, 0, 0);
 	pointer-events: none;
 }
-.fs-form-overview .input__field--kaede:focus + .input__label--kaede,
+.fsFormOverview .input__field--kaede:focus + .input__label--kaede,
 .input--filled .input__label--kaede{
 	font-size: 31px;
 }
@@ -1536,6 +1550,8 @@ div.cs-skin-overlay {
   }
   55% {
     -webkit-transform: skew(-15deg);
+
+
     transform: skew(-15deg);
   }
   60% {
@@ -1945,6 +1961,9 @@ div.cs-skin-overlay {
     opacity: 0.1;
   }
 }
+
+
+
 .glitch {
   position: fixed;
   left: 0;
@@ -1993,4 +2012,247 @@ div.cs-skin-overlay {
 }
 .no-meeting,.no-workey {
 	display: block;
+}
+.cb-slideshow li{
+	list-style:none;
+}
+.cb-slideshow h3{
+	position:absolute;
+	z-index:10001;
+	text-align:center;
+	left:0;
+	top:130px;
+	font-size:50px;
+	font-weight:bold;
+	color:#111;
+	background:rgba(204, 204, 204, 0.58);
+	padding:20px;
+	border-top:10px solid rgba(113, 113, 113, 0.33);
+	border-bottom:10px solid rgba(113, 113, 113, 0.33);
+	width:100%;
+	line-height: 1.5em;
+}
+.cb-slideshow,
+.cb-slideshow:after {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    background: #ccc;
+}
+.cb-slideshow:after {
+    content: '';
+    background: transparent url(img/pattern.png) repeat top left;
+}
+.cb-slideshow li span { 
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: transparent;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: none;
+    opacity: 0;
+    z-index: 0;
+	-webkit-backface-visibility: hidden;
+    -webkit-animation: imageAnimation 36s linear infinite 0s;
+    -moz-animation: imageAnimation 36s linear infinite 0s;
+    -o-animation: imageAnimation 36s linear infinite 0s;
+    -ms-animation: imageAnimation 36s linear infinite 0s;
+    animation: imageAnimation 36s linear infinite 0s; 
+}
+.cb-slideshow li div { 
+    z-index: 1000;
+    position: absolute;
+    bottom: 30px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    color: #fff;
+    -webkit-animation: titleAnimation 36s linear infinite 0s;
+    -moz-animation: titleAnimation 36s linear infinite 0s;
+    -o-animation: titleAnimation 36s linear infinite 0s;
+    -ms-animation: titleAnimation 36s linear infinite 0s;
+    animation: titleAnimation 36s linear infinite 0s; 
+}
+.cb-slideshow li div h3 {
+    
+    font-size: 240px;
+    padding: 0;
+}
+.cb-slideshow li:nth-child(1) span { 
+    background-image: url(img/1.jpg) 
+}
+.cb-slideshow li:nth-child(2) span { 
+    background-image: url(img/2.jpg);
+    -webkit-animation-delay: 6s;
+    -moz-animation-delay: 6s;
+    -o-animation-delay: 6s;
+    -ms-animation-delay: 6s;
+    animation-delay: 6s; 
+}
+.cb-slideshow li:nth-child(3) span { 
+    background-image: url(img/3.jpg);
+    -webkit-animation-delay: 12s;
+    -moz-animation-delay: 12s;
+    -o-animation-delay: 12s;
+    -ms-animation-delay: 12s;
+    animation-delay: 12s; 
+}
+.cb-slideshow li:nth-child(4) span { 
+    background-image: url(img/4.jpg);
+    -webkit-animation-delay: 18s;
+    -moz-animation-delay: 18s;
+    -o-animation-delay: 18s;
+    -ms-animation-delay: 18s;
+    animation-delay: 18s; 
+}
+.cb-slideshow li:nth-child(5) span { 
+    background-image: url(img/5.jpg);
+    -webkit-animation-delay: 24s;
+    -moz-animation-delay: 24s;
+    -o-animation-delay: 24s;
+    -ms-animation-delay: 24s;
+    animation-delay: 24s; 
+}
+.cb-slideshow li:nth-child(6) span { 
+    background-image: url(img/6.jpg);
+    -webkit-animation-delay: 30s;
+    -moz-animation-delay: 30s;
+    -o-animation-delay: 30s;
+    -ms-animation-delay: 30s;
+    animation-delay: 30s; 
+}
+.cb-slideshow li:nth-child(2) div { 
+    -webkit-animation-delay: 6s;
+    -moz-animation-delay: 6s;
+    -o-animation-delay: 6s;
+    -ms-animation-delay: 6s;
+    animation-delay: 6s; 
+}
+.cb-slideshow li:nth-child(3) div { 
+    -webkit-animation-delay: 12s;
+    -moz-animation-delay: 12s;
+    -o-animation-delay: 12s;
+    -ms-animation-delay: 12s;
+    animation-delay: 12s; 
+}
+.cb-slideshow li:nth-child(4) div { 
+    -webkit-animation-delay: 18s;
+    -moz-animation-delay: 18s;
+    -o-animation-delay: 18s;
+    -ms-animation-delay: 18s;
+    animation-delay: 18s; 
+}
+.cb-slideshow li:nth-child(5) div { 
+    -webkit-animation-delay: 24s;
+    -moz-animation-delay: 24s;
+    -o-animation-delay: 24s;
+    -ms-animation-delay: 24s;
+    animation-delay: 24s; 
+}
+.cb-slideshow li:nth-child(6) div { 
+    -webkit-animation-delay: 30s;
+    -moz-animation-delay: 30s;
+    -o-animation-delay: 30s;
+    -ms-animation-delay: 30s;
+    animation-delay: 30s; 
+}
+/* Animation for the slideshow img */
+@-webkit-keyframes imageAnimation { 
+    0% { opacity: 0;
+    -webkit-animation-timing-function: ease-in; }
+    8% { opacity: 1;
+         -webkit-animation-timing-function: ease-out; }
+    17% { opacity: 1 }
+    25% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-moz-keyframes imageAnimation { 
+    0% { opacity: 0;
+    -moz-animation-timing-function: ease-in; }
+    8% { opacity: 1;
+         -moz-animation-timing-function: ease-out; }
+    17% { opacity: 1 }
+    25% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-o-keyframes imageAnimation { 
+    0% { opacity: 0;
+    -o-animation-timing-function: ease-in; }
+    8% { opacity: 1;
+         -o-animation-timing-function: ease-out; }
+    17% { opacity: 1 }
+    25% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-ms-keyframes imageAnimation { 
+    0% { opacity: 0;
+    -ms-animation-timing-function: ease-in; }
+    8% { opacity: 1;
+         -ms-animation-timing-function: ease-out; }
+    17% { opacity: 1 }
+    25% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@keyframes imageAnimation { 
+    0% { opacity: 0;
+    animation-timing-function: ease-in; }
+    8% { opacity: 1;
+         animation-timing-function: ease-out; }
+    17% { opacity: 1 }
+    25% { opacity: 0 }
+    100% { opacity: 0 }
+}
+/* Animation for the title */
+@-webkit-keyframes titleAnimation { 
+    0% { opacity: 0 }
+    8% { opacity: 1 }
+    17% { opacity: 1 }
+    19% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-moz-keyframes titleAnimation { 
+    0% { opacity: 0 }
+    8% { opacity: 1 }
+    17% { opacity: 1 }
+    19% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-o-keyframes titleAnimation { 
+    0% { opacity: 0 }
+    8% { opacity: 1 }
+    17% { opacity: 1 }
+    19% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@-ms-keyframes titleAnimation { 
+    0% { opacity: 0 }
+    8% { opacity: 1 }
+    17% { opacity: 1 }
+    19% { opacity: 0 }
+    100% { opacity: 0 }
+}
+@keyframes titleAnimation { 
+    0% { opacity: 0 }
+    8% { opacity: 1 }
+    17% { opacity: 1 }
+    19% { opacity: 0 }
+    100% { opacity: 0 }
+}
+/* Show at least something when animations not supported */
+.no-cssanimations .cb-slideshow li span{
+	opacity: 1;
+}
+
+@media screen and (max-width: 1140px) { 
+    .cb-slideshow li div h3 { font-size: 140px }
+}
+@media screen and (max-width: 600px) { 
+    .cb-slideshow li div h3 { font-size: 80px }
 }
