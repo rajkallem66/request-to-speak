@@ -1,13 +1,13 @@
 /* global module,require*/
 /* eslint prefer-spread: "off" */
-var logger = null;
-var meeting = {};
-var requests = [];
-var displayRequests = [];
-var wallSpark = null;
-var adminSparks = [];
-var kioskSparks = [];
-var boardSparks = [];
+let logger = null;
+let meeting = {};
+let requests = [];
+let displayRequests = [];
+let wallSpark = null;
+let adminSparks = [];
+let kioskSparks = [];
+let boardSparks = [];
 
 /**
  * Function to attach to Primus events
@@ -91,7 +91,7 @@ function setupPrimus(primus) {
  * @param {Message} data - object to send to admin sparks.
  */
 function notify(group, data) {
-    var sparks = [];
+    let sparks = [];
     switch(group) {
     case "wall":
         sparks.push(wallSpark);
@@ -167,15 +167,19 @@ function initializeWall() {
 /**
  * Adds a request to the live meeting.
  * @param {Request} request
+ * @return {Promise}
  */
 function addRequest(request) {
-    requests.push(request);
-    notify("watchers", {
-        "messageType": "request",
-        "message": {
-            "event": "add",
-            "request": request
-        }
+    return new Promise(function(fulfill, reject) {
+        requests.push(request);
+        notify("watchers", {
+            "messageType": "request",
+            "message": {
+                "event": "add",
+                "request": request
+            }
+        });
+        fulfill();
     });
 }
 

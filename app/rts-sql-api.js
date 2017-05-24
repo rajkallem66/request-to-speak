@@ -115,12 +115,12 @@ function startMeeting(meeting) {
 /**
  * Insert new request into database.
  * @param {Request} newRequest
+ * @return {Promise}
  */
 function addRequest(newRequest) {
-    // Query
-    let transaction = new sql.Transaction(pool);
-    transaction.begin().then(function() {
-        let request = new sql.Request(transaction);
+    return new Promise(function(fulfill, reject) {
+        // Query
+        let request = pool.request();
 
         request.input("meetingId", newRequest.meetingId);
         request.input("firstName", newRequest.firstName);
@@ -136,20 +136,14 @@ function addRequest(newRequest) {
         request.input("email", newRequest.email);
         request.input("address", newRequest.address);
         request.input("timeToSpeak", newRequest.timeToSpeak);
-        let query = "Insert into Request (meetingId,firstName,lastName,official,agency,item,offAgenda,subTopic,stance,notes,phone,email,address,timeToSpeak) ";
-        query += "values (@meetingId,@firstName,@lastName,@official,@agency,@item,@offAgenda,@subTopic,@stance,@notes,@phone,@email,@address,@timeToSpeak)";
-        logger.debug("Statement: " + query);
-        request.query(query).then(function() {
-            transaction.commit().then(function(recordSet) {
-                logger.debug("Commit result.", recordSet);
-            }).catch(function(err) {
-                logger.error("Error in Transaction Commit." + err);
-            });
+        request.output("id");
+        request.execute("InsertRequest").then(function(result) {
+            logger.debug("New request inserted.", result);
+            fulfill(result);
         }).catch(function(err) {
-            logger.error("Error in Transaction Begin." + err);
+            logger.error("Error in calling insert stored procedure." + err);
+            reject(err);
         });
-    }).catch(function(err) {
-        logger.error(err);
     });
 }
 

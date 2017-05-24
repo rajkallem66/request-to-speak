@@ -19,7 +19,7 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             }
         },
         editRequest: function(request) {
-            var self = this;
+            let self = this;
             app.showDialog(new Edit(), request).then(function(response) {
                 if(response !== undefined) {
                     self.meetings.push(response);
@@ -32,7 +32,7 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
         canDeactivate: function() {
             // the router's activator calls this function to see if it can leave the screen
             if(this.isMeetingActive) {
-                return app.showMessage("There is an active meeting. Are you sure you want to leave this page?", "Navigate", ["Yes", "No"]);
+                return app.showMessage("There is an active meeting. Are you sure you want to leave this page?", "Active Meeting!", ["Yes", "No"]);
             } else {
                 return true;
             }

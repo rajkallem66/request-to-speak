@@ -82,7 +82,7 @@
 }
 
 /* Switch view animation (we hide the current view, switch the view class and show it again) */
-.fs-form.fs-show {
+.fs-form.fsShow {
 	-webkit-animation: animFadeIn 0.5s;
 	animation: animFadeIn 0.5s;
 }
@@ -97,7 +97,7 @@
 	100% { opacity: 1; }
 }
 
-.fs-form.fs-show .fs-fields {
+.fs-form.fsShow .fs-fields {
 	-webkit-animation: animMove 0.5s;
 	animation: animMove 0.5s;
 }
@@ -130,7 +130,7 @@
 	visibility: visible;
 }
 
-.fs-show {
+.fsShow {
 	visibility: visible !important;
 }
 
@@ -198,7 +198,7 @@
 .fs-fields > li label {
 	position: relative;
 }
-.fs-form.fs-show .fs-fields > li span.fs-field-label{
+.fs-form.fsShow .fs-fields > li span.fs-field-label{
 	/* font-size:30px; */
 	/* color: #FF792C; */
 	padding-bottom: 10px;
@@ -747,7 +747,7 @@ button.fs-continue:hover {
 	transform: translate3d(-50%,-5px,0);
 }
 
-.fs-message-error.fs-show {
+.fs-message-error.fsShow {
 	opacity: 1;
 	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
 	transition: transform 0.3s, opacity 0.3s;
@@ -761,22 +761,22 @@ button.fs-continue:hover {
 }
 
 .fs-form li.fs-hide,
-.fs-form li.fs-show {
+.fs-form li.fsShow {
 	pointer-events: none;
 }
 
 /* Hide current li when navigating to next question */
-.fs-form .fs-display-next .fs-hide {
+.fs-form .fsDisplayNext .fs-hide {
 	visibility: visible;
 }
 
-.fs-form .fs-display-next .fs-hide .fs-anim-lower,
-.fs-form .fs-display-next .fs-hide .fs-anim-upper {
+.fs-form .fsDisplayNext .fs-hide .fs-anim-lower,
+.fs-form .fsDisplayNext .fs-hide .fs-anim-upper {
 	-webkit-animation: animHideNext 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
 	animation: animHideNext 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
 }
 
-.fs-form .fs-display-next .fs-hide .fs-anim-lower {
+.fs-form .fsDisplayNext .fs-hide .fs-anim-lower {
 	-webkit-animation-delay: 0.1s;
 	animation-delay: 0.1s;
 }
@@ -794,13 +794,13 @@ button.fs-continue:hover {
 }
 
 /* Show new li when navigating to next question */
-.fs-form .fs-display-next .fs-show .fs-anim-lower,
-.fs-form .fs-display-next .fs-show .fs-anim-upper {
+.fs-form .fsDisplayNext .fsShow .fs-anim-lower,
+.fs-form .fsDisplayNext .fsShow .fs-anim-upper {
 	-webkit-animation: animShowNext 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 	animation: animShowNext 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 }
 
-.fs-form .fs-display-next .fs-show .fs-anim-lower {
+.fs-form .fsDisplayNext .fsShow .fs-anim-lower {
 
 	-webkit-animation-delay: 0.25s;
 	animation-delay: 0.25s;
@@ -839,13 +839,13 @@ button.fs-continue:hover {
 }
 
 /* Show new li when navigating to previous question */
-.fs-form .fs-display-prev .fs-show .fs-anim-lower,
-.fs-form .fs-display-prev .fs-show .fs-anim-upper {
+.fs-form .fs-display-prev .fsShow .fs-anim-lower,
+.fs-form .fs-display-prev .fsShow .fs-anim-upper {
 	-webkit-animation: animShowPrev 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 	animation: animShowPrev 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 }
 
-.fs-form .fs-display-prev .fs-show .fs-anim-upper {
+.fs-form .fs-display-prev .fsShow .fs-anim-upper {
 	-webkit-animation-delay: 0.25s;
 	animation-delay: 0.25s;
 }
@@ -943,7 +943,7 @@ input[type=text]::-ms-clear {
 		transform: translate3d(0,-5px,0);
 	}
 
-	.fs-message-error.fs-show {
+	.fs-message-error.fsShow {
 		-webkit-transform: translate3d(0,0,0);
 		transform: translate3d(0,0,0);
 	}
@@ -1290,7 +1290,7 @@ a:hover, a:focus {
 	color: #f06d54;
 	background: transparent;
 }
-.fs-form.fs-show .countdown{
+.fs-form.fsShow .countdown{
 	font-size: 1em;
 	margin-top: -173px;
 	position: absolute;
