@@ -14,17 +14,17 @@
 			<div class="fs-form-wrap" id="fs-form-wrap">
 				<form data-bind="css: {fsFormOverview: step === 7, fsFormFull: step !== 7}" id="myform" class="fs-form" autocomplete="off">
 					<ol data-bind="with: request" class="fs-fields">
-						<li data-bind="css: {fsCurrent: $parent.step === 0}">
+						<li data-bind="css: {fsCurrent: $parent.step === 0, fsStale: $parent.step !== 0}">
 							<span class="fs-field-label fs-anim-upper">What's your name?</span>
 							<input data-bind="value: name" class="fs-anim-lower" id="q1" name="q1" type="text" placeholder="First and Last" required/>
 						</li>
-						<li data-bind="css: {fsCurrent: $parent.step === 1}">
+						<li data-bind="css: {fsCurrent: $parent.step === 1, fsStale: $parent.step !== 1}">
 							<label class="fs-field-label fs-anim-upper" for="q3" >Are you a: </label>
 							<div id="#constituants" class="fs-radio-group fs-radio-custom clearfix fs-anim-lower">
 								<div class="">
-									<span><input data-bind="checked: official" id="q3b" name="q3" type="radio" value="constituant" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
+									<span><input data-bind="checked: official" id="q3b" name="q3" type="radio" value="Constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
 									<span><p class="simplePtag">or</p></span>
-									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
+									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="Official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
 									</span>
 								</div>
 								<div data-bind="style: { display: official === 'official' ? 'block' : 'none' }" class="showInput" style="display: none">
@@ -32,7 +32,7 @@
 								</div>
 							</div>		
 						</li>
-						<li data-bind="css: {fsCurrent: $parent.step === 2}">
+						<li data-bind="css: {fsCurrent: $parent.step === 2, fsStale: $parent.step !== 2}">
 							<div class="" id="subColumns">
 								<section class="fs-anim-lower">
 									<label class="fs-field-label fs-anim-upper" for="q7">Which agenda item? </label>
@@ -84,22 +84,22 @@
 								</div>
 							</div>
 						</li>
-						<li data-bind="css: {fsCurrent: $parent.step === 3}">
+						<li data-bind="css: {fsCurrent: $parent.step === 3, fsStale: $parent.step !== 3}">
 							<label class="fs-field-label fs-anim-upper" for="q4">Any notes you would like to share?</label>
 							<textarea data-bind="textInput: notes" class="fs-anim-lower" id="q4" name="q4" placeholder="Describe here" maxlength="250"></textarea>
 							<div class="fs-anim-lower countdown">
 								<span data-bind="text: $parent.notesCharsRemaining"></span> characters remaining
 							</div>
 						</li>
-						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 4}">
+						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 4, fsStale: $parent.step !== 4}">
 							<label class="fs-field-label fs-anim-upper" for="q2" >What's your email address?</label>
 							<input data-bind="value: email" class="fs-anim-lower " id="q2" name="q2" type="email" placeholder="your.email@saccounty.net" />
 						</li>
-						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 5}">
+						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 5, fsStale: $parent.step !== 5}">
 							<label class="fs-field-label fs-anim-upper" for="q8" >What's your home address?</label>
 							<input data-bind="value: address" class="fs-anim-lower optional" id="q8" name="q8" type="text" placeholder="123 Awesome St., Sacramento, CA 95817"/>
 						</li>
-						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 6}">
+						<li class="optional fs-anim-upper" data-bind="css: {fsCurrent: $parent.step === 6, fsStale: $parent.step !== 6}">
 							<label class="fs-field-label fs-anim-upper" for="q9" >What's your phone number?</label>
 							<input data-bind="value: phone" class="fs-anim-lower optional" id="q9" name="q9" type="text" placeholder="916-123-4567" />
 						</li>

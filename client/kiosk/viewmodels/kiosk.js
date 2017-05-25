@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"],
-function(http, app, observable, event) {
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "jquery"],
+function(http, app, observable, event, $) {
     let ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -9,7 +9,9 @@ function(http, app, observable, event) {
         },
         meeting: {},
         selectedItem: {},
+        isMovingNext: false,
         isSubmitting: false,
+        confirmSubmission: false,
         messages: [],
         primus: null,
         attached: function() {
@@ -43,21 +45,28 @@ function(http, app, observable, event) {
             }
         },
         nextStep: function() {
+            this.isMovingNext = true;
             this.step += 1;
+        },
+        removeStuff: function(d, e) {
+            this.isMovingNext = false;
+            // $(d).removeClass("fs-display-next");
+            // $(d).removeClass("fs-display-prev");
         },
         submitRequest: function() {
             this.isSubmitting = true;
             let self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
                 self.isSubmitting = false;
-                self.confirmSubmission();
+                self.confirmSubmission = true;
+                setTimeout(function() {
+                    self.confirmSubmission = false;
+                    self.request = self.newRequest();
+                    self.step = 0;
+                }, 3000);
             }, function() {
                 // do error stuff
             });
-        },
-        confirmSubmission: function() {
-            // show message for 3 seconds
-            this.request = this.newRequest();
         },
         newRequest: function() {
             let req = {
@@ -78,7 +87,11 @@ function(http, app, observable, event) {
             };
             observable.defineProperty(req, "name", {
                 read: function() {
-                    return this.firstName + " " + this.lastName;
+                    if(this.firstName !== "") {
+                        return this.firstName + " " + this.lastName;
+                    } else {
+                        return "";
+                    }
                 },
                 write: function(value) {
                     let lastSpacePos = value.lastIndexOf(" ");

@@ -49,8 +49,18 @@ app.post("/request", function(req, res) {
     let request = req.body;
     winston.info("Adding request from: " + req._remoteAddress);
     winston.debug("Request data.", request);
-    rtsDbApi.addRequest(request);
-    rtsWsApi.addRequest(request);
+    rtsDbApi.addRequest(request).then(function(id) {
+        request.id = id;
+        rtsWsApi.addRequest(request).then(function() {
+            winston.info("Request added: " + id);
+            res.status(204).end();
+        }, function(err) {
+            res.status(500).send("Unable to send request to admin.");
+        });
+    }, function(err) {
+        winston.error("Error adding request to database: " + err);
+        res.status(500).send("Unable to add request to database.");
+    });
     res.end("yes");
 });
 
