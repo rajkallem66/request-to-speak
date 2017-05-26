@@ -45,8 +45,10 @@ function(http, app, observable, event, $) {
             }
         },
         nextStep: function() {
-            this.isMovingNext = true;
             this.step += 1;
+        },
+		prevStep: function() {
+            this.step -= 1;
         },
         removeStuff: function(d, e) {
             this.isMovingNext = false;
