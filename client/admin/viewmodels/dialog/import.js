@@ -1,8 +1,8 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "plugins/dialog"], function(http, dialog) {
-    let ctor = function() {
+    var ctor = function() {
         this.activate = function() {
-            let self = this;
+            var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "sire/meeting").then(function(data) {
                 self.meetings = data;
             }, function() {
@@ -15,7 +15,7 @@ define(["plugins/http", "plugins/dialog"], function(http, dialog) {
             this.selectedMeeting = data;
         }.bind(this),
         this.confirmSelection = function() {
-            let self = this;
+            var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" + this.selectedMeeting.sireId).then(function(data) {
                 self.selectedMeeting.items = data;
                 dialog.close(self, self.selectedMeeting);

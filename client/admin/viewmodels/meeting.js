@@ -1,16 +1,16 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "plugins/router", "plugins/dialog", "dialog/import"],
 function(http, app, router, dialog, Import) {
-    let ret = {
+    var ret = {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
         selectedMeeting: null,
         activate: function() {
-            let self = this;
+            var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
                 self.meetings = response;
-                let startedMeetings = self.meetings.filter(function(meeting) {
+                var startedMeetings = self.meetings.filter(function(meeting) {
                     meeting.started === true;
                 });
                 if(startedMeetings.length > 0) {
@@ -22,13 +22,14 @@ function(http, app, router, dialog, Import) {
             });
         },
         startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting", this.selectedMeeting).then(function(result) {
-                app.showMessage("Meeting started successfully.").then(function() {
-                    router.navigate("/request");
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting",
+                this.selectedMeeting).then(function(result) {
+                    app.showMessage("Meeting started successfully.").then(function() {
+                        router.navigate("/request");
+                    });
+                }, function(err) {
+                    app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
                 });
-            }, function(err) {
-                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
-            });
         },
         newMeeting: function() {
             return {
@@ -59,7 +60,7 @@ function(http, app, router, dialog, Import) {
             };
         },
         importMeeting: function() {
-            let self = this;
+            var self = this;
             app.showDialog(new Import()).then(function(response) {
                 if(response !== undefined) {
                     // Make sure not already in list
@@ -67,11 +68,12 @@ function(http, app, router, dialog, Import) {
                         return m.sireId === response.sireId;
                     }).length > 0) {
                         // Ask to overwrite
-                        app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?", "Meeting exists", ["Yes", "No"]).then(function(resp) {
-                            if(resp === "Yes") {
-                                self.addMeeting(response);
-                            }
-                        });
+                        app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?",
+                            "Meeting exists", ["Yes", "No"]).then(function(resp) {
+                                if(resp === "Yes") {
+                                    self.addMeeting(response);
+                                }
+                            });
                     } else {
                         // Not in list. Add to list
                         self.addMeeting(response);
@@ -82,15 +84,17 @@ function(http, app, router, dialog, Import) {
             });
         },
         saveMeeting: function() {
-            http.put(location.href.replace(/[^/]*$/, "") + "meeting/" + this.selectedMeeting.meetingId, this.selectedMeeting).then(function() {
-                console.log("Meeting saved.");
-            }, function(err) {
-                app.showMessage("Unable to save meeting.\n" + JSON.stringify(err));
-            });
+            http.put(location.href.replace(/[^/]*$/, "") + "meeting/" + this.selectedMeeting.meetingId,
+                this.selectedMeeting).then(function() {
+                    console.log("Meeting saved.");
+                }, function(err) {
+                    app.showMessage("Unable to save meeting.\n" + JSON.stringify(err));
+                });
         },
         addMeeting: function(meeting) {
-            let self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function() {
+            var self = this;
+            http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
+                meeting.meetingId = response.meetingId;
                 self.meetings.push(meeting);
                 self.selectedMeeting = meeting;
                 console.log("Meeting added.");

@@ -67,8 +67,8 @@ app.post("/request", function(req, res) {
 app.post("/meeting", function(req, res) {
     let meeting = req.body;
     winston.info("Adding meeting sireId: " + meeting.sireId);
-    rtsDbApi.addMeeting(meeting).then(function() {
-        res.status(204).end();
+    rtsDbApi.addMeeting(meeting).then(function(id) {
+        res.status(200).send({ meetingId: id });
     }, function(err) {
         res.status(500).send(err);
     });

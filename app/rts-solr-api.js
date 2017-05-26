@@ -1,9 +1,9 @@
 /* global module,require*/
 
 // Solr Client
-var solr = require("solr-client");
-var client = null;
-var logger = null;
+let solr = require("solr-client");
+let client = null;
+let logger = null;
 
 /**
  * adds a new meeting to the data store.
@@ -48,7 +48,7 @@ function startMeeting(meeting) {
  */
 function getMeetings() {
     return new Promise(function(fulfill, reject) {
-        var query = client.createQuery()
+        let query = client.createQuery()
             .q({type: "meeting"})
             .start(0)
             .rows(100);
