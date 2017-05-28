@@ -1,15 +1,4 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
-@font-face {
-	font-weight: normal;
-	font-style: normal;
-	font-family: 'codropsicons';
-	src:url('../fonts/codropsicons.eot');
-	src:url('../fonts/codropsicons.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/codropsicons.woff') format('woff'),
-		url('../fonts/codropsicons.ttf') format('truetype'),
-		url('../fonts/codropsicons.svg#codropsicons') format('svg');
-}
-
 /* COMPONENTS */
 /* Main form wrapper */
 .fs-form-wrap {
@@ -61,24 +50,28 @@
 }
 
 .fsFormOverview {
-	padding: 0 5% 180px;
+	padding: 0 5% 40px;
 	width: 100%;
 	height: 100%;
-	background: rgba(112, 182, 255, 1);
-	color: #3b3f45;
+	background: rgb(0, 34, 70);
+	color: #f1f1f1;
 	z-index: 10000;
 }
 
 .fsFormOverview .fs-fields::before {
 	display: block;
-	color: #3b3f45;
+	color: #fff;
 	content: 'REVIEW / EDIT / SUBMIT';
 	font-weight: bold;
-	font-size: 1.25em;
+	font-size: 1em;
 	text-transform: uppercase;
 	margin: 0px auto;
-	width: 100%;
-	text-align: left;
+	width: 110%;
+	height: 120px;
+	background: rgba(162, 162, 162, 0.36);
+	padding: 4px 20px;
+	margin-left: -50px;
+	text-align: center;
 }
 
 /* Switch view animation (we hide the current view, switch the view class and show it again) */
@@ -117,7 +110,7 @@
 .fs-numbers,
 .fs-message-error,
 .fs-message-final {
-	visibility: hidden;
+	/* visibility: hidden; */
 }
 
 .fsFormFull .fs-fields > li {
@@ -154,6 +147,28 @@
 .fs-form .fs-submit {
 	display: none;
 }
+.btns-top{
+	position: absolute;
+	top: 47px;
+	right: 180px;
+}
+.fsFormOverview .btns-start{
+	display: none;
+}
+.btns-start{
+  margin: 0 -9999rem;
+  /* add back section padding value */
+  padding: .25rem 9999rem;
+  background: #666;
+  background: rgba(0, 0, 0,.5);
+  background: #3A5067;
+  height: 71px;
+  /* width: 100%; */
+  /* margin-left: -143px; */
+  z-index: 20000;
+  position: relative;
+  color: #1c619b;
+  }
 
 /* Fields */
 .fs-fields {
@@ -166,7 +181,7 @@
 
 .fsFormOverview ol {
 	max-width: 960px;
-	top: 50px;
+	top: 1px;
 }
 
 .fs-fields > li {
@@ -188,10 +203,11 @@
 
 .fsFormOverview .fs-fields > li,
 .no-js .fs-form .fs-fields > li {
-	margin: 2em 0 3em;
-	padding: 0 1em 1em;
+	margin: .5em 0 .5em;
+	padding: 0 1em .5em;
 	border-bottom: 2px solid rgba(0,0,0,0.25);
 	clear: both;
+	display: block;
 }
 
 /* Labels & info */
@@ -208,7 +224,7 @@
 	padding: 10px 5px 20px 0;
 	font-weight: 700;
 	pointer-events: none;
-	/* font-size: 50px; */
+	font-size: 38px;
 }
 
 .fsFormFull .fs-fields > li label[data-info]::after {
@@ -407,6 +423,7 @@ li.optional:after{
 	/* background: #000; */
 	transition: color, border, background 0.3s;
 }
+
 
 
 
@@ -677,37 +694,47 @@ li.optional:after{
 button.fs-submit,
 button.fs-continue {
 	padding: 0.6em 1.5em;
-	border: 3px solid rgba(148, 148, 148, 0.09);
+	border: 2px solid rgba(148, 148, 148, 0.09);
 	border-radius: 0;
 	font-weight: 700;
-	background: rgba(165, 165, 165, 0.21);
-	color: #1C619B;
+	background: #ececec;
 }
+.btn-text{position: relative;left: -10px;top: 0px;text-transform: uppercase;font-size: 2em;border-right: 1px solid #ccc;padding-right: 18px;}
+.btn-text-left{position: relative;right: -11px;top: 0px;text-transform: uppercase;font-size: 2em;border-left: 1px solid #ccc;padding-left: 18px;}
 
 .fsFormOverview .fs-submit,
 .no-js .fs-form .fs-submit  {
 	display: block;
-	/* width: 100%; */
-	position: absolute;
-	top: 40px;
-	right: 5%;
+	/* position: absolute; */
+	margin-right: 6px;
 	z-index: 100000;
 	background: #ececec;
+	margin-top: 7px;
 }
 
 .fsFormOverview .fs-submit {
 	border-color: #e4e4e4;
 	color: #1c619b;
-	font-size: 1em;
+	font-size: .4em;
+	padding-left: 25px;
+	/* clear: both; */
+	float: right;
+	margin-top: 10px;
 }
 
 button.fs-continue {
-	position: absolute;
-	right: -150px;
-	top: 22px;
-	margin: 0 40px 60px 0;
-	font-size: 1em;
-	padding: 10px 30px;
+	position: relative;
+	top: 8px;
+	margin: 0 0px 0px 0;
+	font-size: .4em;
+	padding: 10px 23px;
+	font-style: normal;
+	float: right;
+	right: -129px;
+}
+button.fs-continue.left{
+	left: -130px;
+	float: left;
 }
 
 button.fs-submit:hover,
@@ -756,51 +783,43 @@ button.fs-continue:hover {
 }
 
 /* Animation classes & animations */
-.fs-form li.fsCurrent {
-	visibility: visible;
+li.fsCurrent {
+	visibility: visible !important;
 }
 
-.fs-form li.fs-hide,
-.fs-form li.fsShow {
-	pointer-events: none;
-}
-
-/* Hide current li when navigating to next question */
-.fs-form .fsDisplayNext .fs-hide {
-	visibility: visible;
-}
-
-.fs-form .fsDisplayNext .fs-hide .fs-anim-lower,
-.fs-form .fsDisplayNext .fs-hide .fs-anim-upper {
+.fsStale, .fsStaleStart
+ {
 	-webkit-animation: animHideNext 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
 	animation: animHideNext 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
+	 -webkit-animation-delay: 0.1s; 
+	 animation-delay: 0.1s; 
 }
 
-.fs-form .fsDisplayNext .fs-hide .fs-anim-lower {
-	-webkit-animation-delay: 0.1s;
-	animation-delay: 0.1s;
+.fsFormOverview .fsStaleStart, .fsFormOverview .fsStale{
+	-webkit-animation:none;
+	animation: none;
+	-webkit-animation-delay: 0; 
+	 animation-delay: 0; 
 }
+
 
 @-webkit-keyframes animHideNext {
 	to { opacity: 0; -webkit-transform: translate3d(0,-500px,0); }
+
 }
 
 @keyframes animHideNext {
 	to { opacity: 0; -webkit-transform: translate3d(0,-500px,0); transform: translate3d(0,-500px,0); }
-
-
-
-
 }
 
 /* Show new li when navigating to next question */
-.fs-form .fsDisplayNext .fsShow .fs-anim-lower,
-.fs-form .fsDisplayNext .fsShow .fs-anim-upper {
+.fsCurrent, .fsFormOverview
+{
 	-webkit-animation: animShowNext 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 	animation: animShowNext 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 }
 
-.fs-form .fsDisplayNext .fsShow .fs-anim-lower {
+.fsCurrent, .fsFormOverview{
 
 	-webkit-animation-delay: 0.25s;
 	animation-delay: 0.25s;
@@ -814,22 +833,6 @@ button.fs-continue:hover {
 	from { opacity: 0; -webkit-transform: translate3d(0,500px,0); transform: translate3d(0,500px,0); }
 }
 
-/* Hide current li when navigating to previous question */
-.fs-form .fs-display-prev .fs-hide {
-	visibility: visible;
-}
-
-.fs-form .fs-display-prev .fs-hide .fs-anim-lower,
-.fs-form .fs-display-prev .fs-hide .fs-anim-upper {
-	-webkit-animation: animHidePrev 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
-	animation: animHidePrev 0.5s cubic-bezier(0.7,0,0.3,1) forwards;
-}
-
-.fs-form .fs-display-prev .fs-hide .fs-anim-upper {
-	-webkit-animation-delay: 0.1s;
-	animation-delay: 0.1s;
-}
-
 @-webkit-keyframes animHidePrev {
 	to { opacity: 0; -webkit-transform: translate3d(0,500px,0); }
 }
@@ -839,13 +842,13 @@ button.fs-continue:hover {
 }
 
 /* Show new li when navigating to previous question */
-.fs-form .fs-display-prev .fsShow .fs-anim-lower,
-.fs-form .fs-display-prev .fsShow .fs-anim-upper {
+.fs-display-prev .fsShow .fs-anim-lower,
+.fs-display-prev .fsShow .fs-anim-upper {
 	-webkit-animation: animShowPrev 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 	animation: animShowPrev 0.5s cubic-bezier(0.7,0,0.3,1) both 0.15s;
 }
 
-.fs-form .fs-display-prev .fsShow .fs-anim-upper {
+.fs-display-prev .fsShow .fs-anim-upper {
 	-webkit-animation-delay: 0.25s;
 	animation-delay: 0.25s;
 }
@@ -968,6 +971,7 @@ div.cs-select {
 	-ms-user-select: none;
 	user-select: none;
 }
+
 
 div.cs-select:focus {
 	outline: none; /* For better accessibility add a style for this in your skin */
@@ -1200,6 +1204,7 @@ a:hover, a:focus {
 	-webkit-transition: -webkit-transform 0.4s, opacity 0.4s, visibility 0s 0.4s;
 	transition: transform 0.4s, opacity 0.4s, visibility 0s 0.4s;
 	-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+
 	transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 }
 
@@ -1297,7 +1302,7 @@ a:hover, a:focus {
 	right: 18px;
 }
 .countdown{
-    font-size: 1.25em;
+    font-size: .8em;
     padding-top: 10px;
     color: #676767;
     text-align: right;
@@ -1355,6 +1360,7 @@ a:hover, a:focus {
 .input--filled .input__field--kaede {
 	-webkit-transform: translate3d(100%, 0, 0);
 	transform: translate3d(100%, 0, 0);
+
 	-webkit-transition-delay: 0.06s;
 	transition-delay: 0.06s;
 }
@@ -1369,6 +1375,8 @@ a:hover, a:focus {
 .input--filled .input__label--kaede{
 	font-size: 31px;
 }
+
+
 .input__field {
 	position: relative;
 	display: block;
@@ -1962,8 +1970,6 @@ a:hover, a:focus {
   }
 }
 
-
-
 .glitch {
   position: fixed;
   left: 0;
@@ -1980,7 +1986,7 @@ a:hover, a:focus {
   -moz-animation: noise 0.3s infinite;
   -webkit-animation: noise 0.3s infinite;
   animation: noise 0.3s infinite;
-  z-index: 1000;
+  z-index: 1000000000;
 }
 .glitch:before {
   content: "";
@@ -2039,7 +2045,7 @@ a:hover, a:focus {
     height: 100%;
     top: 0px;
     left: 0px;
-    z-index: 1000;
+    z-index: 1000000;
     background: #ccc;
 }
 .cb-slideshow:after {
@@ -2085,8 +2091,8 @@ a:hover, a:focus {
     font-size: 240px;
     padding: 0;
 }
-.cb-slideshow li:nth-child(1) span { 
-    background-image: url(img/1.jpg) 
+.cb-slideshow li span { 
+    background-image: url(img/1.jpg);
 }
 .cb-slideshow li:nth-child(2) span { 
     background-image: url(img/2.jpg);
@@ -2141,6 +2147,7 @@ a:hover, a:focus {
     -o-animation-delay: 12s;
     -ms-animation-delay: 12s;
     animation-delay: 12s; 
+
 }
 .cb-slideshow li:nth-child(4) div { 
     -webkit-animation-delay: 18s;

@@ -46,6 +46,9 @@ function(http, app, observable, event, $) {
         nextStep: function() {
             this.step += 1;
         },
+    		prevStep: function() {
+            this.step -= 1;
+        },
         submitRequest: function() {
             this.isSubmitting = true;
             var self = this;
