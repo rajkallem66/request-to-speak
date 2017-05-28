@@ -12,7 +12,7 @@
     ],
     "rules": {
         "no-var": [
-        "warn"
+        "off"
         ],
         "indent": [
             "error",

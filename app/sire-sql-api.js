@@ -54,7 +54,7 @@ function getItems(meetingId) {
         let request = pool.request();
         request.input("meetingId", meetingId);
 
-        let query = "SELECT item.item_id as itemId, item.item_index as itemIndex, item.caption as itemCaption " +
+        let query = "SELECT item.item_id as itemId, item.item_index as itemOrder, item.caption as itemName " +
         "FROM [sire].[alpha].[ans_meetings] meet " +
         "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
         "WHERE meet.meet_id = @meetingId";

@@ -19,21 +19,44 @@ function setupPrimus(primus) {
             switch(spark.query.clientType) {
             case "kiosk":
                 kioskSparks.push(spark);
-                notify("admins", {"messageType": "device", "message": {"deviceType": "kiosk", "event": "connected", "count": kioskSparks.length}});
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "kiosk",
+                        "event": "connected",
+                        "count": kioskSparks.length
+                    }});
                 initializeKiosk(spark);
                 break;
             case "wall":
                 wallSpark = spark;
-                notify("admins", {"messageType": "device", "message": {"deviceType": "wall", "event": "connected"}});
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "wall",
+                        "event": "connected"
+                    }});
                 initializeWall(spark);
                 break;
             case "board":
                 boardSparks.push(spark);
-                notify("admins", {"messageType": "device", "message": {"deviceType": "board", "event": "connected", "count": boardSparks.length}});
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "board",
+                        "event": "connected",
+                        "count": boardSparks.length
+                    }});
                 break;
             case "admin":
                 adminSparks.push(spark);
-                notify("admins", {"messageType": "device", "message": {"deviceType": "admin", "event": "connected", "count": adminSparks.length}});
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "admin",
+                        "event": "connected",
+                        "count": adminSparks.length
+                    }});
                 initializeAdmin(spark);
                 break;
             default:
@@ -67,19 +90,37 @@ function setupPrimus(primus) {
             adminSparks = adminSparks.filter(function(adminSpark) {
                 return adminSpark.id !== spark.id;
             });
-            notify("admins", {"messageType": "device", "message": {"deviceType": "admin", "event": "disconnected", "count": adminSparks.length}});
+            notify("admins", {
+                "messageType": "device",
+                "message": {
+                    "deviceType": "admin",
+                    "event": "disconnected",
+                    "count": adminSparks.length
+                }});
             break;
         case "kiosk":
             kioskSparks = kioskSparks.filter(function(kioskSpark) {
                 return kioskSpark.id !== spark.id;
             });
-            notify("admins", {"messageType": "device", "message": {"deviceType": "kiosk", "event": "disconnected", "count": kioskSparks.length}});
+            notify("admins", {
+                "messageType": "device",
+                "message": {
+                    "deviceType": "kiosk",
+                    "event": "disconnected",
+                    "count": kioskSparks.length
+                }});
             break;
         case "board":
             boardSparks = boardSparks.filter(function(boardSpark) {
                 return boardSpark.id !== spark.id;
             });
-            notify("admins", {"messageType": "device", "message": {"deviceType": "board", "event": "disconnected", "count": boardSparks.length}});
+            notify("admins", {
+                "messageType": "device",
+                "message": {
+                    "deviceType": "board",
+                    "event": "disconnected",
+                    "count": boardSparks.length
+                }});
             break;
         }
     });

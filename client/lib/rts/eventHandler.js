@@ -1,3 +1,4 @@
+/* eslint no-console: "off" */
 define(["primus"], function(Primus) {
     return {
         createPrimus: function(url) {

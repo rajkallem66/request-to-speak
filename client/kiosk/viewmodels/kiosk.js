@@ -1,7 +1,7 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "jquery"],
 function(http, app, observable, event, $) {
-    let ret = {
+    var ret = {
         isConnected: false,
         isMeetingActive: false,
         step: 0,
@@ -9,7 +9,6 @@ function(http, app, observable, event, $) {
         },
         meeting: {},
         selectedItem: {},
-        isMovingNext: false,
         isSubmitting: false,
         confirmSubmission: false,
         messages: [],
@@ -47,17 +46,12 @@ function(http, app, observable, event, $) {
         nextStep: function() {
             this.step += 1;
         },
-		prevStep: function() {
+    		prevStep: function() {
             this.step -= 1;
-        },
-        removeStuff: function(d, e) {
-            this.isMovingNext = false;
-            // $(d).removeClass("fs-display-next");
-            // $(d).removeClass("fs-display-prev");
         },
         submitRequest: function() {
             this.isSubmitting = true;
-            let self = this;
+            var self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
                 self.isSubmitting = false;
                 self.confirmSubmission = true;
@@ -71,7 +65,7 @@ function(http, app, observable, event, $) {
             });
         },
         newRequest: function() {
-            let req = {
+            var req = {
                 meetingId: this.meeting.meetingId,
                 firstName: "",
                 lastName: "",
@@ -96,7 +90,7 @@ function(http, app, observable, event, $) {
                     }
                 },
                 write: function(value) {
-                    let lastSpacePos = value.lastIndexOf(" ");
+                    var lastSpacePos = value.lastIndexOf(" ");
                     if (lastSpacePos > 0) { // Ignore values with no space character
                         this.firstName = value.substring(0, lastSpacePos); // Update "firstName"
                         this.lastName = value.substring(lastSpacePos + 1); // Update "lastName"
