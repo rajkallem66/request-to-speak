@@ -112,8 +112,9 @@ app.get("/meeting", function(req, res) {
 });
 
 // Sacramento County agenda management system access.
+let agendaApi = config.get("SIRE.dbApi");
 let sireConfig = config.get("SIRE.dbConfig");
-let sireApi = require("./app/sire-sql-api")(sireConfig, winston);
+let sireApi = require(agendaApi)(sireConfig, winston);
 app.get("/sire/meeting", function(req, res) {
     winston.info("Retrieving meetings from agenda management system.");
     sireApi.getMeetings().then(function(data) {

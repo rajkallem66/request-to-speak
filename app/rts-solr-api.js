@@ -57,7 +57,7 @@ function getMeetings() {
                 logger.error(err);
                 reject(err);
             } else {
-                logger.info(obj);
+                logger.info(obj.response.docs);
                 fulfill(obj.response.docs);
             }
         });

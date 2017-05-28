@@ -14,6 +14,7 @@
         }
     },
     "SIRE": {
+        "dbApi": "./app/sire-js-api",
         "dbConfig": {
             "server": "crane.saccounty.net",
             "database": "SIRE",
