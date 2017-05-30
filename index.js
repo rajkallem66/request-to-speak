@@ -45,6 +45,14 @@ let rtsDbApi = require(dbApi)(dbConfig, winston);
 winston.info("RTS DB API Type: " + rtsDbApi.dbType);
 winston.info("RTS DB API Version: " + rtsDbApi.version);
 
+// In case the app died with an active meeting.
+rtsDbApi.getActiveMeeting().then(function(mtg) {
+    rtsWsApi.startMeeting(mtg);    
+}, function(err){
+    logger.error("Unable to check for active meeting.");
+});
+
+// Setup REST handlers
 app.post("/request", function(req, res) {
     let request = req.body;
     winston.info("Adding request from: " + req._remoteAddress);
@@ -61,7 +69,6 @@ app.post("/request", function(req, res) {
         winston.error("Error adding request to database: " + err);
         res.status(500).send("Unable to add request to database.");
     });
-    res.end("yes");
 });
 
 app.post("/meeting", function(req, res) {

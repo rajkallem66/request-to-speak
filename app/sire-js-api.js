@@ -12,7 +12,7 @@ function getMeetings() {
         let ret = [{
                 sireId: "12",
                 meetingName: "TUESDAY BOARD MEETING",
-                meetingDate: "2017-09-05"
+                meetingDate: "2017-09-05",
             }];
         fulfill(ret);
     });
@@ -25,7 +25,19 @@ function getMeetings() {
  */
 function getItems(meetingId) {
     return new Promise(function(fulfill, reject) {
-        let ret = {};
+        let ret = [{
+            itemId: "1",
+            itemOrder: "1",
+            itemName: "Budget"
+        },{
+            itemId: "2",
+            itemOrder: "2",
+            itemName: "Consent"
+        },{
+            itemId: "3",
+            itemOrder: "3",
+            itemName: "Contract"
+        }];
         fulfill(ret);
     });
 }

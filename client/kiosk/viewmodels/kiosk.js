@@ -5,8 +5,7 @@ function(http, app, observable, event, $) {
         isConnected: false,
         isMeetingActive: false,
         step: 0,
-        request: {
-        },
+        request: {},
         meeting: {},
         selectedItem: {},
         isSubmitting: false,
@@ -37,8 +36,8 @@ function(http, app, observable, event, $) {
         initializeMessage: function(message) {
             console.log("Initializing kiosk");
             this.meeting = message.meetingData;
-            if(message.meetingData.active !== undefined) {
-                this.isMeetingActive = message.meetingData.active;
+            if(message.meetingData.status === "started") {
+                this.isMeetingActive = true;
             } else {
                 this.isMeetingActive = false;
             }
@@ -60,8 +59,9 @@ function(http, app, observable, event, $) {
                     self.request = self.newRequest();
                     self.step = 0;
                 }, 3000);
-            }, function() {
+            }, function(err) {
                 // do error stuff
+                console.log(err);
             });
         },
         newRequest: function() {

@@ -104,6 +104,9 @@ function(http, app, router, dialog, Import) {
         }
     };
     ret.selectMeeting = function(meeting) {
+        if(this.selectedMeeting === meeting) {
+            return;
+        }
         if(this.selectedMeeting !== null && this.meetings.includes(this.selectedMeeting) === false) {
             app.showMessage("This meeting has not been saved.");
         }

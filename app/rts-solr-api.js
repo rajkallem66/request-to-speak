@@ -2,6 +2,7 @@
 
 // Solr Client
 let solr = require("solr-client");
+let uuid = require("uuid/v4");
 let client = null;
 let logger = null;
 
@@ -11,14 +12,33 @@ let logger = null;
  * @return {Promise}
  */
 function addMeeting(meeting) {
+    var docs = [];
+    var id = uuid();
+    meeting.items.forEach(function(item){
+        item.type = "item";
+        item.meetingId = id,
+        docs.push(item);
+    });
+    meeting.id = id;
+    meeting.type = "meeting";
+    meeting.status = "new";
+    delete meeting.items;
+    docs.push(meeting);
     return new Promise(function(fulfill, reject) {
-        client.add([meeting], function(err, obj) {
+        client.add(docs, function(err, obj) {
             if(err) {
                 logger.error(err);
                 reject(err);
             } else {
                 logger.info(obj);
-                fulfill(obj);
+                client.softCommit(function(err, res) {
+                    if(err) {
+                        logger.error(err);
+                    } else {
+                        logger.info(res);
+                    }
+                    fulfill(id);
+                });
             }
         });
     });
@@ -30,14 +50,24 @@ function addMeeting(meeting) {
  * @return {Promise}
  */
 function startMeeting(meeting) {
+    delete meeting.items;
+    meeting.status = "started";
+    meeting._version_ = 1;
     return new Promise(function(fulfill, reject) {
-        client.add({id: meeting.id, started: true}, function(err, obj) {
+        client.add(meeting, function(err, obj) {
             if(err) {
                 logger.error(err);
                 reject(err);
             } else {
                 logger.info(obj);
-                fulfill(obj);
+                client.softCommit(function(err, res) {
+                    if(err) {
+                        logger.error(err);
+                    } else {
+                        logger.info(res);
+                    }
+                    fulfill(obj);
+                });
             }
         });
     });
@@ -63,24 +93,74 @@ function getMeetings() {
         });
     });
 }
+
+function getActiveMeeting() {
+    return new Promise(function(fulfill, reject) {
+        let query = client.createQuery()
+            .q({type: "meeting", status: "started"})
+            .start(0)
+            .rows(10);
+        client.search(query, function(err, obj) {
+            if(err) {
+                logger.error(err);
+                reject(err);
+            } else {
+                if(obj.response.docs.length > 0) {
+                    let meeting = obj.response.docs[0];
+                    let mtgQuery = client.createQuery()
+                        .q({meetingId: meeting.id}) 
+                        .start(0)
+                        .rows(500);
+                    client.search(query, function(err, resp) {
+                        if(err) {
+                            logger.error(err);
+                            reject(err);
+                        } else {
+                            meeting.items = [];
+                            meeting.items.push.apply(meeting.items, 
+                            resp.response.docs.filter(function(item) {
+                                return item.type === "item";
+                            }));
+                            meeting.requests = [];
+                            meeting.requests.push.apply(meeting.requests,
+                            resp.response.docs.filter(function(request){
+                                return request.type === "request";
+                            }));
+                            fulfill(meeting);
+                        }
+                    });
+                } else {
+                    logger.info("No active meeting.");
+                    fulfill({});
+                }
+            }
+        });
+    });
+}
+
 /**
  * Insert new request into database.
- * @param {Request} newRequest
+ * @param {Request} request
  */
-function addRequest(newRequest) {
-    client.add(newRequest, function(err, obj) {
-        if(err) {
-            logger.error(err);
-        } else {
-            logger.info(obj);
-            client.softCommit(function(err, res) {
-                if(err) {
-                    logger.error(err);
-                } else {
-                    logger.info(res);
-                }
-            });
-        }
+function addRequest(request) {
+    request.type = "request";
+    return new Promise(function(fulfill, reject){
+        client.add(request, function(err, obj) {
+            if(err) {
+                logger.error(err);
+                reject(err);
+            } else {
+                logger.info(obj);
+                client.softCommit(function(err, res) {
+                    if(err) {
+                        logger.error(err);
+                    } else {
+                        logger.info(res);
+                    }
+                    fulfill(obj);
+                });
+            }
+        });
     });
 }
 
@@ -88,6 +168,7 @@ module.exports = function(config, log) {
     logger = log;
 
     client = solr.createClient(config);
+    client.autoCommit = true;
 
     return {
         version: "1.0",
@@ -95,6 +176,7 @@ module.exports = function(config, log) {
         addMeeting: addMeeting,
         addRequest: addRequest,
         getMeetings: getMeetings,
+        getActiveMeeting: getActiveMeeting,
         startMeeting: startMeeting
     };
 };

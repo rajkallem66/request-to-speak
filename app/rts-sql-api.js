@@ -189,6 +189,20 @@ function addRequest(newRequest) {
     });
 }
 
+function startedMeeting() {
+    return new Promise(function(fulfill, reject) {
+        let query = "SELECT meetingId, sireId, meetingName, active FROM Meeting WHERE active = 1";
+        logger.debug("Statement: " + query);
+        pool.request().query(query).then(function(result) {
+            logger.debug("Query result.", result.recordset);
+            fulfill(result.recordset);
+        }, function(err) {
+            logger.error("Query error: " + err);
+            reject(err);
+        });
+    });
+}
+ 
 module.exports = function(cfg, log) {
     // config is delivered frozen and this causes problems in mssql. So, just copy over.
     let config = {

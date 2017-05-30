@@ -170,6 +170,7 @@ function initializeAdmin(spark) {
         "messageType": "initialize",
         "message": {
             "meeting": meeting,
+            "requests": requests,
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
             "connectedBoards": boardSparks.length,

@@ -59,13 +59,13 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             }
         },
         initializeMessage: function(message) {
-            if(message.meeting.meetingId !== undefined) {
+            if(message.meeting.status === "started") {
                 this.isMeetingActive = true;
             } else {
                 this.isMeetingActive = false;
             }
             this.meeting = message.meeting;
-            this.isMeetingActive = (this.meeting.meetingId !== undefined);
+            this.requests = message.meeting.requests;
             this.wallConnected = message.wallConnected;
             this.connectedAdmins = message.connectedAdmins;
             this.connectedKiosks = message.connectedKiosks;
