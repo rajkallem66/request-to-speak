@@ -10,10 +10,11 @@ let logger = null;
 function getMeetings() {
     return new Promise(function(fulfill, reject) {
         let ret = [{
-                sireId: "12",
-                meetingName: "TUESDAY BOARD MEETING",
-                meetingDate: "2017-09-05",
-            }];
+            sireId: "12",
+            meetingName: "TUESDAY BOARD MEETING",
+            meetingDate: "2017-09-05"
+        }];
+        logger.debug("Returning meetings.");
         fulfill(ret);
     });
 }
@@ -29,15 +30,16 @@ function getItems(meetingId) {
             itemId: "1",
             itemOrder: "1",
             itemName: "Budget"
-        },{
+        }, {
             itemId: "2",
             itemOrder: "2",
             itemName: "Consent"
-        },{
+        }, {
             itemId: "3",
             itemOrder: "3",
             itemName: "Contract"
         }];
+        logger.debug("Returning items.");
         fulfill(ret);
     });
 }

@@ -29,6 +29,13 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
                 // Do error stuff
             });
         },
+        endMeeting: function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "endMeeting", this.meeting).then(function() {
+            }, function(err) {
+                // do error stuff
+                console.log(err);
+            });
+        },
         canDeactivate: function() {
             // the router's activator calls this function to see if it can leave the screen
             if(this.isMeetingActive) {

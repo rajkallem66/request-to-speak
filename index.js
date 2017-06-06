@@ -2,6 +2,8 @@
 "use strict";
 let winston = require("winston");
 let config = require("config");
+winston.setLevels(config.get("RTS.log.levels"));
+winston.addColors(config.get("RTS.log.colors"));
 winston.level = config.get("RTS.log.level");
 
 let express = require("express");
@@ -47,9 +49,11 @@ winston.info("RTS DB API Version: " + rtsDbApi.version);
 
 // In case the app died with an active meeting.
 rtsDbApi.getActiveMeeting().then(function(mtg) {
-    rtsWsApi.startMeeting(mtg);    
-}, function(err){
-    logger.error("Unable to check for active meeting.");
+    if(mtg !== undefined) {
+        rtsWsApi.startMeeting(mtg);
+    }
+}, function(err) {
+    winston.error("Unable to check for active meeting.");
 });
 
 // Setup REST handlers
@@ -57,12 +61,22 @@ app.post("/request", function(req, res) {
     let request = req.body;
     winston.info("Adding request from: " + req._remoteAddress);
     winston.debug("Request data.", request);
+
+    winston.trace("Upcase name and agency.");
+    request.firstName = request.firstName.toUpperCase();
+    request.lastName = request.lastName.toUpperCase();
+    request.agency = request.agency.toUpperCase();
+
+    winston.trace("Add request with DbApi");
     rtsDbApi.addRequest(request).then(function(id) {
         request.id = id;
+
+        winston.trace("Notify WS clients of new request");
         rtsWsApi.addRequest(request).then(function() {
             winston.info("Request added: " + id);
             res.status(204).end();
         }, function(err) {
+            winston.error("Error notifying WS clients of new request.", err);
             res.status(500).send("Unable to send request to admin.");
         });
     }, function(err) {
@@ -75,7 +89,7 @@ app.post("/meeting", function(req, res) {
     let meeting = req.body;
     winston.info("Adding meeting sireId: " + meeting.sireId);
     rtsDbApi.addMeeting(meeting).then(function(id) {
-        res.status(200).send({ meetingId: id });
+        res.status(200).send({meetingId: id});
     }, function(err) {
         res.status(500).send(err);
     });
@@ -86,7 +100,7 @@ app.put("/meeting/:meetingId", function(req, res) {
     let meetingId = req.params.meetingId;
     winston.info("Updating meeting id: " + meeting.meetingId);
     rtsDbApi.saveMeeting(meetingId, meeting).then(function() {
-        res.end("success");
+        res.status(204).end();
     }, function(err) {
         res.status(500).send(err);
     });
@@ -97,7 +111,18 @@ app.post("/startMeeting", function(req, res) {
     winston.info("Starting meeeting id: " + meeting.meetingId);
     rtsDbApi.startMeeting(meeting).then(function(data) {
         rtsWsApi.startMeeting(meeting);
-        res.send({message: "success"});
+        res.status(204).end();
+    }, function(err) {
+        res.status(500).send(err);
+    });
+});
+
+app.post("/endMeeting", function(req, res) {
+    let meeting = req.body;
+    winston.info("Ending meeeting id: " + meeting.meetingId);
+    rtsDbApi.endMeeting(meeting).then(function(data) {
+        rtsWsApi.endMeeting(meeting);
+        res.status(204).end();
     }, function(err) {
         res.status(500).send(err);
     });
@@ -106,7 +131,7 @@ app.post("/startMeeting", function(req, res) {
 app.post("/refreshWall", function(req, res) {
     winston.info("Refreshing display wall.");
     rtsWsApi.refreshWall();
-    res.end();
+    res.status(204).end();
 });
 
 app.get("/meeting", function(req, res) {

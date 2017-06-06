@@ -10,14 +10,16 @@ let pool = null;
  * @param {config} config
  */
 function setupSql(config) {
-    pool = new sql.ConnectionPool(config, function(err) {
-        if(err) {
-            logger.error(err);
-        } else {
-            logger.debug("RTS DB connected.");
-        }
-    });
-    pool.on("error", function(err) {
+    pool = new sql.ConnectionPool(config).connect().then(function(p) {
+        return new Promise(function(fulfill, reject) {
+            logger.debug("RTS DB Connected.");
+            pool = p;
+            pool.on("error", function(err) {
+                logger.error(err);
+            });
+            fulfill();
+        });
+    }, function(err) {
         logger.error(err);
     });
 }
@@ -36,7 +38,7 @@ function addMeeting(meeting) {
         }
         request.input("meetingName", meeting.meetingName);
         request.input("meetingDate", meeting.meetingDate);
-        request.input("active", 0);
+        request.input("status", "new");
         request.output("id");
         request.execute("InsertMeeting").then(function(result) {
             logger.debug("Commit result.", result);
@@ -47,13 +49,13 @@ function addMeeting(meeting) {
 
                 meeting.items.forEach(function(item) {
                     p = p.then(function(ir) {
-                        return itemRequest(meetingId, item, transaction)
+                        return itemRequest(meetingId, item, transaction);
                     }, function(err) {
                         transaction.rollback().then(function() {
                             reject(err);
                         }, function() {
                             reject(err);
-                        }) 
+                        });
                     });
                 });
                 p.then(function(ir) {
@@ -61,7 +63,7 @@ function addMeeting(meeting) {
                         fulfill(meetingId);
                     }, function(err) {
                         reject(err);
-                    })
+                    });
                 });
             });
         }).catch(function(err) {
@@ -72,7 +74,7 @@ function addMeeting(meeting) {
 }
 
 /**
- * Creates a request to return
+ * Creates a mssql.request for an item
  * @param {String} meetingId
  * @param {Object} item
  * @param {Object} transaction
@@ -80,7 +82,7 @@ function addMeeting(meeting) {
  */
 function itemRequest(meetingId, item, transaction) {
     let request = new sql.Request(transaction);
-    
+
     request.input("meetingId", meetingId);
     request.input("itemOrder", item.itemOrder);
     request.input("itemName", item.itemName);
@@ -94,11 +96,11 @@ function itemRequest(meetingId, item, transaction) {
  */
 function getMeetings() {
     return new Promise(function(fulfill, reject) {
-        let meetingQuery = "SELECT meetingId, sireId, meetingName, active FROM Meeting";
+        let meetingQuery = "SELECT meetingId, sireId, meetingName, meetingDate, status FROM Meeting";
         logger.debug("Meeting statement: " + meetingQuery);
         pool.request().query(meetingQuery).then(function(meetingResult) {
             logger.debug("Meeting query result.", meetingResult.recordset);
-            let itemQuery = "SELECT i.meetingId, i.itemId, i.itemOrder, i.itemName, i.timeToSpeak FROM Meeting m " + 
+            let itemQuery = "SELECT i.meetingId, i.itemId, i.itemOrder, i.itemName, i.timeToSpeak FROM Meeting m " +
                 "INNER JOIN Item i ON m.meetingId = i.meetingId";
             logger.debug("Item statement: " + itemQuery);
             pool.request().query(itemQuery).then(function(itemResult) {
@@ -106,7 +108,7 @@ function getMeetings() {
                 let meetings = [];
                 meetingResult.recordset.forEach(function(meeting) {
                     meeting.items = itemResult.recordset.filter(function(item) {
-                        return item.meetingId === meeting.meetingId;                    
+                        return item.meetingId === meeting.meetingId;
                     });
                     meetings.push(meeting);
                 });
@@ -115,25 +117,45 @@ function getMeetings() {
                 logger.error("Item query error.", err);
                 reject(err);
             });
-         }, function(err) {
+        }, function(err) {
             logger.error("Meeting query error.", err);
             reject(err);
-         });
+        });
     });
 }
 
 /**
+ * set meeting status to started.
  * @param {Meeting} meeting
  * @return {Promise}
  */
 function startMeeting(meeting) {
+    return updateMeetingStatus(meeting.meetingId, "started");
+}
+
+/**
+ * set meeting status to ended.
+ * @param {Meeting} meeting
+ * @return {Promise}
+ */
+function endMeeting(meeting) {
+    return updateMeetingStatus(meeting.meetingId, "ended");
+}
+
+/**
+ * utility function to update meeting status
+ * @param {string} meetingId
+ * @param {string} status
+ * @return {Promise}
+ */
+function updateMeetingStatus(meetingId, status) {
     return new Promise(function(fulfill, reject) {
         let transaction = new sql.Transaction(pool);
         transaction.begin().then(function() {
             let request = new sql.Request(transaction);
 
-            request.input("meetingId", meeting.meetingId);
-            let query = "UPDATE Meeting set active = 1 where @meetingId = " + meeting.meetingId;
+            request.input("meetingId", meetingId);
+            let query = "UPDATE Meeting set status = '" + status + "' where @meetingId = " + meetingId;
             logger.debug("Statement: " + query);
             request.query(query).then(function() {
                 transaction.commit().then(function(recordSet) {
@@ -183,26 +205,46 @@ function addRequest(newRequest) {
             logger.debug("New request inserted.", result);
             fulfill(result);
         }).catch(function(err) {
-            logger.error("Error in calling insert stored procedure." + err);
+            logger.error("Error in calling insert stored procedure.", err);
             reject(err);
         });
     });
 }
 
-function startedMeeting() {
-    return new Promise(function(fulfill, reject) {
-        let query = "SELECT meetingId, sireId, meetingName, active FROM Meeting WHERE active = 1";
+/**
+ * returns information on an active meeting
+ * @return {Promise}
+ */
+function getActiveMeeting() {
+    var doQuery = function(fulfill, reject) {
+        let query = "SELECT meetingId, sireId, meetingName, status FROM Meeting WHERE status = 'started'";
         logger.debug("Statement: " + query);
         pool.request().query(query).then(function(result) {
             logger.debug("Query result.", result.recordset);
-            fulfill(result.recordset);
+            if(result.recordset.length === 0) {
+                fulfill();
+            } else if(result.recordset.length === 1) {
+                fulfill(result.recordset[0]);
+            } else {
+                logger.error("More than one active meeting.");
+                reject(result.recordset);
+            }
         }, function(err) {
             logger.error("Query error: " + err);
             reject(err);
         });
-    });
+    };
+
+    // The pool may not be there. If it isn't, just chain to the promise.
+    if(pool.then !== undefined) {
+        return pool.then(function() {
+            return new Promise(doQuery);
+        });
+    } else {
+        return new Promise(doQuery);
+    }
 }
- 
+
 module.exports = function(cfg, log) {
     // config is delivered frozen and this causes problems in mssql. So, just copy over.
     let config = {
@@ -223,7 +265,9 @@ module.exports = function(cfg, log) {
         addRequest: addRequest,
         addMeeting: addMeeting,
         getMeetings: getMeetings,
+        getActiveMeeting: getActiveMeeting,
         startMeeting: startMeeting,
+        endMeeting: endMeeting,
         setupSql: setupSql
     };
 };

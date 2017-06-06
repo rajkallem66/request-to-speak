@@ -14,7 +14,7 @@ let logger = null;
 function addMeeting(meeting) {
     var docs = [];
     var id = uuid();
-    meeting.items.forEach(function(item){
+    meeting.items.forEach(function(item) {
         item.type = "item";
         item.meetingId = id,
         docs.push(item);
@@ -94,6 +94,9 @@ function getMeetings() {
     });
 }
 
+/**
+ * @return {Promise}
+ */
 function getActiveMeeting() {
     return new Promise(function(fulfill, reject) {
         let query = client.createQuery()
@@ -108,22 +111,20 @@ function getActiveMeeting() {
                 if(obj.response.docs.length > 0) {
                     let meeting = obj.response.docs[0];
                     let mtgQuery = client.createQuery()
-                        .q({meetingId: meeting.id}) 
+                        .q({meetingId: meeting.id})
                         .start(0)
                         .rows(500);
-                    client.search(query, function(err, resp) {
+                    client.search(mtgQuery, function(err, resp) {
                         if(err) {
                             logger.error(err);
                             reject(err);
                         } else {
                             meeting.items = [];
-                            meeting.items.push.apply(meeting.items, 
-                            resp.response.docs.filter(function(item) {
+                            meeting.items.push(...resp.response.docs.filter(function(item) {
                                 return item.type === "item";
                             }));
                             meeting.requests = [];
-                            meeting.requests.push.apply(meeting.requests,
-                            resp.response.docs.filter(function(request){
+                            meeting.requests.push(...resp.response.docs.filter(function(request) {
                                 return request.type === "request";
                             }));
                             fulfill(meeting);
@@ -141,10 +142,11 @@ function getActiveMeeting() {
 /**
  * Insert new request into database.
  * @param {Request} request
+ * @return {Promise}
  */
 function addRequest(request) {
     request.type = "request";
-    return new Promise(function(fulfill, reject){
+    return new Promise(function(fulfill, reject) {
         client.add(request, function(err, obj) {
             if(err) {
                 logger.error(err);

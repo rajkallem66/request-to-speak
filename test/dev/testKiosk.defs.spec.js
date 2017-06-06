@@ -37,6 +37,10 @@ define(["kiosk"], function(kiosk) {
                 expect(a.isConnected).toBeDefined();
             });
 
+            it("should define confirmSubmission.", function() {
+                expect(a.confirmSubmission).toBeDefined();
+            });
+
             it("should define primus", function() {
                 expect(a.primus).toBeDefined();
             });
@@ -49,11 +53,6 @@ define(["kiosk"], function(kiosk) {
             it("should define submitRequest as a Function.", function() {
                 expect(a.submitRequest).toBeDefined();
                 expect(a.submitRequest).toEqual(jasmine.any(Function));
-            });
-
-            it("should define confirmSubmission as a Function.", function() {
-                expect(a.confirmSubmission).toBeDefined();
-                expect(a.confirmSubmission).toEqual(jasmine.any(Function));
             });
 
             it("should define newRequest as a Function.", function() {

@@ -242,6 +242,22 @@ function startMeeting(newMeeting) {
 }
 
 /**
+ * Ends an active meeting by sending event to everyone.
+ * @param {Meeting} newMeeting
+ */
+function endMeeting(newMeeting) {
+    meeting = newMeeting;
+
+    notify("all", {
+        "messageType": "meeting",
+        "message": {
+            "event": "ended",
+            "meetingData": meeting
+        }
+    });
+}
+
+/**
  * Send updated list of requests to the wall
  */
 function refreshWall() {
@@ -267,6 +283,7 @@ module.exports = function(primus, log) {
         version: "1.0",
         addRequest: addRequest,
         startMeeting: startMeeting,
+        endMeeting: endMeeting,
         refreshWall: refreshWall
     };
 };

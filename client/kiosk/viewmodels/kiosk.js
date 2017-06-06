@@ -38,6 +38,7 @@ function(http, app, observable, event, $) {
             this.meeting = message.meetingData;
             if(message.meetingData.status === "started") {
                 this.isMeetingActive = true;
+                this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
             }
@@ -45,7 +46,7 @@ function(http, app, observable, event, $) {
         nextStep: function() {
             this.step += 1;
         },
-    		prevStep: function() {
+        prevStep: function() {
             this.step -= 1;
         },
         submitRequest: function() {
