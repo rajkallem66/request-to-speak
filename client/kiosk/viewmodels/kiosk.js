@@ -25,13 +25,11 @@ function(http, app, observable, event, $) {
             console.log("Meeting message");
             if(message.event === "started") {
                 this.isMeetingActive = true;
-                this.meeting = message.meetingData;
-                this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
-                this.meeting = {};
-                this.request = {};
             }
+            this.meeting = message.meetingData;
+            this.request = this.newRequest();
         },
         initializeMessage: function(message) {
             console.log("Initializing kiosk");

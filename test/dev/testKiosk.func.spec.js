@@ -37,23 +37,14 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
         var endedMeetingData = {
             event: "ended",
-            meetingData: {}
-        };
-
-        var inactiveMeetingData = {
+            meetingData: {
+                meetingId: 12
+            }
         };
 
         var a = require("kiosk");
 
         describe("Kiosk functions.", function() {
-            it("meetingMessage should set proper values for inactive meeting.", function() {
-                a.meetingMessage(inactiveMeetingData);
-                expect(a.meeting.meetingId).toBe(undefined);
-                expect(a.meeting.meetingName).toBe(undefined);
-                expect(a.meeting.confirmationDuration).toBe(undefined);
-                expect(a.isMeetingActive).toBe(false);
-            });
-
             it("meetingMessage should set proper values for active meeting.", function() {
                 a.meetingMessage(activeMeetingData);
                 expect(a.meeting.meetingId).toBe(12);
@@ -65,8 +56,8 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
             it("meetingMessage should set proper values for ended meeting.", function() {
                 a.meetingMessage(endedMeetingData);
-                expect(a.meeting).toEqual({});
-                expect(a.request).toEqual({});
+                expect(a.meeting.meetingId).toBe(12);
+                expect(a.request).toEqual(a.newRequest());
                 expect(a.isMeetingActive).toBe(false);
             });
 

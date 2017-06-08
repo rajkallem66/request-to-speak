@@ -109,7 +109,7 @@ app.put("/meeting/:meetingId", function(req, res) {
 app.post("/startMeeting", function(req, res) {
     let meeting = req.body;
     winston.info("Starting meeeting id: " + meeting.meetingId);
-    rtsDbApi.startMeeting(meeting).then(function(data) {
+    rtsDbApi.startMeeting(meeting).then(function() {
         rtsWsApi.startMeeting(meeting);
         res.status(204).end();
     }, function(err) {
@@ -120,7 +120,7 @@ app.post("/startMeeting", function(req, res) {
 app.post("/endMeeting", function(req, res) {
     let meeting = req.body;
     winston.info("Ending meeeting id: " + meeting.meetingId);
-    rtsDbApi.endMeeting(meeting).then(function(data) {
+    rtsDbApi.endMeeting(meeting).then(function() {
         rtsWsApi.endMeeting(meeting);
         res.status(204).end();
     }, function(err) {

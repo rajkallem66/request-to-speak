@@ -243,10 +243,10 @@ function startMeeting(newMeeting) {
 
 /**
  * Ends an active meeting by sending event to everyone.
- * @param {Meeting} newMeeting
+ * @param {Meeting} endingMeeting
  */
-function endMeeting(newMeeting) {
-    meeting = newMeeting;
+function endMeeting(endingMeeting) {
+    meeting = endingMeeting;
 
     notify("all", {
         "messageType": "meeting",

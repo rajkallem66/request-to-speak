@@ -9,6 +9,7 @@ function(http, app, router, dialog, Import) {
         activate: function() {
             var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
+                self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {
                     meeting.started === true;
