@@ -68,7 +68,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
                 expect(a.request.lastName).toBe("Doe");
                 expect(a.request.official).toBe(true);
                 expect(a.request.agency).toBe("USA");
-                expect(a.request.item).toBe("");
+                expect(a.request.item).toEqual({});
                 expect(a.request.offAgenda).toBe(false);
                 expect(a.request.subTopic).toBe("");
                 expect(a.request.stance).toBe("");

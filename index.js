@@ -62,6 +62,9 @@ app.post("/request", function(req, res) {
     winston.info("Adding request from: " + req._remoteAddress);
     winston.debug("Request data.", request);
 
+    winston.trace("Set datetime added.");
+    request.timeSubmitted = new Date();
+
     winston.trace("Upcase name and agency.");
     request.firstName = request.firstName.toUpperCase();
     request.lastName = request.lastName.toUpperCase();

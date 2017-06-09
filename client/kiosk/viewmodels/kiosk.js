@@ -70,7 +70,7 @@ function(http, app, observable, event, $) {
                 lastName: "",
                 official: false,
                 agency: "",
-                item: "",
+                item: {},
                 offAgenda: false,
                 subTopic: "",
                 stance: "",
@@ -99,7 +99,7 @@ function(http, app, observable, event, $) {
             return req;
         },
         additionalRequest: function() {
-            this.request.item = "";
+            this.request.item = {};
             this.request.offAgenda = false;
             this.request.subTopic = "";
             this.request.stance = "";
@@ -108,7 +108,7 @@ function(http, app, observable, event, $) {
     };
     observable(ret, "selectedItem").subscribe(function(value) {
         if(value !== undefined) {
-            this.request.item = value.itemName;
+            this.request.item = value;
             this.request.timeToSpeak = value.defaultTimeToSpeak;
         }
     }.bind(ret));

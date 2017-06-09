@@ -6,7 +6,6 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
         isMeetingActive: false,
         messages: [],
         meeting: {},
-        requests: [],
         wallConnected: false,
         connectedKiosks: 0,
         connectedAdmins: 0,
@@ -72,7 +71,6 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
                 this.isMeetingActive = false;
             }
             this.meeting = message.meeting;
-            this.requests = message.meeting.requests;
             this.wallConnected = message.wallConnected;
             this.connectedAdmins = message.connectedAdmins;
             this.connectedKiosks = message.connectedKiosks;
@@ -84,12 +82,12 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             } else {
                 this.isMeetingActive = false;
             }
-            this.meeting = message.meetingData;
+            this.meeting = message.meeting;
         },
         requestMessage: function(message) {
             switch(message.event) {
             case "add":
-                this.requests.push(message.request);
+                this.meeting.requests.push(message.request);
                 break;
             case "remove":
             }

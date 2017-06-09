@@ -146,8 +146,13 @@ function getActiveMeeting() {
  */
 function addRequest(request) {
     request.type = "request";
+    // for now just storing the id.
+    var item = request.item;
+    request.item = item.itemId;
+
     return new Promise(function(fulfill, reject) {
         client.add(request, function(err, obj) {
+            request.item = item;
             if(err) {
                 logger.error(err);
                 reject(err);
