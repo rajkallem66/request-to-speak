@@ -5,8 +5,7 @@ function(http, app, observable, event, $) {
         isConnected: false,
         isMeetingActive: false,
         step: 0,
-        request: {
-        },
+        request: {},
         meeting: {},
         selectedItem: {},
         isSubmitting: false,
@@ -26,19 +25,18 @@ function(http, app, observable, event, $) {
             console.log("Meeting message");
             if(message.event === "started") {
                 this.isMeetingActive = true;
-                this.meeting = message.meetingData;
-                this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
-                this.meeting = {};
-                this.request = {};
             }
+            this.meeting = message.meetingData;
+            this.request = this.newRequest();
         },
         initializeMessage: function(message) {
             console.log("Initializing kiosk");
             this.meeting = message.meetingData;
-            if(message.meetingData.active !== undefined) {
-                this.isMeetingActive = message.meetingData.active;
+            if(message.meetingData.status === "started") {
+                this.isMeetingActive = true;
+                this.request = this.newRequest();
             } else {
                 this.isMeetingActive = false;
             }
@@ -46,7 +44,7 @@ function(http, app, observable, event, $) {
         nextStep: function() {
             this.step += 1;
         },
-    		prevStep: function() {
+        prevStep: function() {
             this.step -= 1;
         },
         submitRequest: function() {
@@ -60,8 +58,9 @@ function(http, app, observable, event, $) {
                     self.request = self.newRequest();
                     self.step = 0;
                 }, 3000);
-            }, function() {
+            }, function(err) {
                 // do error stuff
+                console.log(err);
             });
         },
         newRequest: function() {
@@ -71,7 +70,7 @@ function(http, app, observable, event, $) {
                 lastName: "",
                 official: false,
                 agency: "",
-                item: "",
+                item: {},
                 offAgenda: false,
                 subTopic: "",
                 stance: "",
@@ -100,7 +99,7 @@ function(http, app, observable, event, $) {
             return req;
         },
         additionalRequest: function() {
-            this.request.item = "";
+            this.request.item = {};
             this.request.offAgenda = false;
             this.request.subTopic = "";
             this.request.stance = "";
@@ -109,7 +108,7 @@ function(http, app, observable, event, $) {
     };
     observable(ret, "selectedItem").subscribe(function(value) {
         if(value !== undefined) {
-            this.request.item = value.itemName;
+            this.request.item = value;
             this.request.timeToSpeak = value.defaultTimeToSpeak;
         }
     }.bind(ret));

@@ -13,7 +13,7 @@ let pool = null;
 function setupSql(config) {
     pool = new sql.ConnectionPool(config, function(err) {
         if(err) {
-            logger.info(err);
+            logger.error(err);
         } else {
             logger.info("SIRE DB connected.");
         }

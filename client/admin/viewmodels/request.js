@@ -6,7 +6,6 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
         isMeetingActive: false,
         messages: [],
         meeting: {},
-        requests: [],
         wallConnected: false,
         connectedKiosks: 0,
         connectedAdmins: 0,
@@ -27,6 +26,13 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
                 }
             }, function(err) {
                 // Do error stuff
+            });
+        },
+        endMeeting: function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "endMeeting", this.meeting).then(function() {
+            }, function(err) {
+                // do error stuff
+                console.log(err);
             });
         },
         canDeactivate: function() {
@@ -59,13 +65,12 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             }
         },
         initializeMessage: function(message) {
-            if(message.meeting.meetingId !== undefined) {
+            if(message.meeting.status === "started") {
                 this.isMeetingActive = true;
             } else {
                 this.isMeetingActive = false;
             }
             this.meeting = message.meeting;
-            this.isMeetingActive = (this.meeting.meetingId !== undefined);
             this.wallConnected = message.wallConnected;
             this.connectedAdmins = message.connectedAdmins;
             this.connectedKiosks = message.connectedKiosks;
@@ -77,12 +82,12 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             } else {
                 this.isMeetingActive = false;
             }
-            this.meeting = message.meetingData;
+            this.meeting = message.meeting;
         },
         requestMessage: function(message) {
             switch(message.event) {
             case "add":
-                this.requests.push(message.request);
+                this.meeting.requests.push(message.request);
                 break;
             case "remove":
             }

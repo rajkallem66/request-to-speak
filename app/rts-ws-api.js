@@ -170,6 +170,7 @@ function initializeAdmin(spark) {
         "messageType": "initialize",
         "message": {
             "meeting": meeting,
+            "requests": requests,
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
             "connectedBoards": boardSparks.length,
@@ -241,6 +242,22 @@ function startMeeting(newMeeting) {
 }
 
 /**
+ * Ends an active meeting by sending event to everyone.
+ * @param {Meeting} endingMeeting
+ */
+function endMeeting(endingMeeting) {
+    meeting = endingMeeting;
+
+    notify("all", {
+        "messageType": "meeting",
+        "message": {
+            "event": "ended",
+            "meetingData": meeting
+        }
+    });
+}
+
+/**
  * Send updated list of requests to the wall
  */
 function refreshWall() {
@@ -266,6 +283,7 @@ module.exports = function(primus, log) {
         version: "1.0",
         addRequest: addRequest,
         startMeeting: startMeeting,
+        endMeeting: endMeeting,
         refreshWall: refreshWall
     };
 };

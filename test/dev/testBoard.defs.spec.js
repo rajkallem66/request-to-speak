@@ -6,17 +6,20 @@ define(["board"], function(board) {
         var a = board;
 
         describe("Board definitions.", function() {
-            it("should define isMeetingActive", function() {
-                expect(a.isMeetingActive).toBeDefined();
-            });
-
             it("should define isConnected", function() {
                 expect(a.isConnected).toBeDefined();
             });
 
-            it("should define requests", function() {
-                expect(a.requests).toBeDefined();
-                expect(a.requests).toEqual(jasmine.any(Array));
+            it("should define isMeetingActive", function() {
+                expect(a.isMeetingActive).toBeDefined();
+            });
+
+            it("should define meeting", function() {
+                expect(a.meeting).toBeDefined();
+            });
+
+            it("should define requestSort", function() {
+                expect(a.requestSort).toBeDefined();
             });
 
             it("should define primus", function() {

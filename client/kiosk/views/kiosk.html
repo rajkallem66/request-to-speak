@@ -22,9 +22,9 @@
 							<label for="q3" ><span class="fs-field-label ">Are you a: </span></label>
 							<div id="#constituants" class="fs-radio-group fs-radio-custom clearfix ">
 								<div class="">
-									<span><input data-bind="checked: official" id="q3b" name="q3" type="radio" value="Constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
+									<span><input data-bind="checked: official" id="q3b" name="q3" type="radio" value="constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
 									<span><p class="simplePtag">or</p></span>
-									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="Official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
+									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
 									</span>
 								</div>
 								<div data-bind="style: { display: official === 'official' ? 'block' : 'none' }" class="showInput" style="display: none">
@@ -44,9 +44,9 @@
 								<label for="q10" ><span class="fs-field-label ">What's your stance?</span> </label>
 								<div class="fs-radio-group fs-radio-custom clearfix ">
 									<div class="">
-										<span><input data-bind="checked: stance" id="q10a" name="q10" type="radio" value="constituant" class="supportRadio" /><label for="q10a" ><h2>In-Support</h2></label></span>
-										<span><input data-bind="checked: stance" id="q10b" name="q10" type="radio" value="official" class="opposedRadio"/><label for="q10b" ><h2>Opposed</h2></label></span>
-										<span><input data-bind="checked: stance" id="q10c" name="q10" type="radio" value="official" class="neutralRadio"/><label for="q10c" ><h2>Neutral</h2></label></span>
+										<span><input data-bind="checked: stance" id="q10a" name="q10" type="radio" value="support" class="supportRadio" /><label for="q10a" ><h2>In-Support</h2></label></span>
+										<span><input data-bind="checked: stance" id="q10b" name="q10" type="radio" value="oppose" class="opposedRadio"/><label for="q10b" ><h2>Opposed</h2></label></span>
+										<span><input data-bind="checked: stance" id="q10c" name="q10" type="radio" value="neutral" class="neutralRadio"/><label for="q10c" ><h2>Neutral</h2></label></span>
 									</div>
 								</div>
 							</div>
@@ -74,7 +74,7 @@
 					</ol><!-- /fs-fields -->
 					
 					<div class="btns-top">
-						<button data-bind="click: submitRequest" class="fs-submit" type="submit"><span class="btn-text">Send Now</span> <i class="fa fa-2x fa-check"></i></button>
+						<button data-bind="click: submitRequest" class="fs-submit" type="button"><span class="btn-text">Send Now</span> <i class="fa fa-2x fa-check"></i></button>
 						<button type="button" class="fs-submit" ><span class="btn-text"> Cancel</span> <i class="fa fa-2x fa-ban"></i></button>
 
 						<button type="button" class="fs-submit" ><span class="btn-text"> Add Another</span> <i class="fa fa-2x fa-plus"></i></button>

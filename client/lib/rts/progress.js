@@ -1,108 +1,92 @@
-$(document).ready(function(){
-				var controlButton = $('#controlButton');
-				
-			     $('.increment').click(function(){
-					controlButton.progressIncrement();
-				});
-			});
+/* global $, jQuery */
+$(document).ready(function() {
+    var controlButton = $("#controlButton");
 
-			(function($){
+    $(".increment").click(function() {
+        controlButton.progressIncrement();
+    });
+});
 
-				// Creating a number of jQuery plugins that you can use to
-				// initialize and control the progress meters.
+(function($) {
+    // Creating a number of jQuery plugins that you can use to
+    // initialize and control the progress meters.
 
-				$.fn.progressInitialize = function(){
+    $.fn.progressInitialize = function() {
+        // This function creates the necessary markup for the progress meter
+        // and sets up a few event listeners.
 
-					// This function creates the necessary markup for the progress meter
-					// and sets up a few event listeners.
+        // Loop through all the buttons:
+        return this.each(function() {
+            var button = $(this);
+            var progress = 0;
 
+            // Extract the data attributes into the options object.
+            // If they are missing, they will receive default values.
 
-					// Loop through all the buttons:
+            var options = $.extend({
+                type: "background-horizontal",
+                loading: "Loading...",
+                finished: "Done!"
+            }, button.data());
 
-					return this.each(function(){
+            // Add the data attributes if they are missing from the element.
+            // They are used by our CSS code to show the messages
+            button.attr({"data-loading": options.loading, "data-finished": options.finished});
 
-						var button = $(this),
-							progress = 0;
+            // Add the needed markup for the progress bar to the button
+            var bar = $("<span class='tz-bar '" + options.type + "'>").appendTo(button);
 
-						// Extract the data attributes into the options object.
-						// If they are missing, they will receive default values.
+            // The progress event tells the button to update the progress bar
+            button.on("progress", function(e, val, absolute, finish) {
+                if (!button.hasClass("in-progress")) {
+                    // This is the first progress event for the button (or the
+                    // first after it has finished in a previous run). Re-initialize
+                    // the progress and remove some classes that may be left.
+                    bar.show();
+                    progress = 0;
+                    button.removeClass("finished").addClass("in-progress");
+                }
 
-						var options = $.extend({
-							type:'background-horizontal',
-							loading: 'Loading..',
-							finished: 'Done!'
-						}, button.data());
+                // val, absolute and finish are event data passed by the progressIncrement
+                // and progressSet methods that you can see near the end of this file.
 
-						// Add the data attributes if they are missing from the element.
-						// They are used by our CSS code to show the messages
-						button.attr({'data-loading': options.loading, 'data-finished': options.finished});
+                if (absolute) {
+                    progress = val;
+                } else {
+                    progress += val;
+                }
 
-						// Add the needed markup for the progress bar to the button
-						var bar = $('<span class="tz-bar ' + options.type + '">').appendTo(button);
+                if (progress >= 100) {
+                    progress = 100;
+                }
 
+                if (finish) {
+                    button.removeClass("in-progress").addClass("finished");
 
-						// The progress event tells the button to update the progress bar
-						button.on('progress', function(e, val, absolute, finish){
+                    bar.delay(500).fadeOut(function() {
+                        // Trigger the custom progress-finish event
+                        button.trigger("progress-finish");
+                        setProgress(0);
+                    });
+                }
+                setProgress(progress);
+            });
 
-							if(!button.hasClass('in-progress')){
+/**
+ *
+ * @param {int} percentage
+ */
+            function setProgress(percentage) {
+                bar.filter(".background-horizontal,.background-bar").width(percentage + "%");
+                bar.filter(".background-vertical").height(percentage + "%");
+            }
+        });
+    };
 
-								// This is the first progress event for the button (or the
-								// first after it has finished in a previous run). Re-initialize
-								// the progress and remove some classes that may be left.
-
-								bar.show();
-								progress = 0;
-								button.removeClass('finished').addClass('in-progress')
-							}
-
-							// val, absolute and finish are event data passed by the progressIncrement
-							// and progressSet methods that you can see near the end of this file.
-
-							if(absolute){
-								progress = val;
-							}
-							else{
-								progress += val;
-							}
-
-							if(progress >= 100){
-								progress = 100;
-							}
-
-							if(finish){
-
-								button.removeClass('in-progress').addClass('finished');
-
-								bar.delay(500).fadeOut(function(){
-
-									// Trigger the custom progress-finish event
-									button.trigger('progress-finish');
-									setProgress(0);
-								});
-
-							}
-
-							setProgress(progress);
-						});
-
-						function setProgress(percentage){
-							bar.filter('.background-horizontal,.background-bar').width(percentage+'%');
-							bar.filter('.background-vertical').height(percentage+'%');
-						}
-
-					});
-
-	};
-
-				$.fn.progressIncrement = function(val){
-
-					val = val || 10;
-
-					var button = this.first();
-
-					button.trigger('progress',[val])
-
-					return this;
-				};
-
-			})(jQuery);
+    $.fn.progressIncrement = function(val) {
+        val = val || 10;
+        var button = this.first();
+        button.trigger("progress", [val]);
+        return this;
+    };
+})(jQuery);

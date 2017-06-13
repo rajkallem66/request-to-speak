@@ -6,22 +6,21 @@ define(["requestAdmin"], function(requestAdmin) {
         var a = requestAdmin;
 
         describe("Request Admin definitions.", function() {
-            it("should define activate as a Function", function() {
-                expect(a.activate).toBeDefined();
-                expect(a.activate).toEqual(jasmine.any(Function));
-            });
-
-            it("should define requests as an Array", function() {
-                expect(a.requests).toBeDefined();
-                expect(a.requests).toEqual(jasmine.any(Array));
-            });
-
             it("should define isConnected", function() {
                 expect(a.isConnected).toBeDefined();
             });
 
             it("should define isMeetingActive", function() {
                 expect(a.isMeetingActive).toBeDefined();
+            });
+
+            it("should define messages as an Array", function() {
+                expect(a.messages).toBeDefined();
+                expect(a.messages).toEqual(jasmine.any(Array));
+            });
+
+            it("should define meeting", function() {
+                expect(a.meeting).toBeDefined();
             });
 
             it("should define wallConnected", function() {
@@ -42,6 +41,21 @@ define(["requestAdmin"], function(requestAdmin) {
 
             it("should define primus", function() {
                 expect(a.primus).toBeDefined();
+            });
+
+            it("should define activate as a Function", function() {
+                expect(a.activate).toBeDefined();
+                expect(a.activate).toEqual(jasmine.any(Function));
+            });
+
+            it("should define editRequest as a Function.", function() {
+                expect(a.editRequest).toBeDefined();
+                expect(a.editRequest).toEqual(jasmine.any(Function));
+            });
+
+            it("should define endMeeting as a Function.", function() {
+                expect(a.endMeeting).toBeDefined();
+                expect(a.endMeeting).toEqual(jasmine.any(Function));
             });
 
             it("should define canDeactivate as a Function.", function() {

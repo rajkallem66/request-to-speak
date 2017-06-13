@@ -9,6 +9,7 @@ function(http, app, router, dialog, Import) {
         activate: function() {
             var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
+                self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {
                     meeting.started === true;
@@ -104,6 +105,9 @@ function(http, app, router, dialog, Import) {
         }
     };
     ret.selectMeeting = function(meeting) {
+        if(this.selectedMeeting === meeting) {
+            return;
+        }
         if(this.selectedMeeting !== null && this.meetings.includes(this.selectedMeeting) === false) {
             app.showMessage("This meeting has not been saved.");
         }
