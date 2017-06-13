@@ -14,6 +14,11 @@ function(http, app, observable, event, $) {
         primus: null,
         attached: function() {
         },
+        deactivate: function() {
+            if(this.primus) {
+                this.primus.end();
+            }
+        },
         activate: function() {
             this.request = this.newRequest();
             // the router's activator calls this function and waits for it to complete before proceeding
@@ -65,7 +70,7 @@ function(http, app, observable, event, $) {
         },
         newRequest: function() {
             var req = {
-                meetingId: this.meeting.meetingId,
+                meetingId: this.meeting ? this.meeting.meetingId : "",
                 firstName: "",
                 lastName: "",
                 official: false,

@@ -4,7 +4,7 @@ define(["plugins/http", "plugins/dialog"], function(http, dialog) {
         this.activate = function(req) {
             this.request = req;
         },
-        this.request = null,
+        this.request = {},
         this.save = function() {
             dialog.close(this, this.request);
         }

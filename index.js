@@ -109,22 +109,32 @@ app.put("/meeting/:meetingId", function(req, res) {
     });
 });
 
-app.post("/startMeeting", function(req, res) {
-    let meeting = req.body;
-    winston.info("Starting meeeting id: " + meeting.meetingId);
-    rtsDbApi.startMeeting(meeting).then(function() {
-        rtsWsApi.startMeeting(meeting);
-        res.status(204).end();
+app.post("/startMeeting/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    winston.info("Starting meeeting id: " + meetingId);
+    rtsDbApi.startMeeting(meetingId).then(function() {
+        rtsDbApi.getActiveMeeting().then(function(meeting) {
+            rtsWsApi.startMeeting(meeting).then(function() {
+                res.status(204).end();
+            }, function(err) {
+                winston.error("Error communicating started meeting.", err);
+                res.status(500).send(err);
+            });
+        }, function(err){
+            winston.error("Error getting active meeting.", err);
+            res.status(500).send(err);
+        });
     }, function(err) {
+        winston.error("Error starting meeting.", err);
         res.status(500).send(err);
     });
 });
 
-app.post("/endMeeting", function(req, res) {
-    let meeting = req.body;
-    winston.info("Ending meeeting id: " + meeting.meetingId);
-    rtsDbApi.endMeeting(meeting).then(function() {
-        rtsWsApi.endMeeting(meeting);
+app.post("/endMeeting/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    winston.info("Ending meeeting id: " + meetingId);
+    rtsDbApi.endMeeting(meetingId).then(function() {
+        rtsWsApi.endActiveMeeting();
         res.status(204).end();
     }, function(err) {
         res.status(500).send(err);

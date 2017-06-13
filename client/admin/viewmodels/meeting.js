@@ -12,7 +12,7 @@ function(http, app, router, dialog, Import) {
                 self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {
-                    meeting.started === true;
+                    meeting.status === "started";
                 });
                 if(startedMeetings.length > 0) {
                     app.showMessage("A meeting is active. You will not be able to edit the active meeting.");
@@ -23,8 +23,7 @@ function(http, app, router, dialog, Import) {
             });
         },
         startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting",
-                this.selectedMeeting).then(function(result) {
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + this.selectedMeeting.meetingId).then(function(result) {
                     app.showMessage("Meeting started successfully.").then(function() {
                         router.navigate("/request");
                     });

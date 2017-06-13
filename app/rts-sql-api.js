@@ -126,20 +126,20 @@ function getMeetings() {
 
 /**
  * set meeting status to started.
- * @param {Meeting} meeting
+ * @param {Meeting} meetingId
  * @return {Promise}
  */
-function startMeeting(meeting) {
-    return updateMeetingStatus(meeting.meetingId, "started");
+function startMeeting(meetingId) {
+    return updateMeetingStatus(meetingId, "started");
 }
 
 /**
  * set meeting status to ended.
- * @param {Meeting} meeting
+ * @param {Meeting} meetingId
  * @return {Promise}
  */
-function endMeeting(meeting) {
-    return updateMeetingStatus(meeting.meetingId, "ended");
+function endMeeting(meetingId) {
+    return updateMeetingStatus(meetingId, "ended");
 }
 
 /**
@@ -154,12 +154,13 @@ function updateMeetingStatus(meetingId, status) {
         transaction.begin().then(function() {
             let request = new sql.Request(transaction);
 
+            request.input("status", status);
             request.input("meetingId", meetingId);
-            let query = "UPDATE Meeting set status = '" + status + "' where @meetingId = " + meetingId;
+            let query = "UPDATE Meeting set status = @status where meetingId = @meetingId";
             logger.debug("Statement: " + query);
             request.query(query).then(function() {
                 transaction.commit().then(function(recordSet) {
-                    logger.debug("Commit result.", recordSet);
+                    logger.debug("Update meeting status commit result.", recordSet);
                     fulfill();
                 }).catch(function(err) {
                     logger.error("Error in Transaction Commit." + err);
@@ -220,11 +221,29 @@ function getActiveMeeting() {
         let query = "SELECT meetingId, sireId, meetingName, status FROM Meeting WHERE status = 'started'";
         logger.debug("Statement: " + query);
         pool.request().query(query).then(function(result) {
-            logger.debug("Query result.", result.recordset);
+            logger.debug("Active meeting query result.", result.recordset);
             if(result.recordset.length === 0) {
                 fulfill();
             } else if(result.recordset.length === 1) {
-                fulfill(result.recordset[0]);
+                let meeting = result.recordset[0];
+                logger.debug("There is an active meeting: " + meeting.meetingId);
+                meeting.requests = [];
+                let requestQuery = "SELECT meetingId, dateAdded, firstName, lastName, official, agency, item, " +
+                    "offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status FROM Request " +
+                    "WHERE meetingId = @meetingId";
+                logger.debug("Statement: " + query);
+                let requestRequest = pool.request();
+                requestRequest.input("meetingId", meeting.meetingId);
+                requestRequest.query(requestQuery).then(function(requestResult) {
+                    logger.debug("Active meeting requests result.", requestResult.recordset);
+                    requestResult.recordset.forEach(function(req) {
+                        meeting.requests.push(req);
+                    });
+                    fulfill(meeting);
+                }, function (err) {
+                    logger.error("Error getting active meeting requests.", err);
+                    reject(err);
+                });
             } else {
                 logger.error("More than one active meeting.");
                 reject(result.recordset);
