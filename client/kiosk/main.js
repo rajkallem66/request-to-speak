@@ -10,7 +10,7 @@ requirejs.config({
         "jquery": "../lib/jquery/jquery-1.9.1",
         "primus": "../primus/primus",
         "eventHandler": "../lib/rts/eventHandler",
-        "modernizr": "../lib/rts/modernizr"
+        "kioskDialog": "./viewmodels/dialog"
     },
     shim: {
         "bootstrap": {

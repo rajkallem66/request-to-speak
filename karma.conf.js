@@ -21,6 +21,7 @@ module.exports = function (config) {
             { pattern: 'client/admin/viewmodels/dialog/*.js', included: false },
             { pattern: 'client/board/viewmodels/*.js', included: false },
             { pattern: 'client/kiosk/viewmodels/*.js', included: false },
+            { pattern: 'client/kiosk/viewmodels/dialog/*.js', included: false },
             { pattern: 'client/wall/viewmodels/*.js', included: false },
             { pattern: 'client/lib/**/*.js', included: false }
         ],

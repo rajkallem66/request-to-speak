@@ -1,23 +1,24 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function(http, app, event, Edit) {
-    return {
-        displayName: "Request",
-        isConnected: false,
-        isMeetingActive: false,
-        messages: [],
-        meeting: {},
-        wallConnected: false,
-        connectedKiosks: 0,
-        connectedAdmins: 0,
-        connectedBoards: 0,
-        primus: null,
-        activate: function() {
+    var ctor = function() {
+        this.displayName = "Request";
+        this.isConnected = false;
+        this.isMeetingActive = false;
+        this.messages = [];
+        this.meeting = null;
+        this.wallConnected = false;
+        this.connectedKiosks = 0;
+        this.connectedAdmins = 0;
+        this.connectedBoards = 0;
+        this.primus = null;
+        this.activate = function() {
             // the router's activator calls this function and waits for it to complete before proceeding
+            this.meeting = this.blankMeeting();
             if(this.primus === null || this.primus.online !== true) {
                 event.setupPrimus(this, "admin");
             }
-        },
-        editRequest: function(request) {
+        };
+        this.editRequest = function(request) {
             var self = this;
             app.showDialog(new Edit(), request).then(function(response) {
                 if(response !== undefined) {
@@ -27,15 +28,20 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             }, function(err) {
                 // Do error stuff
             });
-        },
-        endMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "endMeeting", this.meeting).then(function() {
-            }, function(err) {
-                // do error stuff
-                console.log(err);
+        }.bind(this);
+        this.endMeeting = function() {
+            var self = this;
+            app.showMessage("Are you sure?", "End meeting", ["Yes", "No"]).then(function(response) {
+                if(response === "Yes") {
+                    http.post(location.href.replace(/[^/]*$/, "") + "endMeeting/" + self.meeting.meetingId).then(function() {
+                    }, function(err) {
+                        // do error stuff
+                        console.log(err);
+                    });
+                }
             });
-        },
-        canDeactivate: function() {
+        };
+        this.canDeactivate = function() {
             // the router's activator calls this function to see if it can leave the screen
             if(this.isMeetingActive) {
                 return app.showMessage("There is an active meeting. Are you sure you want to leave this page?",
@@ -43,8 +49,13 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             } else {
                 return true;
             }
-        },
-        deviceMessage: function(message) {
+        };
+        this.deactivate = function() {
+            if(this.primus) {
+                this.primus.end();
+            }
+        };
+        this.deviceMessage = function(message) {
             switch(message.deviceType) {
             case "wall":
                 if(message.event === "connected") {
@@ -63,8 +74,8 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
                 this.connectedAdmins = message.count;
                 break;
             }
-        },
-        initializeMessage: function(message) {
+        };
+        this.initializeMessage = function(message) {
             if(message.meeting.status === "started") {
                 this.isMeetingActive = true;
             } else {
@@ -75,22 +86,30 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             this.connectedAdmins = message.connectedAdmins;
             this.connectedKiosks = message.connectedKiosks;
             this.connectedBoards = message.connectedBoards;
-        },
-        meetingMessage: function(message) {
+        };
+        this.meetingMessage = function(message) {
             if(message.event === "started") {
                 this.isMeetingActive = true;
+                this.meeting = message.meeting;
             } else {
                 this.isMeetingActive = false;
+                this.meeting = this.blankMeeting();
             }
-            this.meeting = message.meeting;
-        },
-        requestMessage: function(message) {
+        };
+        this.requestMessage = function(message) {
             switch(message.event) {
             case "add":
                 this.meeting.requests.push(message.request);
                 break;
             case "remove":
             }
-        }
+        };
+        this.blankMeeting = function() {
+            return {
+                meetingName: "No active meeting.",
+                requests: []
+            };
+        };
     };
+    return ctor;
 });

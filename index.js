@@ -88,6 +88,32 @@ app.post("/request", function(req, res) {
     });
 });
 
+app.patch("/request", function(req, res) {
+    let request = req.body;
+    winston.info("Updating request from: " + req._remoteAddress);
+    winston.debug("Request data.", request);
+
+    winston.trace("Upcase name and agency.");
+    request.firstName = request.firstName.toUpperCase();
+    request.lastName = request.lastName.toUpperCase();
+    request.agency = request.agency.toUpperCase();
+
+    winston.trace("Update request with DbApi");
+    rtsDbApi.updateRequest(request).then(function() {
+        winston.trace("Notify WS clients of updated request");
+        rtsWsApi.updateRequest(request).then(function() {
+            winston.info("Request updated.");
+            res.status(204).end();
+        }, function(err) {
+            winston.error("Error notifying WS clients of updated request.", err);
+            res.status(500).send("Unable to send updated request to admin.");
+        });
+    }, function(err) {
+        winston.error("Error updating request to database: " + err);
+        res.status(500).send("Unable to update request to database.");
+    });
+});
+
 app.post("/meeting", function(req, res) {
     let meeting = req.body;
     winston.info("Adding meeting sireId: " + meeting.sireId);
@@ -109,22 +135,32 @@ app.put("/meeting/:meetingId", function(req, res) {
     });
 });
 
-app.post("/startMeeting", function(req, res) {
-    let meeting = req.body;
-    winston.info("Starting meeeting id: " + meeting.meetingId);
-    rtsDbApi.startMeeting(meeting).then(function() {
-        rtsWsApi.startMeeting(meeting);
-        res.status(204).end();
+app.post("/startMeeting/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    winston.info("Starting meeeting id: " + meetingId);
+    rtsDbApi.startMeeting(meetingId).then(function() {
+        rtsDbApi.getActiveMeeting().then(function(meeting) {
+            rtsWsApi.startMeeting(meeting).then(function() {
+                res.status(204).end();
+            }, function(err) {
+                winston.error("Error communicating started meeting.", err);
+                res.status(500).send(err);
+            });
+        }, function(err) {
+            winston.error("Error getting active meeting.", err);
+            res.status(500).send(err);
+        });
     }, function(err) {
+        winston.error("Error starting meeting.", err);
         res.status(500).send(err);
     });
 });
 
-app.post("/endMeeting", function(req, res) {
-    let meeting = req.body;
-    winston.info("Ending meeeting id: " + meeting.meetingId);
-    rtsDbApi.endMeeting(meeting).then(function() {
-        rtsWsApi.endMeeting(meeting);
+app.post("/endMeeting/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    winston.info("Ending meeeting id: " + meetingId);
+    rtsDbApi.endMeeting(meetingId).then(function() {
+        rtsWsApi.endActiveMeeting();
         res.status(204).end();
     }, function(err) {
         res.status(500).send(err);

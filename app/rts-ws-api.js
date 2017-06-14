@@ -2,7 +2,6 @@
 /* eslint prefer-spread: "off" */
 let logger = null;
 let meeting = {};
-let requests = [];
 let displayRequests = [];
 let wallSpark = null;
 let adminSparks = [];
@@ -47,6 +46,7 @@ function setupPrimus(primus) {
                         "event": "connected",
                         "count": boardSparks.length
                     }});
+                initializeBoard(spark);
                 break;
             case "admin":
                 adminSparks.push(spark);
@@ -72,6 +72,9 @@ function setupPrimus(primus) {
                 if(message == "ping") {
                     primus.write({reply: "pong"});
                 }
+            });
+            spark.on("heartbeat", function() {
+                logger.trace("Hearbeat.");
             });
         }
     });
@@ -143,6 +146,9 @@ function notify(group, data) {
     case "admins":
         sparks = adminSparks;
         break;
+    case "boards":
+        sparks = boardSparks;
+        break;
     case "all":
         sparks.push.apply(sparks, kioskSparks);
         sparks.push.apply(sparks, adminSparks);
@@ -166,11 +172,12 @@ function notify(group, data) {
  * @param {Spark} spark - newly connected admin spark.
  */
 function initializeAdmin(spark) {
+    logger.debug("Initializing admin.");
+
     spark.write({
         "messageType": "initialize",
         "message": {
             "meeting": meeting,
-            "requests": requests,
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
             "connectedBoards": boardSparks.length,
@@ -184,6 +191,8 @@ function initializeAdmin(spark) {
  * @param {Spark} spark - newly connected kiosk spark.
  */
 function initializeKiosk(spark) {
+    logger.debug("Initializing kiosk.");
+
     spark.write({
         "messageType": "initialize",
         "message": {
@@ -196,6 +205,8 @@ function initializeKiosk(spark) {
  * initialize wall state.
  */
 function initializeWall() {
+    logger.debug("Initializing wall.");
+
     notify("wall", {
         "messageType": "initialize",
         "mesage": {
@@ -205,15 +216,33 @@ function initializeWall() {
     });
 }
 
+/**
+ * @param {Spark} spark
+ * initialize board state.
+ */
+function initializeBoard(spark) {
+    logger.debug("Initializing board.");
+
+    spark.write({
+        "messageType": "initialize",
+        "message": {
+            "meeting": meeting
+        }
+    });
+}
+
 // Public functions
+
 /**
  * Adds a request to the live meeting.
  * @param {Request} request
  * @return {Promise}
  */
 function addRequest(request) {
+    logger.debug("Adding request.");
+
     return new Promise(function(fulfill, reject) {
-        requests.push(request);
+        meeting.requests.push(request);
         notify("watchers", {
             "messageType": "request",
             "message": {
@@ -226,33 +255,55 @@ function addRequest(request) {
 }
 
 /**
+ * Adds a request to the live meeting.
+ * @param {Request} request
+ * @return {Promise}
+ */
+function updateRequest(request) {
+    logger.debug("Updating request.");
+
+    return new Promise(function(fulfill, reject) {
+        let old = meeting.requests.findIndex(function(r) {
+            return r.requestId === request.requestId;
+        });
+        meeting.requests.splice(old, 1, request);
+    });
+}
+
+/**
  * Starts a meeting by sending event to everyone.
  * @param {Meeting} newMeeting
+ * @return {Promise}
  */
 function startMeeting(newMeeting) {
-    meeting = newMeeting;
+    logger.debug("Starting meeting.");
 
-    notify("all", {
-        "messageType": "meeting",
-        "message": {
-            "event": "started",
-            "meetingData": meeting
-        }
+    return new Promise(function(fulfill, reject) {
+        meeting = newMeeting;
+
+        notify("all", {
+            "messageType": "meeting",
+            "message": {
+                "event": "started",
+                "meeting": meeting
+            }
+        });
+        fulfill();
     });
 }
 
 /**
  * Ends an active meeting by sending event to everyone.
- * @param {Meeting} endingMeeting
  */
-function endMeeting(endingMeeting) {
-    meeting = endingMeeting;
+function endActiveMeeting() {
+    logger.debug("Ending active meeting.");
+
+    meeting = {};
 
     notify("all", {
         "messageType": "meeting",
         "message": {
-            "event": "ended",
-            "meetingData": meeting
+            "event": "ended"
         }
     });
 }
@@ -261,7 +312,9 @@ function endMeeting(endingMeeting) {
  * Send updated list of requests to the wall
  */
 function refreshWall() {
-    displayRequests = requests.filter(function(r) {
+    logger.debug("Refreshing wall.");
+
+    displayRequests = meeting.requests.filter(function(r) {
         r.approvedForDisplay === true;
     });
 
@@ -282,8 +335,9 @@ module.exports = function(primus, log) {
     return {
         version: "1.0",
         addRequest: addRequest,
+        updateRequest: updateRequest,
         startMeeting: startMeeting,
-        endMeeting: endMeeting,
+        endActiveMeeting: endActiveMeeting,
         refreshWall: refreshWall
     };
 };

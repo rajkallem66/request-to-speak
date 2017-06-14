@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "jquery"],
-function(http, app, observable, event, $) {
+define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items", "eventHandler", "jquery"],
+function(http, app, observable, Items, event, $) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -13,6 +13,11 @@ function(http, app, observable, event, $) {
         messages: [],
         primus: null,
         attached: function() {
+        },
+        deactivate: function() {
+            if(this.primus) {
+                this.primus.end();
+            }
         },
         activate: function() {
             this.request = this.newRequest();
@@ -41,9 +46,6 @@ function(http, app, observable, event, $) {
                 this.isMeetingActive = false;
             }
         },
-        nextStep: function() {
-            this.step += 1;
-        },
         prevStep: function() {
             this.step -= 1;
         },
@@ -65,7 +67,7 @@ function(http, app, observable, event, $) {
         },
         newRequest: function() {
             var req = {
-                meetingId: this.meeting.meetingId,
+                meetingId: this.meeting ? this.meeting.meetingId : "",
                 firstName: "",
                 lastName: "",
                 official: false,
@@ -106,6 +108,23 @@ function(http, app, observable, event, $) {
             this.request.notes = "";
         }
     };
+
+    ret.nextStep = function() {
+        this.step += 1;
+    }.bind(ret);
+
+    ret.selectItem = function() {
+        var self = this;
+        app.showDialog(new Items(), this.meeting.items).then(function(resp) {
+            if(resp) {
+                self.request.item = resp.item;
+                if(resp.subTopic) {
+                    self.subTopic = resp.subTopic;
+                }
+            }
+        });
+    }.bind(ret);
+
     observable(ret, "selectedItem").subscribe(function(value) {
         if(value !== undefined) {
             this.request.item = value;

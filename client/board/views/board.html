@@ -2,7 +2,7 @@
     <div>
         <span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining"></span>
     </div>
-    <div data-bind="foreach: items">
+    <div data-bind="foreach: requestList">
         <span data-bind="text: itemName"></span>
         <span data-bind="text: timeRemaining"> </span>
         <div data-bind="foreach: requests">
