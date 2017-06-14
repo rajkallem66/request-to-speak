@@ -24,12 +24,12 @@ function(http, app, router, dialog, Import) {
         },
         startMeeting: function() {
             http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + this.selectedMeeting.meetingId).then(function(result) {
-                    app.showMessage("Meeting started successfully.").then(function() {
-                        router.navigate("/request");
-                    });
-                }, function(err) {
-                    app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
+                app.showMessage("Meeting started successfully.").then(function() {
+                    router.navigate("/request");
                 });
+            }, function(err) {
+                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
+            });
         },
         newMeeting: function() {
             return {

@@ -1,5 +1,5 @@
 /* global jasmine, describe, beforeEach, it, expect, require */
-define(["requestAdmin"], function(requestAdmin) {
+define(["requestAdmin"], function(RequestAdmin) {
     describe("Request Admin ViewModel functions.", function() {
         "use strict";
         /**
@@ -13,7 +13,7 @@ define(["requestAdmin"], function(requestAdmin) {
             connectedBoards: 1
         };
 
-        var a = requestAdmin;
+        var a = new RequestAdmin();
 
         describe("Request Admin functions.", function() {
             it("deviceMessage should activate or deactivate the wall for wall device type event.", function() {

@@ -31,7 +31,8 @@ require.config({
         "jquery": "client/lib/jquery/jquery-1.9.1",
         "primus": "client/lib/primus/primus",
         "eventHandler": "client/lib/rts/eventHandler",
-        "dialog": "client/admin/viewmodels/dialog"
+        "dialog": "client/admin/viewmodels/dialog",
+        "kioskDialog": "client/kiosk/viewmodels/dialog"
     },
     shim: {
         "bootstrap": {

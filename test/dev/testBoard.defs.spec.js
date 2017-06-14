@@ -14,8 +14,9 @@ define(["board"], function(board) {
                 expect(a.isMeetingActive).toBeDefined();
             });
 
-            it("should define meeting", function() {
-                expect(a.meeting).toBeDefined();
+            it("should define requests", function() {
+                expect(a.requests).toBeDefined();
+                expect(a.requests).toEqual(jasmine.any(Array));
             });
 
             it("should define requestSort", function() {

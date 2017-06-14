@@ -9,6 +9,7 @@ let paths = {
         "app/*.js",
         "client/*/main.js",
         "client/*/viewmodels/*.js",
+        "client/*/viewmodels/dialog/*.js",
         "test/**/*.js",
         "client/lib/rts/*.js"
     ],

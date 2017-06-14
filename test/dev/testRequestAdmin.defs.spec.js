@@ -1,9 +1,9 @@
 /* global jasmine, describe, beforeEach, it, expect, require */
-define(["requestAdmin"], function(requestAdmin) {
+define(["requestAdmin"], function(RequestAdmin) {
     describe("Request Admin ViewModel definitions.", function() {
         "use strict";
 
-        var a = requestAdmin;
+        var a = new RequestAdmin();
 
         describe("Request Admin definitions.", function() {
             it("should define isConnected", function() {

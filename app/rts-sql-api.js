@@ -213,6 +213,41 @@ function addRequest(newRequest) {
 }
 
 /**
+ * Update a request in the database.
+ * @param {Request} updateRequest
+ * @return {Promise}
+ */
+function updateRequest(updateRequest) {
+    return new Promise(function(fulfill, reject) {
+        // Query
+        let request = pool.request();
+
+        request.input("requestId", updateRequest.meetingId);
+        request.input("firstName", updateRequest.firstName);
+        request.input("lastName", updateRequest.lastName);
+        request.input("official", updateRequest.official);
+        request.input("agency", updateRequest.agency);
+        request.input("item", updateRequest.item);
+        request.input("offAgenda", updateRequest.offAgenda);
+        request.input("subTopic", updateRequest.subTopic);
+        request.input("stance", updateRequest.stance);
+        request.input("notes", updateRequest.notes);
+        request.input("phone", updateRequest.phone);
+        request.input("email", updateRequest.email);
+        request.input("address", updateRequest.address);
+        request.input("timeToSpeak", updateRequest.timeToSpeak);
+        request.input("approvedForDisplay", updateRequest.approvedForDisplay);
+        request.execute("UpdateRequest").then(function(result) {
+            logger.debug("New request updated.", result);
+            fulfill(result);
+        }).catch(function(err) {
+            logger.error("Error in calling insert stored procedure.", err);
+            reject(err);
+        });
+    });
+}
+
+/**
  * returns information on an active meeting
  * @return {Promise}
  */
@@ -240,7 +275,7 @@ function getActiveMeeting() {
                         meeting.requests.push(req);
                     });
                     fulfill(meeting);
-                }, function (err) {
+                }, function(err) {
                     logger.error("Error getting active meeting requests.", err);
                     reject(err);
                 });
@@ -282,6 +317,7 @@ module.exports = function(cfg, log) {
         version: "1.0",
         dbType: "Microsoft SQL Server",
         addRequest: addRequest,
+        updateRequest: updateRequest,
         addMeeting: addMeeting,
         getMeetings: getMeetings,
         getActiveMeeting: getActiveMeeting,

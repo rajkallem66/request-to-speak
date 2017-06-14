@@ -26,7 +26,6 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Pri
             } else {
                 this.isMeetingActive = false;
             }
-            this.requests = [];
         },
         refreshMessage: function(message) {
             this.requests = message.requests;

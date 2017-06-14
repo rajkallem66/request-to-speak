@@ -22,7 +22,7 @@
 							<label for="q3" ><span class="fs-field-label ">Are you a: </span></label>
 							<div id="#constituants" class="fs-radio-group fs-radio-custom clearfix ">
 								<div class="">
-									<span><input data-bind="checked: official" id="q3b" name="q3" type="radio" value="constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
+									<span><input data-bind="checked: official, click: $parent.nextStep" id="q3b" name="q3" type="radio" value="constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
 									<span><p class="simplePtag">or</p></span>
 									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
 									</span>
@@ -36,7 +36,7 @@
 							<div class="" id="subColumns">
 								<section >
 									<label for="q7"><span class="fs-field-label ">Which agenda item? </span></label>
-									<button>Choose Item, click here</button>
+									<button data-bind="click: $parent.selectItem">Choose Item, click here</button>
 								</section>
 							</div>
 							<div class="clearfix"></div>

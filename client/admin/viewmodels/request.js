@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function(http, app, event, edit) {
-    var ctor = function () {
+define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function(http, app, event, Edit) {
+    var ctor = function() {
         this.displayName = "Request";
         this.isConnected = false;
         this.isMeetingActive = false;
@@ -20,7 +20,7 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
         };
         this.editRequest = function(request) {
             var self = this;
-            app.showDialog(new edit(), request).then(function(response) {
+            app.showDialog(new Edit(), request).then(function(response) {
                 if(response !== undefined) {
                     self.meetings.push(response);
                     self.selectedMeeting = response;
@@ -104,7 +104,7 @@ define(["plugins/http", "durandal/app", "eventHandler", "dialog/edit"], function
             case "remove":
             }
         };
-        this.blankMeeting = function () {
+        this.blankMeeting = function() {
             return {
                 meetingName: "No active meeting.",
                 requests: []
