@@ -192,7 +192,7 @@ function addRequest(newRequest) {
         request.input("lastName", newRequest.lastName);
         request.input("official", newRequest.official);
         request.input("agency", newRequest.agency);
-        request.input("item", newRequest.item);
+        request.input("item", newRequest.item.itemId);
         request.input("offAgenda", newRequest.offAgenda);
         request.input("subTopic", newRequest.subTopic);
         request.input("stance", newRequest.stance);
@@ -227,7 +227,7 @@ function updateRequest(updateRequest) {
         request.input("lastName", updateRequest.lastName);
         request.input("official", updateRequest.official);
         request.input("agency", updateRequest.agency);
-        request.input("item", updateRequest.item);
+        request.input("item", updateRequest.item.itemId);
         request.input("offAgenda", updateRequest.offAgenda);
         request.input("subTopic", updateRequest.subTopic);
         request.input("stance", updateRequest.stance);
@@ -263,7 +263,7 @@ function getActiveMeeting() {
                 let meeting = result.recordset[0];
                 logger.debug("There is an active meeting: " + meeting.meetingId);
                 meeting.requests = [];
-                let requestQuery = "SELECT meetingId, dateAdded, firstName, lastName, official, agency, item, " +
+                let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, item, " +
                     "offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status FROM Request " +
                     "WHERE meetingId = @meetingId";
                 logger.debug("Statement: " + query);
@@ -274,7 +274,27 @@ function getActiveMeeting() {
                     requestResult.recordset.forEach(function(req) {
                         meeting.requests.push(req);
                     });
-                    fulfill(meeting);
+                    meeting.items = [];
+                    let itemQuery = "SELECT i.meetingId, i.itemId, i.itemOrder, i.itemName, i.timeToSpeak FROM " +
+                        "Item i WHERE meetingId = @meetingId";
+                    logger.debug("Item statement: " + itemQuery);
+                    let itemRequest = pool.request();
+                    itemRequest.input("meetingId", meeting.meetingId);
+                    itemRequest.query(itemQuery).then(function(itemResult) {
+                        logger.debug("Item query result.", itemResult.recordset);
+                        itemResult.recordset.forEach(function(item) {
+                            meeting.items.push(item);
+                        });
+                        meeting.requests.forEach(function(req){
+                            req.item = meeting.items.find(function(item) {
+                                return item.itemId === req.item;
+                            });
+                        });
+                        fulfill(meeting);
+                    }, function(err) {
+                        logger.error("Item query error.", err);
+                        reject(err);
+                    });
                 }, function(err) {
                     logger.error("Error getting active meeting requests.", err);
                     reject(err);

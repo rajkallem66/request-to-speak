@@ -36,7 +36,7 @@
 							<div class="" id="subColumns">
 								<section >
 									<label for="q7"><span class="fs-field-label ">Which agenda item? </span></label>
-									<button data-bind="click: $parent.selectItem">Choose Item, click here</button>
+									<button data-bind="click: $parent.openItemSelector">Choose Item, click here</button>
 								</section>
 							</div>
 							<div class="clearfix"></div>
@@ -89,12 +89,9 @@
 						</button>
 					</div>	
 				</form><!-- /fs-form -->
-			</div><!-- /fs-form-wrap -->
-
-			
+			</div><!-- /fs-form-wrap -->		
 		</div><!-- /container -->
 	
-		
 		<div data-bind="style: { display: isMeetingActive === true ? 'none' : 'block' }" >
 		  <ul class="cb-slideshow">
             <div><h3>There is currently <br> no active meeting.<br> Please check back soon.</h3></div>
@@ -117,7 +114,7 @@
 				<img class="hide" src="css/img/whitenoise-361x370.png"/>
 		  </div>
 		</div>
-		<!--<div data-bind="style: { display: success === true ? 'none' : 'block' }" >
+		<div data-bind="style: { display: confirmSubmission === true ? 'block' : 'none' }" >
 		  <div class="successMesg" role="document">
 				<span class="model-par">
 				You have successfully submitted you information!
@@ -125,9 +122,20 @@
 				Thank you.
 				</span>
 		  </div>
-		</div>-->
-		
-		
+		</div>
+		<div data-bind="style: { display: itemSelector === true ? 'block' : 'none' }">
+			<div style="height:500px">
+				<div data-bind="visible: !showSubTopics">
+					<div data-bind="foreach: meeting.items">
+						<span data-bind="text: itemName, click: $root.selectItem"></span>
+					</div>
+				</div>
+				<div data-bind="visible: showSubTopics">
+					<div data-bind="foreach: selectedItem.subTopics">
+						<span data-bind="text: $data"></span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
-
 </html>
