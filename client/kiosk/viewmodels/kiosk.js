@@ -10,6 +10,8 @@ function(http, app, observable, Items, event, $) {
         selectedItem: {},
         isSubmitting: false,
         confirmSubmission: false,
+        itemSelector: false,
+        showSubTopics: false,
         messages: [],
         primus: null,
         attached: function() {
@@ -113,16 +115,22 @@ function(http, app, observable, Items, event, $) {
         this.step += 1;
     }.bind(ret);
 
-    ret.selectItem = function() {
-        var self = this;
-        app.showDialog(new Items(), this.meeting.items).then(function(resp) {
-            if(resp) {
-                self.request.item = resp.item;
-                if(resp.subTopic) {
-                    self.subTopic = resp.subTopic;
-                }
-            }
-        });
+    ret.openItemSelector = function() {
+        this.itemSelector = true;
+    }.bind(ret);
+
+    ret.selectItem = function(data) {
+        this.selectedItem = data;
+        if(this.selectedItem.subTopics) {
+            this.showSubTopics = true;
+        } else {
+            this.itemSelector = false;
+        }
+    }.bind(ret);
+
+    ret.selectItem = function(data) {
+        this.request.subTopic = data;
+        this.itemSelector = false;
     }.bind(ret);
 
     observable(ret, "selectedItem").subscribe(function(value) {

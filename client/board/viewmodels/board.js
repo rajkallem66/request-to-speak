@@ -22,6 +22,9 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             }
             this.requests = message.meeting.requests;
             this.requestList = this.createList(this.requests);
+            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
+                return p + c.timeRemaining;
+            });
         },
         meetingMessage: function(message) {
             if(message.event === "started") {
@@ -31,6 +34,9 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             }
             this.requests = message.meeting.requests;
             this.requestList = this.createList(this.requests);
+            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
+                return p + c.timeRemaining;
+            });
         },
         requestMessage: function(message) {
             var requests = this.meeting.requests;
@@ -41,29 +47,30 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                     return r.requestId === message.request.requestId;
                 }), 1);
             }
+            this.requestList = this.createList(this.requests);
+            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
+                return p + c.timeRemaining;
+            });
         },
         createList: function(requests) {
             // start with a distinct list of items.
-            var items = requests.map(function(request) {
+            var allItems = requests.map(function(request) {
                 return request.item;
-            }).filter(function(value, index, self) {
+            });
+            var items = allItems.filter(function(value, index, self) {
                 return self.findIndex(function(i) {
-                    return i.itemId === i.itemId;
+                    return value.itemId === i.itemId;
                 }) === index;
             });
 
             // add requests and sum time to speak
             items.forEach(function(i) {
                 i.requests = requests.filter(function(r) {
-                    return r.itemId === i.itemId;
+                    return r.item.itemId === i.itemId;
                 });
                 i.timeRemaining = i.requests.reduce(function(p, c) {
-                    return p + c.timeToSpeak;
+                    return p.timeToSpeak + c.timeToSpeak;
                 });
-            });
-
-            this.totalRemainingTime = items.reduce(function(p, c) {
-                return p + c.timeRemaining;
             });
 
             return items;
