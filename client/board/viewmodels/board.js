@@ -72,7 +72,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 });
                 i.timeRemaining = i.requests.reduce(function(a, b) {
                     return a + b.timeToSpeak;
-                },0);
+                }, 0);
             });
 
             return items;

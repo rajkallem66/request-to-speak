@@ -285,7 +285,7 @@ function getActiveMeeting() {
                         itemResult.recordset.forEach(function(item) {
                             meeting.items.push(item);
                         });
-                        meeting.requests.forEach(function(req){
+                        meeting.requests.forEach(function(req) {
                             req.item = meeting.items.find(function(item) {
                                 return item.itemId === req.item;
                             });

@@ -1,9 +1,10 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Primus) {
-    return {
+define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
+    var ret = {
         isConnected: false,
         isMeetingActive: false,
         requests: [],
+        displayRequests: [],
         messages: [],
         primus: null,
         activate: function() {
@@ -18,7 +19,8 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Pri
             } else {
                 this.isMeetingActive = false;
             }
-            this.requests = message.requests;
+            this.requests = message.meeting.requests;
+            this.setDisplay();
         },
         meetingMessage: function(message) {
             if(message.event === "started") {
@@ -29,6 +31,12 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, Pri
         },
         refreshMessage: function(message) {
             this.requests = message.requests;
+            this.setDisplay();
         }
     };
+
+    ret.setDisplay = function() {
+        this.displayRequests = this.requests.slice(0,10);
+    };
+    return ret;
 });

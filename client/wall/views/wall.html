@@ -2,9 +2,13 @@
     <div data-bind="visible: !isConnected">
         <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
     </div>
-    <div class="row" data-bind="foreach: requests">
-        <div>
+    <div class="row" data-bind="foreach: displayRequests">
+        <div data-bind="style: { backgroundColor: status === 'active' ?  'red' : 'white'}">
+            <span data-bind="text: item.itemOrder">
+            </span>
             <span data-bind="text: firstName">
+            </span>
+            <span data-bind="text: lastName">
             </span>
         </div>
     </div>
