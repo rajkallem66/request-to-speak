@@ -3,7 +3,7 @@
     "compounds": [
         {
             "name": "Dev Serve",
-            "configurations": ["nodemon","Gulp BrowserSync", "Launch Board", "Launch Admin"],
+            "configurations": ["nodemon","Gulp BrowserSync", "Launch Kiosk", "Launch Admin"],
             "preLaunchTask": "eslint"
         }
     ],
