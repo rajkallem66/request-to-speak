@@ -3,10 +3,11 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
     var ret = {
         isConnected: false,
         isMeetingActive: false,
+        messages: [],
         requests: [],
         requestList: [],
         requestSort: "",
-        totalRemainingTime: 0,
+        totalTimeRemaining: 0,
         primus: null,
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
@@ -21,7 +22,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 this.isMeetingActive = false;
             }
             this.requests = message.meeting.requests;
-            this.requestList = this.createList(this.requests);
+            this.requestList.length = 0;
+            this.requestList.push.apply(this.requestList, this.createList(this.requests));
             this.totalRemainingTime = this.requestList.reduce(function(p, c) {
                 return p + c.timeRemaining;
             });
@@ -39,7 +41,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             });
         },
         requestMessage: function(message) {
-            var requests = this.meeting.requests;
+            var requests = this.requests;
             if(message.event === "add") {
                 requests.push(message.request);
             } else {
@@ -68,9 +70,9 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 i.requests = requests.filter(function(r) {
                     return r.item.itemId === i.itemId;
                 });
-                i.timeRemaining = i.requests.reduce(function(p, c) {
-                    return p.timeToSpeak + c.timeToSpeak;
-                });
+                i.timeRemaining = i.requests.reduce(function(a, b) {
+                    return a + b.timeToSpeak;
+                },0);
             });
 
             return items;
