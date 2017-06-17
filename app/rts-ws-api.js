@@ -209,7 +209,7 @@ function initializeWall() {
 
     notify("wall", {
         "messageType": "initialize",
-        "mesage": {
+        "message": {
             "meeting": meeting,
             "requests": displayRequests
         }
