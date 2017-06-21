@@ -1,22 +1,18 @@
-     <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-         
-          <div class="navbar-brand">
-				<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining"> </span><span>mins</span>
-       	  </div>
-        </div>
-        <div class="active">
-          <div class="pull-right">
-            <span><i class="fa fa-circle greenDot" aria-hidden="true"></i> Connected</span>
-            <span><i class="fa fa-circle redDot" aria-hidden="true"></i> Not Connceted</span>           
-          </div>
-          
-        </div>
-      </div>
-    </nav>
+<div class="container-fluid boardHeader navbar-inverse navbar-fixed-top">
+  <div class="row">
+  	<div class="col-md-12">
+		<div class="col-md-8 col-sm-6 col-xs-8">
+			<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining">0</span><span>mins</span> 
+		</div>	
+		<div class="active col-md-3 col-xs-2 pull-right">
+			<span><i class="fa fa-circle greenDot" aria-hidden="true"></i><span class="status">Connected</span></span>
+			<!--<span><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connceted</span></span> -->          
+		</div>
+	</div>
+  </div>
+</div>
 
-<div class="container-fluid">
+<div class="container-fluid boardInfoWrap">
     <div class="row">
         <div class="col-md-12 main dashboard">			
 				<div data-bind="foreach: requestList">
@@ -29,7 +25,7 @@
 					</div>
 					<div class="row itemInfoWrap" data-bind="foreach: requests">
 							<div class="itemInfo">
-								<div class="col-md-8">
+								<div class="col-md-8 nameNotesWrap">
 									<div class="infoName">
 										<span data-bind="text: firstName"></span>
 										<span data-bind="text: lastName"></span>
