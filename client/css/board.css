@@ -6,12 +6,11 @@
 .clearfix:after { clear: both; }
 
 html, body, .container {
-	/* height: 100%; */
+	 height: 100%; 
 }
 
 body {
 	background: #f9f9f9;
-	/* color: #fff; */
 	font-weight: 400;
 	font-size: 1.8em;
 	font-family: 'Raleway', Arial, sans-serif;
@@ -50,24 +49,12 @@ a:hover, a:focus {
   text-shadow: 1px 2px #808080;
 }
 .main {
-	  padding: 20px;
-	  margin-top: 75px;
-	}
-	@media (min-width: 768px) {
-	  .main {
-		padding-right: 40px;
-		padding-left: 40px;
-	  }
-	}
-	.main .page-header {
-	  margin-top: 40px;
-	}
-
-.infoName {
-	
+  padding: 20px;
+  margin-top: 75px;
 }
-.agency{
 	
+.main .page-header {
+  margin-top: 40px;
 }
 .stance{
 	text-transform: uppercase;
@@ -82,10 +69,10 @@ a:hover, a:focus {
 	
 color: #fff;
 	
-margin-top: 9px;
+text-align: right;
 }
 .itemOrder{
-    font: 33px Arial, sans-serif;
+    font-size: 33px;
     width: 1.5em;
     height: 1.5em;
     background: #bababa;
@@ -102,26 +89,32 @@ margin-top: 9px;
     padding-right: 23px;
 }
 .itemName{
-	
-margin-left: 20px;
+	margin-left: 20px;
+	font-weight: bold;
+	font-size: 30px;
+	line-height: 16px;
+}
+/*.notes:before{
+	content:'\f27b';
+	font-family:'FontAwesome';
+}*/
+.notes{
+	padding-top: 10px;
+    padding-bottom: 10px;
+}
+.infoName{
 	
 font-weight: bold;
 	
-font-size: 30px;
-	
-line-height: 16px;
-}
-.notes:before{
-	content:'\f27b';
-	font-family:'FontAwesome';
+font-size: 25px;
 }
 .date{
-	
-text-align: center;
-	
-font-size: 14px;
-	
-padding-top: 10px;
+	text-align: center;
+	font-size: 16px;
+	padding-top: 10px;
+}
+.nameNotesWrap{
+	border-right:2px solid #d1d1d1;
 }
 hr{
 	clear: both;
@@ -132,14 +125,117 @@ hr{
 }
 .itemInfo{
     background: rgba(208, 208, 208, 0.3);
-	padding: 10px;
+    padding: 15px;
 }
-
-
 .greenDot{
   color:#217300;
 }
 
 .redDot{
 	color:#D30003;
+}
+.boardHeader{
+	margin-bottom: 10px;
+	color: #fff;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.boardInfoWrap{
+	
+}
+.status{
+	padding-left: 10px;
+}
+
+
+/* Media Queries */
+@media all and (min-width: 1024px) and (max-width: 1280px) { }
+
+@media all and (min-width: 768px) and (max-width: 1024px) { 
+	.notes{
+		border-top: 2px solid #d1d1d1;
+		border-bottom: 2px solid #d1d1d1;
+	}
+	.nameNotesWrap{
+		border:none;
+	}
+	.main {
+		padding-right: 40px;
+		padding-left: 40px;
+	  }
+	.status{
+		display: none;
+	}
+}
+
+@media all and (min-width: 480px) and (max-width: 768px) { 
+	.notes{
+		border-top: 2px solid #d1d1d1;
+		border-bottom: 2px solid #d1d1d1;
+	}
+	.nameNotesWrap{
+		border:none;
+	}
+	.status{
+		display: none;
+	}
+}
+
+@media all and (max-width: 480px) {
+	.notes{
+		border-top: 2px solid #d1d1d1;
+		border-bottom: 2px solid #d1d1d1;
+	}
+	.nameNotesWrap{
+		border:none;
+	}
+	.itemName{
+		line-height:1.24em;
+		font-size:18px
+	}
+	.itemInfo{
+		padding:25px;
+	}
+	.main{
+		margin-top: 90px;
+	}
+	.status{
+		display: none;
+	}
+}
+
+
+/* Portrait */
+@media screen and (orientation:portrait) { /* Portrait styles here */ }
+/* Landscape */
+@media screen and (orientation:landscape) { /* Landscape styles here */ }
+
+
+/* CSS for iPhone, iPad, and Retina Displays */
+
+/* Non-Retina */
+@media screen and (-webkit-max-device-pixel-ratio: 1) {
+}
+
+/* Retina */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min--moz-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5) {
+}
+
+/* iPhone Portrait */
+@media screen and (max-device-width: 480px) and (orientation:portrait) {
+} 
+
+/* iPhone Landscape */
+@media screen and (max-device-width: 480px) and (orientation:landscape) {
+}
+
+/* iPad Portrait */
+@media screen and (min-device-width: 481px) and (orientation:portrait) {
+}
+
+/* iPad Landscape */
+@media screen and (min-device-width: 481px) and (orientation:landscape) {
 }
