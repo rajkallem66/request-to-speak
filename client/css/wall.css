@@ -1,0 +1,158 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
+/* MAIN CSS */
+
+*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+.clearfix:before, .clearfix:after { content: ''; display: table; }
+.clearfix:after { clear: both; }
+
+html, body, .container {
+	 height: 100%; 
+}
+
+body {
+	background: #f9f9f9;
+	font-weight: 400;
+	font-size: 1.8em;
+	font-family: 'Raleway', Arial, sans-serif;
+	overflow: hidden;
+	overflow-y: scroll;
+	min-height: 590px;
+	line-height: 1.85em;
+}
+
+a {
+	color: rgba(0,0,0,0.3);
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover, a:focus {
+	color: #fff;
+}
+
+.modal-dialog {
+  width: 100% !important;
+  height: 100%;
+  padding: 0;
+  margin: 0px !important;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100vh;
+  border-radius: 0 !important;
+  background-color: rgba(105, 185, 255, 0.65) !important;
+  color: #fff;
+  font-size: 60px;
+  text-align: center;
+  padding: 10%;
+  text-shadow: 1px 2px #808080;
+}
+.main {
+	  padding: 20px;
+	  margin-top: 75px;
+	}
+	@media (min-width: 768px) {
+	  .main {
+		padding-right: 40px;
+		padding-left: 40px;
+	  }
+	}
+	.main .page-header {
+	  margin-top: 40px;
+	}
+
+.infoName {
+	
+font-size: 30px;
+	
+line-height: 55px;
+	
+height: 100%;
+	
+margin-bottom: 10px;
+	
+font-weight: bold;
+	
+border-bottom: 1px solid #d1d1d1;
+}
+.agency{
+	
+}
+.stance{
+	text-transform: uppercase;
+	font-weight: bold;
+	height: 30px;
+	text-align: center;
+	font-size: 40px;
+	position: relative;
+	margin-top: 15px;
+}
+.active{
+	
+color: #fff;
+	
+margin-top: 9px;
+}
+.itemOrder{
+    font-size: 33px;
+    width: 1.5em;
+    height: 1.65em;
+    background: #3A5067;
+    border-right: 3px solid #e0e0e0;
+    color: #fff;
+    text-align: center;
+    line-height: 1.35em;
+    box-sizing: content-box;
+    font-weight: bold;
+}
+.itemTime{
+    padding-top: 10px;
+    padding-right: 23px;
+}
+.itemName{
+	
+margin-left: 20px;
+	
+font-weight: bold;
+	
+font-size: 30px;
+	
+line-height: 16px;
+}
+.notes:before{
+	content:'\f27b';
+	font-family:'FontAwesome';
+}
+.date{
+	
+text-align: center;
+	
+font-size: 14px;
+	
+padding-top: 10px;
+}
+hr{
+	clear: both;
+}
+.itemInfo{
+    background: rgba(208, 208, 208, 0.3);
+	padding: 10px;
+}
+
+.wallWrap{
+	
+margin-top: 10px;
+}
+
+.nameRow.activeSpeaker .infoName{
+  -moz-transition: all .5s ease-in-out;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+  background: #3A5067;
+  color: #fff;
+}
+.nameRow{
+	background:none;
+}
+}
