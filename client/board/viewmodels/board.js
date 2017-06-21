@@ -24,8 +24,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             this.requests = message.meeting.requests;
             this.requestList.length = 0;
             this.requestList.push.apply(this.requestList, this.createList(this.requests));
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
+            this.totalTimeRemaining = this.requestList.reduce(function(p, c) {
+                return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
             });
         },
         meetingMessage: function(message) {
@@ -36,8 +36,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             }
             this.requests = message.meeting.requests;
             this.requestList = this.createList(this.requests);
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
+            this.totalTimeRemaining = this.requestList.reduce(function(p, c) {
+                return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
             });
         },
         requestMessage: function(message) {
@@ -50,8 +50,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 }), 1);
             }
             this.requestList = this.createList(this.requests);
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
+            this.totalTimeRemaining = this.requestList.reduce(function(p, c) {
+                return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
             });
         },
         createList: function(requests) {

@@ -238,10 +238,10 @@ function updateRequest(updateRequest) {
         request.input("timeToSpeak", updateRequest.timeToSpeak);
         request.input("approvedForDisplay", updateRequest.approvedForDisplay);
         request.execute("UpdateRequest").then(function(result) {
-            logger.debug("New request updated.", result);
+            logger.debug("Request updated.", result);
             fulfill(result);
         }).catch(function(err) {
-            logger.error("Error in calling insert stored procedure.", err);
+            logger.error("Error in calling update stored procedure.", err);
             reject(err);
         });
     });
