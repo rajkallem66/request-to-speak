@@ -7,17 +7,17 @@
 
 html, body, .container {
 	 height: 100%; 
+	 cursor: none;
 }
 
 body {
-	background: #f9f9f9;
+	background: #222222;
 	font-weight: 400;
 	font-size: 1.8em;
 	font-family: 'Raleway', Arial, sans-serif;
-	overflow: hidden;
-	overflow-y: scroll;
 	min-height: 590px;
 	line-height: 1.85em;
+	overflow: hidden;
 }
 
 a {
@@ -64,21 +64,23 @@ a:hover, a:focus {
 
 .infoName {
 	
-font-size: 30px;
+font-size: 32px;
 	
 line-height: 55px;
 	
 height: 100%;
 	
-margin-bottom: 10px;
+margin-bottom: 12px;
 	
 font-weight: bold;
 	
-border-bottom: 1px solid #d1d1d1;
-}
-.agency{
+border-bottom: 1px solid #575757;
 	
+color: #bebebe;
+	
+/* border-left: 1px solid #575757; */
 }
+
 .stance{
 	text-transform: uppercase;
 	font-weight: bold;
@@ -88,23 +90,43 @@ border-bottom: 1px solid #d1d1d1;
 	position: relative;
 	margin-top: 15px;
 }
-.active{
-	
-color: #fff;
-	
-margin-top: 9px;
-}
+
 .itemOrder{
-    font-size: 33px;
+    font-size: 30px;
     width: 1.5em;
-    height: 1.65em;
-    background: #3A5067;
-    border-right: 3px solid #e0e0e0;
+    height: 1.83em;
+    background: #545454;
+    /* border-top: 1px solid #545454; */
     color: #fff;
     text-align: center;
-    line-height: 1.35em;
+    line-height: 1.65em;
     box-sizing: content-box;
     font-weight: bold;
+    /* border-bottom: 1px solid #5f5f5f; */
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+    border-left: 1px solid #5f5f5f;
+}
+.activeSpeaker .itemOrder{
+	height: 1.8em;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
+	-webkit-box-shadow: 0px -1px 2px rgba(0, 0, 0, .35) inset, 0 1px 0 #575757;
+	-moz-box-shadow: 0 -1px 2px rgba(0, 0, 0, .35) inset, 0 1px 0 #575757;
+	box-shadow: 0 -1px 1px rgba(0, 0, 0, .5), 0 2px 0 #575757;
+	background:#353535;
+	-moz-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+}
+.activeSpeaker{
+	-moz-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
 }
 .itemTime{
     padding-top: 10px;
@@ -119,6 +141,7 @@ font-weight: bold;
 font-size: 30px;
 	
 line-height: 16px;
+
 }
 .notes:before{
 	content:'\f27b';
@@ -136,23 +159,29 @@ hr{
 	clear: both;
 }
 .itemInfo{
-    background: rgba(208, 208, 208, 0.3);
+   
 	padding: 10px;
+	background-color: rgb(68,68,68); /* Needed for IEs */
 }
 
 .wallWrap{
-	
-margin-top: 10px;
+	margin-top: 10px;
 }
 
 .nameRow.activeSpeaker .infoName{
   -moz-transition: all .5s ease-in-out;
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;
-  background: #3A5067;
-  color: #fff;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
+ -webkit-box-shadow: 1px -1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
+  color: #ffffff;
+  text-shadow: 2px 2px 1px rgba(25, 25, 25, .75);
 }
+
 .nameRow{
 	background:none;
-}
+	margin-left: -6px;
+	padding-top: -8px;
 }
