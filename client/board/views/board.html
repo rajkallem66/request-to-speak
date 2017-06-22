@@ -1,7 +1,7 @@
 <div class="container-fluid boardHeader navbar-inverse navbar-fixed-top">
   <div class="row">
   	<div class="col-md-12">
-		<div class="col-md-8 col-sm-6 col-xs-8">
+		<div class="col-md-8 col-sm-6 col-xs-10">
 			<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining">0</span><span>mins</span> 
 		</div>	
 		<div class="active col-md-3 col-xs-2 pull-right">
@@ -31,10 +31,14 @@
 										<span data-bind="text: lastName"></span>
 									</div>
 									<div class="agency">
-										<span data-bind="text: agency"></span>
+										<span>Agency: </span><span data-bind="text: agency"></span>
+										
+									</div>
+									<div class="group">
+										<span>Group: Westchester</span>
 									</div>
 									<div class="notes" >
-										<span data-bind="text: notes"></span>
+										<span>Notes: </span><span data-bind="text: notes"></span>
 									</div>
 								</div>
 								<div class="col-md-4">

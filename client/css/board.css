@@ -162,6 +162,7 @@ hr{
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-color: #3A5067;
+	border-bottom: 0.2em solid #c7c7c7;
 }
 .boardInfoWrap{
 	
@@ -213,8 +214,10 @@ hr{
 		border:none;
 	}
 	.itemName{
-		line-height:1.24em;
-		font-size:18px
+		line-height: 1.24em;
+		font-size: 25px;
+		width: 80%;
+		margin-top: -5px;
 	}
 	.itemInfo{
 		padding:25px;
