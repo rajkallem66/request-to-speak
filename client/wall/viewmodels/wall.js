@@ -36,7 +36,7 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
     };
 
     ret.setDisplay = function() {
-        this.displayRequests = this.requests.slice(0,10);
+        this.displayRequests = this.requests.slice(0, 10);
     };
     return ret;
 });

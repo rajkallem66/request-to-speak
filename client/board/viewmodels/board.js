@@ -5,6 +5,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
         isMeetingActive: false,
         messages: [],
         requests: [],
+        newRequests: [],
         requestList: [],
         requestSort: "",
         totalTimeRemaining: 0,
@@ -22,11 +23,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 this.isMeetingActive = false;
             }
             this.requests = message.meeting.requests;
-            this.requestList.length = 0;
-            this.requestList.push.apply(this.requestList, this.createList(this.requests));
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
-            });
+            this.updateList();
         },
         meetingMessage: function(message) {
             if(message.event === "started") {
@@ -35,49 +32,51 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 this.isMeetingActive = false;
             }
             this.requests = message.meeting.requests;
-            this.requestList = this.createList(this.requests);
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
-            });
+            this.updateList();
         },
         requestMessage: function(message) {
             var requests = this.requests;
             if(message.event === "add") {
                 requests.push(message.request);
+                new.push(message.request);
             } else {
                 requests.splice(requests.findIndex(function(r) {
                     return r.requestId === message.request.requestId;
                 }), 1);
             }
-            this.requestList = this.createList(this.requests);
-            this.totalRemainingTime = this.requestList.reduce(function(p, c) {
-                return p + c.timeRemaining;
-            });
         },
-        createList: function(requests) {
-            // start with a distinct list of items.
-            var allItems = requests.map(function(request) {
-                return request.item;
-            });
-            var items = allItems.filter(function(value, index, self) {
-                return self.findIndex(function(i) {
-                    return value.itemId === i.itemId;
-                }) === index;
-            });
-
-            // add requests and sum time to speak
-            items.forEach(function(i) {
-                i.requests = requests.filter(function(r) {
-                    return r.item.itemId === i.itemId;
-                });
-                i.timeRemaining = i.requests.reduce(function(a, b) {
-                    return a + b.timeToSpeak;
-                }, 0);
-            });
-
-            return items;
-        }
     };
+
+    ret.updateList = function() { 
+        // trunc newMessages array
+        this.newRequests.length = 0;
+        // start with a distinct list of items.
+        var requests = this.requests;
+        var allItems = requests.map(function(request) {
+            return request.item;
+        });
+        var items = allItems.filter(function(value, index, self) {
+            return self.findIndex(function(i) {
+                return value.itemId === i.itemId;
+            }) === index;
+        });
+
+        // add requests and sum time to speak
+        items.forEach(function(i) {
+            i.requests = requests.filter(function(r) {
+                return r.item.itemId === i.itemId;
+            });
+            i.timeRemaining = i.requests.reduce(function(a, b) {
+                return a + b.timeToSpeak;
+            }, 0);
+        });
+
+        this.requestList = items;
+        
+        this.totalTimeRemaining = this.requestList.reduce(function(p, c) {
+            return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
+        });
+    }.bind(ret);
 
     return ret;
 });
