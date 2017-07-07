@@ -1,17 +1,24 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
+
 /* MAIN CSS */
 
-*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
-.clearfix:before, .clearfix:after { content: ''; display: table; }
-.clearfix:after { clear: both; }
-
-html, body, .container {
-	 height: 100%; 
-	 cursor: none;
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
-
+.clearfix:before, .clearfix:after {
+	content: '';
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+html, body, .container {
+	height: 100%;
+	cursor: none;
+}
 body {
-	background: #222222;
+	background: url("img/dark_wall.png");
 	font-weight: 400;
 	font-size: 1.8em;
 	font-family: 'Raleway', Arial, sans-serif;
@@ -19,69 +26,54 @@ body {
 	line-height: 1.85em;
 	overflow: hidden;
 }
-
 a {
-	color: rgba(0,0,0,0.3);
+	color: rgba(0, 0, 0, 0.3);
 	text-decoration: none;
 	outline: none;
 }
-
 a:hover, a:focus {
 	color: #fff;
 }
-
 .modal-dialog {
-  width: 100% !important;
-  height: 100%;
-  padding: 0;
-  margin: 0px !important;
+	width: 100% !important;
+	height: 100%;
+	padding: 0;
+	margin: 0px !important;
 }
-
 .modal-content {
-  height: auto;
-  min-height: 100vh;
-  border-radius: 0 !important;
-  background-color: rgba(105, 185, 255, 0.65) !important;
-  color: #fff;
-  font-size: 60px;
-  text-align: center;
-  padding: 10%;
-  text-shadow: 1px 2px #808080;
+	height: auto;
+	min-height: 100vh;
+	border-radius: 0 !important;
+	background-color: rgba(105, 185, 255, 0.65) !important;
+	color: #fff;
+	font-size: 60px;
+	text-align: center;
+	padding: 10%;
+	text-shadow: 1px 2px #808080;
 }
 .main {
-	  padding: 20px;
-	  margin-top: 75px;
-	}
-	@media (min-width: 768px) {
-	  .main {
+	padding: 20px;
+	margin-top: 75px;
+}
+@media (min-width: 768px) {
+	.main {
 		padding-right: 40px;
 		padding-left: 40px;
-	  }
 	}
-	.main .page-header {
-	  margin-top: 40px;
-	}
-
-.infoName {
-	
-font-size: 32px;
-	
-line-height: 55px;
-	
-height: 100%;
-	
-margin-bottom: 12px;
-	
-font-weight: bold;
-	
-border-bottom: 1px solid #575757;
-	
-color: #bebebe;
-	
-/* border-left: 1px solid #575757; */
 }
-
-.stance{
+.main .page-header {
+	margin-top: 40px;
+}
+.infoName {
+	font-size: 40px;
+	line-height: 55px;
+	height: 100%;
+	margin-bottom: 12px;
+	font-weight: bold;
+	border-bottom: 1px solid #575757;
+	color: #bebebe;
+}
+.stance {
 	text-transform: uppercase;
 	font-weight: bold;
 	height: 30px;
@@ -90,98 +82,79 @@ color: #bebebe;
 	position: relative;
 	margin-top: 15px;
 }
-
-.itemOrder{
-    font-size: 30px;
-    width: 1.5em;
-    height: 1.83em;
-    background: #545454;
-    /* border-top: 1px solid #545454; */
-    color: #fff;
-    text-align: center;
-    line-height: 1.65em;
-    box-sizing: content-box;
-    font-weight: bold;
-    /* border-bottom: 1px solid #5f5f5f; */
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
-    -moz-transition: all .5s ease-in-out;
-    -webkit-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-    border-left: 1px solid #5f5f5f;
-}
-.activeSpeaker .itemOrder{
-	height: 1.8em;
+.itemOrder {
+	font-size: 33px;
+	width: 1.5em;
+	height: 1.658em;
+	background: #545454;
+	color: #fff;
+	text-align: center;
+	line-height: 1.55em;
+	box-sizing: content-box;
+	font-weight: bold;
+	/* border-bottom: 1px solid #5f5f5f; */
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	-moz-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+	border-left: 1px solid #5f5f5f;
+}
+.activeSpeaker .itemOrder {
 	-webkit-box-shadow: 0px -1px 2px rgba(0, 0, 0, .35) inset, 0 1px 0 #575757;
 	-moz-box-shadow: 0 -1px 2px rgba(0, 0, 0, .35) inset, 0 1px 0 #575757;
-	box-shadow: 0 -1px 1px rgba(0, 0, 0, .5), 0 2px 0 #575757;
-	background:#353535;
+	background: #353535;
 	-moz-transition: all .5s ease-in-out;
 	-webkit-transition: all .5s ease-in-out;
 	transition: all .5s ease-in-out;
 }
-.activeSpeaker{
+.activeSpeaker {
 	-moz-transition: all .5s ease-in-out;
 	-webkit-transition: all .5s ease-in-out;
 	transition: all .5s ease-in-out;
 }
-.itemTime{
-    padding-top: 10px;
-    padding-right: 23px;
+.itemTime {
+	padding-top: 10px;
+	padding-right: 23px;
 }
-.itemName{
-	
-margin-left: 20px;
-	
-font-weight: bold;
-	
-font-size: 30px;
-	
-line-height: 16px;
-
+.itemName {
+	margin-left: 20px;
+	font-weight: bold;
+	font-size: 30px;
+	line-height: 16px;
 }
-.notes:before{
-	content:'\f27b';
-	font-family:'FontAwesome';
+.notes:before {
+	content: '\f27b';
+	font-family: 'FontAwesome';
 }
-.date{
-	
-text-align: center;
-	
-font-size: 14px;
-	
-padding-top: 10px;
+.date {
+	text-align: center;
+	font-size: 14px;
+	padding-top: 10px;
 }
-hr{
+hr {
 	clear: both;
 }
-.itemInfo{
-   
+.itemInfo {
 	padding: 10px;
-	background-color: rgb(68,68,68); /* Needed for IEs */
+	background-color: rgb(68, 68, 68);
+	/* Needed for IEs */
 }
-
-.wallWrap{
+.wallWrap {
 	margin-top: 10px;
 }
-
-.nameRow.activeSpeaker .infoName{
-  -moz-transition: all .5s ease-in-out;
-  -webkit-transition: all .5s ease-in-out;
-  transition: all .5s ease-in-out;
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
- -webkit-box-shadow: 1px -1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .5) inset, 0 1px 0 #575757;
-  color: #ffffff;
-  text-shadow: 2px 2px 1px rgba(25, 25, 25, .75);
+.nameRow.activeSpeaker .infoName {
+	-moz-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+	color: #ffffff;
+	background: rgba(255, 255, 255, .25);
+	border-bottom: 1px solid #545454;
 }
-
-.nameRow{
-	background:none;
+.nameRow {
+	background: none;
 	margin-left: -6px;
-	padding-top: -8px;
+	margin-right: -100%;
 }

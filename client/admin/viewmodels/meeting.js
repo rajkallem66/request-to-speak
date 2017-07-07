@@ -5,7 +5,7 @@ function(http, app, router, dialog, Import) {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
-        selectedMeeting: null,
+        selectedMeeting: {},
         activate: function() {
             var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
