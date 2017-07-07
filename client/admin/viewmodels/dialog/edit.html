@@ -1,40 +1,102 @@
-<div>
-    <section>
-        <div data-bind="with: request">
-            <div>
-                <span>First Name</span><span data-bind="value: firstName" type="text"></span>
-            </div>
-            <div>
-                <span>Last Name</span><input data-bind="text: lastName" type="text"></input>
-            </div>
-            <div>
-                <span>Official</span><input data-bind="textInput: official" type="text"></input>
-            </div>
-            <div>
-                <span>Agency</span><input data-bind="textInput: agency" type="text"></input>
-            </div>
-            <div>
-                <span>Item</span><input data-bind="textInput: item" type="text"></input>
-            </div>
-            <div>
-                <span>Stance</span><input data-bind="textInput: stance" type="text"></input>
-            </div>
-            <div>
-                <span>Notes</span><input data-bind="textInput: notes" type="text"></input>
-            </div>
-            <div>
-                <span>Email</span><input data-bind="textInput: email" type="text"></input>
-            </div>
-            <div>
-                <span>Address</span><input data-bind="textInput: address" type="text"></input>
-            </div>
-            <div>
-                <span>Phone</span><input data-bind="textInput: phone" type="text"></input>
-            </div>
-        </div>
-        <div>
-            <button data-bind="click: function () { save(); }">Save</button>
-            <button data-bind="click: function () { closeDialog(); }">Cancel</button>
-        </div>
-    </section>
+<div class="modal fade meetingDialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Information</h5>
+      </div>
+      <div class="modal-body">
+      
+	<div data-bind="with: request">
+	
+	  <div class="form-group row">
+		<label class="col-sm-3 col-form-label">
+			<span>First Name</span>
+		</label>
+		<div class="col-sm-9">
+		    <input data-bind="value: firstName" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-3 col-form-label">
+			<span>Last Name</span>
+		</label>
+		<div class="col-sm-9">
+		 	<input data-bind="text: lastName" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label class="col-sm-3 col-form-label">
+			<span>Official</span>
+		</label>
+		<div class="col-sm-9">
+		    <input data-bind="textInput: official" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-3 col-form-label">
+			<span>Agency</span>
+		</label>
+		<div class="col-sm-9">
+		 	<input data-bind="textInput: agency" type="text"></input>
+		</div>
+	  </div>
+	  
+	  <div class="form-group row">
+		<label class="col-sm-3 col-form-label">
+			<span>Item</span>
+		</label>
+		<div class="col-sm-9">
+		    <input data-bind="textInput: item" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-3 col-form-label">
+			<span>Stance</span>
+		</label>
+		<div class="col-sm-9">
+		 	<input data-bind="textInput: stance" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label class="col-sm-3 col-form-label">
+			<span>Notes</span>
+		</label>
+		<div class="col-sm-9">
+		    <input data-bind="textInput: notes" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-3 col-form-label">
+			<span>Email</span>
+		</label>
+		<div class="col-sm-9">
+		 	<input data-bind="textInput: email" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label class="col-sm-3 col-form-label">
+			<span>Address</span>
+		</label>
+		<div class="col-sm-9">
+		    <input data-bind="textInput: address" type="text"></input>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-3 col-form-label">
+			<span>Phone</span>
+		</label>
+		<div class="col-sm-9">
+		 	<input data-bind="textInput: phone" type="text"></input>
+		</div>
+	  </div>
+
+	</div>
+	
+	</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  data-bind="click: function () { save(); }">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bind="click: function () { closeDialog(); }" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>

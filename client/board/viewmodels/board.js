@@ -38,7 +38,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
             var requests = this.requests;
             if(message.event === "add") {
                 requests.push(message.request);
-                new.push(message.request);
+                this.newRequests.push(message.request);
             } else {
                 requests.splice(requests.findIndex(function(r) {
                     return r.requestId === message.request.requestId;

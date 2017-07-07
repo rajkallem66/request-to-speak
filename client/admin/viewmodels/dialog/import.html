@@ -1,14 +1,24 @@
-<div style="background:white; width:300px">
-    <section>
-        <div data-bind="foreach: meetings">
-            <div data-bind="click: $parent.selectMeeting"> 
-                <span data-bind="text: meetingName"></span>
-                <span data-bind="text: meetingDate"></span>
-            </div>
-        </div>
-    </section>
-    <div>
-        <button data-bind="click: function () { confirmSelection(); }">Confirm</button>
-        <button data-bind="click: function () { closeDialog(); }">Cancel</button>
-    </div>
+ <div class="modal fade meetingDialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Import Meeting</h5>
+      </div>
+		  <div class="modal-body">
+			<div data-bind="foreach: meetings">
+				<div data-bind="click: $parent.selectMeeting"> 
+					<div data-bind="text: meetingName"></div>
+					<div data-bind="text: meetingDate"></div>
+					<hr>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"  data-bind="click: function () { confirmSelection(); }">Confirm</button>
+				<button type="button" class="btn btn-secondary" data-bind="click: function () { closeDialog(); }" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	  </div>
+	 </div>
 </div>
+ 
+	 

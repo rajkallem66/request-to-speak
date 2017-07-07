@@ -1,9 +1,38 @@
-<section>
-    <h2 data-bind="text: displayName"></h2>
-    <div data-bind="foreach: meetings">
-        <span data-bind="text: meetingName, click: $parent.selectMeeting"></span>
-    </div>
-    <button data-bind="click: startMeeting, enable: selectedMeeting !== null">start meeting</button>
-    <button data-bind="click: importMeeting">import meeting</button>
-    <button data-bind="click: saveMeeting, enable: selectedMeeting !== null">save meeting</button>
-</section>
+<div class="container boardInfoWrap">
+    <div class="row">
+        <div class="col-md-12 main meetingDash">
+            <div class="row">
+					<button class="btn btn-primary" data-bind="click: importMeeting">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						Import
+					</button>
+					<button class="btn btn-secondary" >
+						<i class="fa fa-plus" aria-hidden="true"></i>
+						Add
+					</button>
+					<button class="btn btn-info" >
+						<i class="fa fa-pencil" aria-hidden="true"></i>
+						Edit
+					</button>
+					<button class="btn btn-success" data-bind="click: startMeeting, enable: selectedMeeting !== null">
+						<i class="fa fa-check-circle" aria-hidden="true"></i> 
+						Start
+					</button>
+					<button class="btn btn-warning" data-bind="click: saveMeeting, enable: selectedMeeting !== null">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						Save
+					</button>
+			</div>
+			<div class="row">
+				<div class="meetingWrap" data-bind="foreach: meetings">
+					<div>
+						<button class="checks" >
+							<input data-bind="checked: $data === $parent.selectedMeeting, click: $parent.selectMeeting" type="checkbox"  class="faChkSqr">
+						</button>
+						<span data-bind="text: meetingName"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
