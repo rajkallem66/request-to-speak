@@ -10,7 +10,7 @@
 						<i class="fa fa-plus" aria-hidden="true"></i>
 						Add
 					</button>
-					<button class="btn btn-info" >
+					<button class="btn btn-info" data-bind="click: editMeeting, enable: selectedMeeting !== null">
 						<i class="fa fa-pencil" aria-hidden="true"></i>
 						Edit
 					</button>
@@ -26,10 +26,18 @@
 			<div class="row">
 				<div class="meetingWrap" data-bind="foreach: meetings">
 					<div>
-						<button class="checks" >
-							<input data-bind="checked: $data === $parent.selectedMeeting, click: $parent.selectMeeting" type="checkbox"  class="faChkSqr">
-						</button>
-						<span data-bind="text: meetingName"></span>
+						<div>
+							<button class="checks" >
+								<input data-bind="checkedValue: $data, checked:$parent.selectedMeeting" type="radio" name="meetings"  class="faChkSqr">
+							</button>
+							<span data-bind="text: meetingName"></span>
+						</div>
+						<div>
+							<button class="btn btn-info" data-bind="click: $root.editMeeting">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								Edit
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -28,10 +28,10 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
         meetingMessage: function(message) {
             if(message.event === "started") {
                 this.isMeetingActive = true;
+                this.requests = message.meeting.requests;
             } else {
                 this.isMeetingActive = false;
             }
-            this.requests = message.meeting.requests;
             this.updateList();
         },
         requestMessage: function(message) {
@@ -44,10 +44,10 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                     return r.requestId === message.request.requestId;
                 }), 1);
             }
-        },
+        }
     };
 
-    ret.updateList = function() { 
+    ret.updateList = function() {
         // trunc newMessages array
         this.newRequests.length = 0;
         // start with a distinct list of items.
@@ -72,10 +72,10 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
         });
 
         this.requestList = items;
-        
+
         this.totalTimeRemaining = this.requestList.reduce(function(p, c) {
             return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
-        });
+        }, 0);
     }.bind(ret);
 
     return ret;

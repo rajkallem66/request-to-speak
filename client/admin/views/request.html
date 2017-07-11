@@ -2,11 +2,11 @@
     <div class="row">
         <div class="col-md-12 main dashboard">
             <div class="row">
-				<div class="notice notice-success pull-left col-xs-6 col-sm-3 col-md-2">
-					<div>Meeting: <span data-bind="text: isMeetingActive"></span> </div>
+				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2" data-bind="css: { 'notice-success': isMeetingActive === true, 'notice-danger': isMeetingActive === false }">
+					<div>Meeting</div>
 				</div>
-				<div class="notice notice-success pull-left col-xs-6 col-sm-3 col-md-2">
-					<div>Wall: <span data-bind="text: wallConnected"></span></div>
+				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2" data-bind="css: { 'notice-success': wallConnected === true, 'notice-danger': wallConnected === false }">
+					<div>Display Wall</div>
 				</div>
 				<div class="notice notice-info pull-left col-xs-6 col-sm-3 col-md-2">				
 					<div>Kiosks: <span data-bind="text: connectedKiosks"></span></div>
@@ -22,48 +22,48 @@
 				<div class="clearfix"></div>
 			</div>
             
-           <!-- <h2 data-bind="text: displayName"></h2>-->
-    
-			<div class="pull-right endMeeting">
-				<button class="btn btn-danger" data-bind="click: endMeeting, enable: isMeetingActive">
-					<i class="fa fa-ban"></i>
-					<span class="hidden-xs">End Meeting</span>
-				</button>
-				<button class="btn btn-info">
-					<i class="fa fa-refresh"></i>
-				</button>
-			</div>
-			<div data-bind="with: meeting">
-				<div class="row meetingName">
-					<small>CURRENT MEETING:</small>
-					<h3 data-bind="text: meetingName"></h3>
+			<div data-bind="visible: isMeetingActive">    
+				<div class="pull-right endMeeting">
+					<button class="btn btn-info">
+						<i class="fa fa-refresh"></i>
+						<span class="hidden-xs">Refresh Wall</span>
+					</button>
+					<button class="btn btn-danger" data-bind="click: endMeeting, enable: isMeetingActive">
+						<i class="fa fa-ban"></i>
+						<span class="hidden-xs">End Meeting</span>
+					</button>
 				</div>
-				<div class="row ">
-					<div class="col-xs-4">
-						<label for="exampleSelect1">Filter</label>
-						<select class="form-control" id="exampleSelect1">
-						  <option>Alphabetical</option>
-						  <option>Stance</option>
-						  <option>Whatever</option>
-						</select>
+				<div data-bind="with: meeting">
+					<div class="row meetingName">
+						<small>CURRENT MEETING:</small>
+						<h3 data-bind="text: meetingName"></h3>
 					</div>
-				</div>
-				<div class="adminNamesWrap" data-bind="foreach: requests">
-					<div class="row">
-						<div class="pull-left col-sm-6 col-md-8 col-xs-6">
-							<span data-bind="text: firstName"></span>
-							<span data-bind="text: lastName"></span>
+					<div class="row ">
+						<div class="col-xs-4">
+							<label for="exampleSelect1">Filter</label>
+							<select class="form-control" id="exampleSelect1">
+								<option>Time Entered</option>
+								<option>Stance</option>
+							</select>
 						</div>
-						<div>
-							<button class="btn btn-primary" data-bind="click: $root.editRequest">
-								<i class="fa fa-pencil"></i> 
-								<span class="hidden-xs">EDIT</span>
-							</button>
-							<button class="btn btn-danger">
-								<i class="fa fa-trash"></i>
-								<span class="hidden-xs">Delete</span>
-							</button>
-							<button class="checks"><input type="checkbox" class="faChkSqr"></button>
+					</div>
+					<div class="adminNamesWrap" data-bind="foreach: requests">
+						<div class="row">
+							<div class="pull-left col-sm-6 col-md-8 col-xs-6">
+								<span data-bind="text: firstName"></span>
+								<span data-bind="text: lastName"></span>
+							</div>
+							<div>
+								<button class="btn btn-primary" data-bind="click: $root.editRequest">
+									<i class="fa fa-pencil"></i> 
+									<span class="hidden-xs">Edit</span>
+								</button>
+								<button class="btn btn-danger">
+									<i class="fa fa-trash"></i>
+									<span class="hidden-xs">Delete</span>
+								</button>
+								<button class="checks"><input type="checkbox" class="faChkSqr"></button>
+							</div>
 						</div>
 					</div>
 				</div>

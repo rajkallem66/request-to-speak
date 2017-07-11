@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/router", "plugins/dialog", "dialog/import"],
-function(http, app, router, dialog, Import) {
+define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting"],
+function(http, app, router, observable, dialog, Import, Edit) {
     var ret = {
         displayName: "Meeting",
         activeMeeting: null,
@@ -103,6 +103,23 @@ function(http, app, router, dialog, Import) {
             });
         }
     };
+
+    ret.editMeeting = function(meeting) {
+        var self = this;
+        app.showDialog(new Edit(), meeting).then(function(response) {
+            if(response !== undefined) {
+                self.meetings.push(response);
+                self.selectedMeeting = response;
+            }
+        }, function(err) {
+            // Do error stuff
+        });
+    }.bind(ret);
+
+    observable(ret, "selectedMeeting").subscribe(function(value) {
+        var t = typeof value;
+    });
+
     ret.selectMeeting = function(meeting) {
         if(this.selectedMeeting === meeting) {
             return;
