@@ -1,0 +1,54 @@
+<div class="modal fade meetingDialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Meeting Configuration</h5>
+            </div>
+            <div class="modal-body">
+                <div data-bind="with: meeting">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                            <span>Meeting Name</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input data-bind="value: meetingName" type="text"></input>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                            <span>Meeting Date</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input data-bind="value: meetingDate" type="text"></input>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                            <span>Meeting Items</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="button" class="btn btn-primary">Add</button>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div data-bind="foreach: meeting.items">
+                            <div>
+                                <label class="col-sm-3 col-form-label">
+                                    <span>Item Name</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input data-bind="textInput: itemName" type="text"></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click: function () { save(); }">Save</button>
+                <button type="button" class="btn btn-secondary" data-bind="click: function () { closeDialog(); }" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
