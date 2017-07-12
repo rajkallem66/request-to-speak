@@ -49,20 +49,38 @@
 					</div>
 					<div class="adminNamesWrap" data-bind="foreach: requests">
 						<div class="row">
-							<div class="pull-left col-sm-6 col-md-8 col-xs-6">
+							<div class="pull-left col-xs-8 col-sm-6 col-md-7">
 								<span data-bind="text: firstName"></span>
 								<span data-bind="text: lastName"></span>
 							</div>
-							<div>
-								<button class="btn btn-primary" data-bind="click: $root.editRequest">
-									<i class="fa fa-pencil"></i> 
-									<span class="hidden-xs">Edit</span>
-								</button>
-								<button class="btn btn-danger">
-									<i class="fa fa-trash"></i>
-									<span class="hidden-xs">Delete</span>
-								</button>
-								<button class="checks"><input type="checkbox" class="faChkSqr"></button>
+							<div class="col-xs-4 col-sm-6 col-md-5 btns">
+								<div class="col-md-3">
+									<button class="btn btn-primary" data-bind="click: $root.editRequest">
+										<i class="fa fa-pencil"></i> 
+										<span class="hidden-xs">Edit</span>
+									</button>
+								</div>
+								<div class="col-md-3">
+									<button class="btn btn-danger">
+										<i class="fa fa-trash"></i>
+										<span class="hidden-xs">Delete</span>
+									</button>
+								</div>
+								<div class="col-md-3">
+									<button class="btn btn-danger">
+										<i class="fa fa-minus"></i>
+										<span class="hidden-xs">Remove</span>
+									</button>
+								</div>
+								<div class="col-md-3 col-xs-5">
+									<div class="requestswitch">
+										<input type="checkbox" name="requestswitch" class="requestswitch-checkbox" id="myrequestswitch" checked>
+										<label class="requestswitch-label" for="myrequestswitch">
+											<span class="requestswitch-inner"></span>
+											<span class="requestswitch-switch"></span>
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
