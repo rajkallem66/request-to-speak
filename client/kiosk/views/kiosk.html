@@ -36,7 +36,10 @@
 							<div class="" id="subColumns">
 								<section >
 									<label for="q7"><span class="fs-field-label ">Which agenda item? </span></label>
-									<button data-bind="click: $parent.openItemSelector">Choose Item, click here</button>
+									
+									<button class="agendaBtn" data-bind="click: $parent.openItemSelector">Choose Item here <i class="fa fa-hand-pointer-o" aria-hidden="true"></i></button>
+									
+									<p>[PUT SELECTED AGENDA HERE]</p>
 								</section>
 							</div>
 							<div class="clearfix"></div>
@@ -124,10 +127,13 @@
 		  </div>
 		</div>
 		<div data-bind="style: { display: itemSelector === true ? 'block' : 'none' }">
-			<div style="height:500px">
+			<div class="agendaItems container">
 				<div data-bind="visible: !showSubTopics">
 					<div data-bind="foreach: meeting.items">
-						<span data-bind="text: itemName, click: $root.selectItem"></span>
+						<div class="itemSelection row">
+							<div class="itemNum col-md-1">70</div>
+							<div class="itemName col-md-11" data-bind="text: itemName, click: $root.selectItem"></div>
+						</div>
 					</div>
 				</div>
 				<div data-bind="visible: showSubTopics">
