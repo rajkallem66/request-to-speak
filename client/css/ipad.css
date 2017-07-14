@@ -951,7 +951,80 @@ input[type=text]::-ms-clear {
 		transform: translate3d(0,0,0);
 	}
 }
+/* Agenda selection */
 
+.agendaBtn{
+	border: 3px solid rgba(148, 148, 148, 0.09) !important;
+	padding: 18px;
+	margin-top: 10px;
+	background: #ececec !important;
+	color: #1c619b;
+	border-radius: 0px;
+	font-weight: bold;
+	font-size: 24px;
+	transition: background .3s;
+	vertical-align: middle;
+}
+.agendaBtn:hover{
+    transition: background .3s;
+    background: rgb(28, 97, 155) !important;
+    border-radius: 0px;
+    color: #ffffff;
+    border: 3px solid #1c619b !important;
+}
+
+.agendaItems{
+	background:rgba(255, 255, 255, 0.95);
+	display:block;
+	position:absolute;
+	z-index:20000;
+	top:0px;
+	height:100%;
+	color:#333;
+	font-size:16px;
+	line-height:1.6em;
+	overflow-y: auto;
+	width:100%;
+	overflow-x: hidden;
+}
+.agendaItems div.itemSelection{
+
+margin: 10px;
+}
+
+.agendaItems div.itemSelection .itemName:hover{
+	cursor:pointer;
+	transition: background .3s;
+    background: rgb(28, 97, 155);
+    border-radius: 0px;
+    color: #ffffff;
+    border: 3px solid #1c619b;
+}
+.agendaItems div.itemSelection .itemNum{
+	border: 3px solid rgba(148, 148, 148, 0.09);
+	/* background: #ececec; */
+	color: #1c619b;
+	border-radius: 0px;
+	font-weight: bold;
+	font-size: 16px;
+	transition: background .3s;
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.agendaItems div.itemSelection .itemName{
+	border: 3px solid rgba(148, 148, 148, 0.09);
+	background: #ececec;
+	color: #1c619b;
+	border-radius: 0px;
+	font-weight: bold;
+	font-size: 16px;
+	transition: background .3s;
+	vertical-align: middle;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
 /* Custom select */
 
 /* Default custom select styles */
@@ -1031,7 +1104,7 @@ div.cs-select:focus {
 	width: 100%;
 	background: #fff;
 	visibility: hidden;
-	z-index: 100000;
+	z-index: 10000;
 }
 
 .cs-select.cs-active .cs-options {
@@ -1339,6 +1412,8 @@ a:hover, a:focus {
 	width: 100%;
 	height: 100%;
 	text-align: left;
+
+
 	cursor: text;
 	-webkit-transform-origin: 0% 50%;
 	transform-origin: 0% 50%;
