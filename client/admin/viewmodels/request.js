@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest"], 
+define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest"],
 function(http, app, event, Edit) {
     var ctor = function() {
         this.displayName = "Request";

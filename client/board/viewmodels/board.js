@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], function(http, app, observable, event) {
+define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "moment"], function(http, app, observable, event, moment) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -19,10 +19,11 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
         initializeMessage: function(message) {
             if(message.meeting.meetingId !== undefined) {
                 this.isMeetingActive = true;
+                this.requests = message.meeting.requests;
             } else {
                 this.isMeetingActive = false;
+                this.requests = [];
             }
-            this.requests = message.meeting.requests;
             this.updateList();
         },
         meetingMessage: function(message) {
@@ -31,6 +32,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler"], f
                 this.requests = message.meeting.requests;
             } else {
                 this.isMeetingActive = false;
+                this.requests = [];
             }
             this.updateList();
         },

@@ -16,19 +16,19 @@
 					<ol data-bind="with: request" class="fs-fields">
 						<li data-bind="css: {fsCurrent: $parent.step === 0, fsStaleStart: $parent.step !== 0}">
 							<span class="fs-field-label ">What's your name?</span>
-							<input data-bind="value: name"  id="q1" name="q1" type="text" placeholder="First and Last" required/>
+							<input data-bind="textInput: name"  id="q1" name="q1" type="text" placeholder="First and Last" required/>
 						</li>
 						<li data-bind="css: {fsCurrent: $parent.step === 1, fsStale: $parent.step !== 1}">
 							<label for="q3" ><span class="fs-field-label ">Are you a: </span></label>
 							<div id="#constituants" class="fs-radio-group fs-radio-custom clearfix ">
 								<div class="">
-									<span><input data-bind="checked: official, click: $parent.nextStep" id="q3b" name="q3" type="radio" value="constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
+									<span><input data-bind="checked: official, click: $parent.constituentClick" id="q3b" name="q3" type="radio" value="constituent" class="conRadio" /><label for="q3b" class="conLabel"><h2>Constituent</h2></label></span>
 									<span><p class="simplePtag">or</p></span>
 									<span><input data-bind="checked: official" id="q3a" name="q3" type="radio" value="official" class="officalRadio"/><label for="q3a" class="officialLabel"><h2>Active / Retired Official</h2></label>
 									</span>
 								</div>
 								<div data-bind="style: { display: official === 'official' ? 'block' : 'none' }" class="showInput" style="display: none">
-									<input type="text"  id="q3c" placeholder="Agency Name">
+									<input type="text"  id="q3c" placeholder="Agency Name" data-bind="textInput: agency">
 								</div>
 							</div>		
 						</li>
@@ -39,7 +39,7 @@
 									
 									<button class="agendaBtn" data-bind="click: $parent.openItemSelector">Choose Item here <i class="fa fa-hand-pointer-o" aria-hidden="true"></i></button>
 									
-									<p>[PUT SELECTED AGENDA HERE]</p>
+									<p data-bind="text: $parent.displayItem"></p>
 								</section>
 							</div>
 							<div class="clearfix"></div>
@@ -87,7 +87,7 @@
 							<i class="fa fa-2x fa-angle-left"></i> <span class="btn-text-left">Last</span> 
 						</button>
 
-						<button type="button" data-bind="click: nextStep,css: {hide: step === 7}" class="fs-continue progress-button">
+						<button type="button" data-bind="click: nextStep,css: {hide: step === 7}, enable: enableNext" class="fs-continue progress-button">
 							<span class="btn-text ">Next</span> <i class="fa fa-2x fa-angle-right"></i>
 						</button>
 					</div>	
@@ -129,9 +129,12 @@
 		<div data-bind="style: { display: itemSelector === true ? 'block' : 'none' }">
 			<div class="agendaItems container">
 				<div data-bind="visible: !showSubTopics">
+					<div class="itemSelection row">
+						<div class="itemName col-md-12" data-bind="click: function() { $root.selectItem(null); }">I would like to speak off topic</div>
+					</div>
 					<div data-bind="foreach: meeting.items">
 						<div class="itemSelection row">
-							<div class="itemNum col-md-1">70</div>
+							<div class="itemNum col-md-1" data-bind="text: itemOrder"></div>
 							<div class="itemName col-md-11" data-bind="text: itemName, click: $root.selectItem"></div>
 						</div>
 					</div>
