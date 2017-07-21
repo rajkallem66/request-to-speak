@@ -24,11 +24,11 @@
             
 			<div data-bind="visible: isMeetingActive">    
 				<div class="pull-right endMeeting">
-					<button class="btn btn-info">
+					<button class="btn btn-info" data-bind="click: refreshWall">
 						<i class="fa fa-refresh"></i>
 						<span class="hidden-xs">Refresh Wall</span>
 					</button>
-					<button class="btn btn-danger" data-bind="click: endMeeting, enable: isMeetingActive">
+					<button class="btn btn-danger" data-bind="click: endMeeting">
 						<i class="fa fa-ban"></i>
 						<span class="hidden-xs">End Meeting</span>
 					</button>
@@ -78,7 +78,7 @@
 									  <i></i>
 									</label>
 									<label class="approvedChk">
-									  <input type="checkbox" />
+									  <input type="checkbox" data-bind="checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest"/>
 									  <i></i>
 									</label>
 								</div>

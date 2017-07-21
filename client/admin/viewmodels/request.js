@@ -30,6 +30,22 @@ function(http, app, event, Edit) {
                 // Do error stuff
             });
         }.bind(this);
+        this.approveRequest = function(request) {
+            var status = "";
+            if(request.status === "approved" || request.status === "display" || request.status === "active") {
+                request.status = "new";
+            } else {
+                request.status = "approved";
+            }
+            return true;
+        }
+        this.refreshWall = function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "refreshWall").then(function() {
+            }, function(err) {
+                // do error stuff
+                console.log(err);
+            });
+        }.bind(this);
         this.endMeeting = function() {
             var self = this;
             app.showMessage("Are you sure?", "End meeting", ["Yes", "No"]).then(function(response) {
