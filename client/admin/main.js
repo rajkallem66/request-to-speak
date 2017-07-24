@@ -10,7 +10,8 @@ requirejs.config({
         "jquery": "../lib/jquery/jquery-1.9.1",
         "primus": "../primus/primus",
         "eventHandler": "../lib/rts/eventHandler",
-        "dialog": "./viewmodels/dialog"
+        "dialog": "./viewmodels/dialog",
+        "moment": "../lib/moment/moment.min"
     },
     shim: {
         "bootstrap": {

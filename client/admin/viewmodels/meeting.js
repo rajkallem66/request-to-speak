@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting"],
-function(http, app, router, observable, dialog, Import, Edit) {
+define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting", "moment"],
+function(http, app, router, observable, dialog, Import, Edit, moment) {
     var ret = {
         displayName: "Meeting",
         activeMeeting: null,
@@ -104,6 +104,10 @@ function(http, app, router, observable, dialog, Import, Edit) {
                 });
             }
         }
+    };
+
+    ret.format = function(date) {
+        return moment(date).format("MMM Do YYYY");
     };
 
     ret.editMeeting = function(meeting) {

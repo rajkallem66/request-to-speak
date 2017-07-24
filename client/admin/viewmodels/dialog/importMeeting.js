@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "plugins/dialog"], function(http, dialog) {
+define(["plugins/http", "plugins/dialog", "moment"], function(http, dialog, moment) {
     var ctor = function() {
         this.activate = function() {
             var self = this;
@@ -24,8 +24,13 @@ define(["plugins/http", "plugins/dialog"], function(http, dialog) {
             });
         };
     };
+    ctor.prototype.format = function(date) {
+        return moment(date).format("MMM Do YYYY");
+    };
+
     ctor.prototype.closeDialog = function() {
         dialog.close(this);
     };
+    
     return ctor;
 });
