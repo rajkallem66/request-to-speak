@@ -7,8 +7,7 @@
 		  <div class="modal-body">
 			<div data-bind="foreach: meetings">
 				<div data-bind="click: $parent.selectMeeting"> 
-					<div data-bind="text: meetingName"></div>
-					<div data-bind="text: meetingDate"></div>
+					<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span>
 					<hr>
 				</div>
 			</div>

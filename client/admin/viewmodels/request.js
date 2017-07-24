@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest"],
-function(http, app, event, Edit) {
+define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
+function(http, app, event, Edit, moment) {
     var ctor = function() {
         this.displayName = "Request";
         this.isConnected = false;
@@ -12,6 +12,7 @@ function(http, app, event, Edit) {
         this.connectedAdmins = 0;
         this.connectedBoards = 0;
         this.primus = null;
+
         this.activate = function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             this.meeting = this.blankMeeting();
@@ -112,5 +113,10 @@ function(http, app, event, Edit) {
             };
         };
     };
+
+    ctor.prototype.format = function(date) {
+        return moment(date).format("HH:mm:ss A");
+    };
+
     return ctor;
 });

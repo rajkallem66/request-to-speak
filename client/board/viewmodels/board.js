@@ -49,6 +49,10 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
         }
     };
 
+    ret.format = function(date) {
+        return moment(date).format("HH:mm:ss A");
+    };
+
     ret.updateList = function() {
         // trunc newMessages array
         this.newRequests.length = 0;
@@ -68,9 +72,13 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
             i.requests = requests.filter(function(r) {
                 return r.item.itemId === i.itemId;
             });
-            i.timeRemaining = i.requests.reduce(function(a, b) {
-                return a + b.timeToSpeak;
-            }, 0);
+            if(i.requests) {
+                i.timeRemaining = i.requests.reduce(function(a, b) {
+                    return a + b.timeToSpeak;
+                }, 0);
+            } else {
+                i.timeRemaining = 0;
+            }
         });
 
         this.requestList = items;
