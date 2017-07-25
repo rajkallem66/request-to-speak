@@ -110,6 +110,7 @@ function getActiveMeeting() {
             } else {
                 if(obj.response.docs.length > 0) {
                     let meeting = obj.response.docs[0];
+                    meeting.meetingId = meeting.id;
                     let mtgQuery = client.createQuery()
                         .q({meetingId: meeting.id})
                         .start(0)

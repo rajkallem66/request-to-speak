@@ -63,6 +63,7 @@ function(http, app, observable, Items, event, $) {
                     self.step = 0;
                 }, 3000);
             }, function(err) {
+                self.isSubmitting = false;
                 // do error stuff
                 console.log(err);
             });
@@ -86,10 +87,10 @@ function(http, app, observable, Items, event, $) {
             };
             observable.defineProperty(req, "name", {
                 read: function() {
-                    if(this.firstName !== "") {
+                    if(this.lastName !== "") {
                         return this.firstName + " " + this.lastName;
                     } else {
-                        return "";
+                        return this.firstName;
                     }
                 },
                 write: function(value) {
@@ -97,6 +98,9 @@ function(http, app, observable, Items, event, $) {
                     if (lastSpacePos > 0) { // Ignore values with no space character
                         this.firstName = value.substring(0, lastSpacePos); // Update "firstName"
                         this.lastName = value.substring(lastSpacePos + 1); // Update "lastName"
+                    } else {
+                        this.firstName = value;
+                        this.lastName = "";
                     }
                 }
             });
@@ -111,6 +115,14 @@ function(http, app, observable, Items, event, $) {
         }
     };
 
+    ret.constituentClick = function() {
+        if(this.step === 1) {
+            this.nextStep();
+        }
+        this.request.agency = "";
+        return true;
+    }.bind(ret);
+
     ret.nextStep = function() {
         this.step += 1;
     }.bind(ret);
@@ -120,28 +132,57 @@ function(http, app, observable, Items, event, $) {
     }.bind(ret);
 
     ret.selectItem = function(data) {
-        this.selectedItem = data;
-        if(this.selectedItem.subTopics) {
-            this.showSubTopics = true;
-        } else {
+        if(data.itemOrder === 0) {
+            this.request.offAgenda = true;
+            this.request.item = data;
+            this.request.timeToSpeak = data.timeToSpeak;
             this.itemSelector = false;
+        } else {
+            this.request.offAgenda = false;
+            this.request.item = data;
+            this.request.timeToSpeak = data.timeToSpeak;
+            if(this.selectedItem.subTopics) {
+                this.showSubTopics = true;
+            } else {
+                this.itemSelector = false;
+            }
         }
     }.bind(ret);
 
-    ret.selectItem = function(data) {
-        this.request.subTopic = data;
-        this.itemSelector = false;
-    }.bind(ret);
-
-    observable(ret, "selectedItem").subscribe(function(value) {
-        if(value !== undefined) {
-            this.request.item = value;
-            this.request.timeToSpeak = value.defaultTimeToSpeak;
+    observable.defineProperty(ret, "displayItem", function() {
+        if(this.request.offAgenda === true) {
+            return "Off Agenda";
+        } else if(this.request.item && this.request.item.itemName) {
+            return this.request.item.itemName
+        } else {
+            return "";
         }
-    }.bind(ret));
+    });
 
     observable.defineProperty(ret, "notesCharsRemaining", function() {
         return 250 - this.request.notes.length;
+    });
+
+    observable.defineProperty(ret, "enableNext", function() {
+        var step = this.step;
+        var name = this.request.name;
+        var official = this.request.official;
+        var agency = this.request.agency;
+        var stance = this.request.stance;
+
+        switch(this.step) {
+            case 0:
+                return (name.trim().length > 2);
+                break;
+            case 1:
+                return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
+                break;
+            case 2:
+                return (stance !== "" && this.displayItem);
+                break;
+            default:
+                return true;
+        }
     });
 
     return ret;

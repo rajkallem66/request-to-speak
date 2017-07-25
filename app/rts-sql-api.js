@@ -253,7 +253,7 @@ function updateRequest(updateRequest) {
  */
 function getActiveMeeting() {
     var doQuery = function(fulfill, reject) {
-        let query = "SELECT meetingId, sireId, meetingName, status FROM Meeting WHERE status = 'started'";
+        let query = "SELECT meetingId, sireId, meetingName, meetingDate, status FROM Meeting WHERE status = 'started'";
         logger.debug("Statement: " + query);
         pool.request().query(query).then(function(result) {
             logger.debug("Active meeting query result.", result.recordset);

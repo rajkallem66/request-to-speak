@@ -1,6 +1,6 @@
 {
     "RTS": {
-        "wsTransformer": "faye",
+        "wsTransformer": "websockets", // be advised that faye strips js types
         "dbApi": "./app/rts-sql-api",
         "dbConfig": {
             "server": "crane.saccounty.net",
@@ -12,15 +12,15 @@
         "log": {
             "level": "debug",
             "levels": {
-                "fatal": 0,
-                "error": 1,
-                "warn": 2,
-                "info": 3,
-                "debug": 4,
-                "trace": 5
+                "emergency": 0,
+                "error": 3,
+                "warning": 4,
+                "info": 6,
+                "debug": 7,
+                "trace": 8
             },
             "colors": {
-                "fatal": "red",
+                "emergency": "red",
                 "error": "red",
                 "warn": "yellow",
                 "info": "white",

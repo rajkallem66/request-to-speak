@@ -6,21 +6,20 @@
         <div class="active">
           <div class="pull-right">
             <div data-bind="visible: !isConnected">
-				<span><i class="fa fa-circle redDot" aria-hidden="true"></i> Not Connceted</span>
-			</div>           
+				      <span><i class="fa fa-circle redDot" aria-hidden="true"></i></span>
+			      </div>           
           </div>
-          
         </div>
       </div>
     </nav>
-    <div class="wallWrap"  data-bind="foreach: displayRequests">
+    <div class="wallWrap"  data-bind="foreach: displayRequests, visible: isMeetingActive">
            <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
             <div class="itemOrder col-md-2" data-bind="text: item.itemOrder">
             </div>
             <div class="infoName col-md-10">
-				<span data-bind="text: firstName"></span>
-				<span data-bind="text: lastName"></span>
-			</div>
+				      <span data-bind="text: firstName"></span>
+				      <span data-bind="text: lastName"></span>
+			      </div>
         </div>
     </div>
 </div>

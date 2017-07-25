@@ -1,11 +1,10 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting"],
-function(http, app, router, observable, dialog, Import, Edit) {
+define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting", "moment"],
+function(http, app, router, observable, dialog, Import, Edit, moment) {
     var ret = {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
-        selectedMeeting: {},
         activate: function() {
             var self = this;
             http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
@@ -22,8 +21,8 @@ function(http, app, router, observable, dialog, Import, Edit) {
                 app.showMessage("Unable to connect to database.");
             });
         },
-        startMeeting: function() {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + this.selectedMeeting.meetingId).then(function(result) {
+        startMeeting: function(meeting) {
+            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + meeting.meetingId).then(function(result) {
                 app.showMessage("Meeting started successfully.").then(function() {
                     router.navigate("/request");
                 });
@@ -83,25 +82,32 @@ function(http, app, router, observable, dialog, Import, Edit) {
                 // Do error stuff
             });
         },
-        saveMeeting: function() {
-            http.put(location.href.replace(/[^/]*$/, "") + "meeting/" + this.selectedMeeting.meetingId,
-                this.selectedMeeting).then(function() {
-                    console.log("Meeting saved.");
-                }, function(err) {
-                    app.showMessage("Unable to save meeting.\n" + JSON.stringify(err));
-                });
-        },
         addMeeting: function(meeting) {
             var self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
                 meeting.meetingId = response.meetingId;
                 self.meetings.push(meeting);
-                self.selectedMeeting = meeting;
                 console.log("Meeting added.");
             }, function(err) {
                 app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
             });
+        },
+        deleteMeeting: function(meeting) {
+            if(app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]) === "Yes") {
+                var self = this;
+                http.delete(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
+                    meeting.meetingId = response.meetingId;
+                    self.meetings.splice(meeting);
+                    console.log("Meeting deleted.");
+                }, function(err) {
+                    app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
+                });
+            }
         }
+    };
+
+    ret.format = function(date) {
+        return moment(date).format("MMM Do YYYY");
     };
 
     ret.editMeeting = function(meeting) {
@@ -109,29 +115,10 @@ function(http, app, router, observable, dialog, Import, Edit) {
         app.showDialog(new Edit(), meeting).then(function(response) {
             if(response !== undefined) {
                 self.meetings.push(response);
-                self.selectedMeeting = response;
             }
         }, function(err) {
             // Do error stuff
         });
-    }.bind(ret);
-
-    observable(ret, "selectedMeeting").subscribe(function(value) {
-        var t = typeof value;
-    });
-
-    ret.selectMeeting = function(meeting) {
-        if(this.selectedMeeting === meeting) {
-            return;
-        }
-        if(this.selectedMeeting !== null && this.meetings.includes(this.selectedMeeting) === false) {
-            app.showMessage("This meeting has not been saved.");
-        }
-        if(meeting === this.activeMeeting) {
-            app.showMessage("The meeting you selected is active. You cannot edit an active meeting.");
-            return;
-        }
-        this.selectedMeeting = meeting;
     }.bind(ret);
 
     return ret;

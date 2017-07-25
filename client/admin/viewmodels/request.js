@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest"], 
-function(http, app, event, Edit) {
+define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
+function(http, app, event, Edit, moment) {
     var ctor = function() {
         this.displayName = "Request";
         this.isConnected = false;
@@ -12,6 +12,7 @@ function(http, app, event, Edit) {
         this.connectedAdmins = 0;
         this.connectedBoards = 0;
         this.primus = null;
+
         this.activate = function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             this.meeting = this.blankMeeting();
@@ -28,6 +29,22 @@ function(http, app, event, Edit) {
                 }
             }, function(err) {
                 // Do error stuff
+            });
+        }.bind(this);
+        this.approveRequest = function(request) {
+            var status = "";
+            if(request.status === "approved" || request.status === "display" || request.status === "active") {
+                request.status = "new";
+            } else {
+                request.status = "approved";
+            }
+            return true;
+        }
+        this.refreshWall = function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "refreshWall").then(function() {
+            }, function(err) {
+                // do error stuff
+                console.log(err);
             });
         }.bind(this);
         this.endMeeting = function() {
@@ -112,5 +129,10 @@ function(http, app, event, Edit) {
             };
         };
     };
+
+    ctor.prototype.format = function(date) {
+        return moment(date).format("HH:mm:ss A");
+    };
+
     return ctor;
 });
