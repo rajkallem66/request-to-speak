@@ -350,6 +350,32 @@ li.optional:after{
 	font-size: 1.25em;
 }
 
+.fs-radio-custom .conLabel h2{
+	padding-top: 35px;
+	min-height: 100px;
+}
+.fs-radio-custom .officialLabel h2{
+	line-height:1.3;
+}
+.fs-radio-custom h2{
+	border: 3px solid rgba(148, 148, 148, 0.09);
+	padding: 18px;
+	margin-top: 10px;
+	background: #ececec;
+	color: #1c619b;
+	border-radius: 0px;
+	font-weight: bold;
+	font-size: 24px;
+	transition:background .3s;
+	vertical-align: middle;
+}
+.fs-fields .fs-radio-custom input[type="radio"]:checked + label h2{
+	transition:background .3s;
+	background: rgb(28, 97, 155);
+	border-radius:0px;
+	color: #ffffff;
+	border: 3px solid #1c619b;
+}
 .fs-fields .fs-radio-custom input[type="radio"] {
 	position: absolute;
 	display: block;
@@ -365,8 +391,6 @@ li.optional:after{
 	float: left;
 	position: relative;
 	margin-right: 3%;
-	/* padding: 10px; */
-	/* max-width: 200px; */
 	width: 30%;
 	text-align: center;
 	font-weight: 700;
@@ -390,7 +414,6 @@ li.optional:after{
 
 .fs-fields > li .fs-radio-custom label {
 	display: block;
-	/* padding-top: 100%; */
 	width: 100%;
 	height: 100%;
 	cursor: pointer;
@@ -418,13 +441,8 @@ li.optional:after{
 
 .fs-fields .fs-radio-custom input[type="radio"]:checked + label {
 	color: #fff;
-	/* border-top: 3px solid; */
-	/* border-bottom: 3px solid; */
-	/* background: #000; */
 	transition: color, border, background 0.3s;
 }
-
-
 
 
 .fsFormOverview .officialLabel h2 {
@@ -1184,33 +1202,7 @@ a:hover, a:focus {
   padding: 10%;
   text-shadow: 1px 2px #808080;
 }
-.fs-radio-custom .conLabel h2{
-	padding-top: 35px;
-	min-height: 100px;
-}
-.fs-radio-custom .officialLabel h2{
-	line-height:1.3;
-}
-.fs-radio-custom h2{
-	border: 3px solid rgba(148, 148, 148, 0.09);
-	padding: 18px;
-	margin-top: 10px;
-	background: #ececec;
-	color: #1c619b;
-	border-radius: 0px;
-	font-weight: bold;
-	font-size: 24px;
-	transition:background .3s;
-	vertical-align: middle;
-	/* min-height: 100px; */
-}
-.fs-fields .fs-radio-custom input[type="radio"]:checked + label h2{
-	transition:background .3s;
-	background: rgb(28, 97, 155);
-	border-radius:0px;
-	color: #ffffff;
-	border: 3px solid #1c619b;
-}
+
 .simplePtag{
 	padding-top: 37px;
 	font-size:1.5em;
@@ -1757,6 +1749,7 @@ a:hover, a:focus {
   }
   70% {
     -moz-transform: skew(-74deg);
+
     -ms-transform: skew(-74deg);
     -webkit-transform: skew(-74deg);
     transform: skew(-74deg);

@@ -27,7 +27,7 @@
                             <span>Official</span>
                         </label>
                         <div class="col-sm-9">
-                            <input data-bind="value: official" type="checkbox"></input>
+                            <input class="faChkSqr" data-bind="value: official" type="checkbox"></input>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -43,6 +43,10 @@
                             <span>Item</span>
                         </label>
                         <div class="col-sm-9">
+                           	<select class="form-control" id="exampleSelect1">
+								<option>Item 1</option>
+								<option>Item 2</option>
+							</select>
                             <input data-bind="textInput: item" type="text"></input>
                         </div>
                     </div>
@@ -51,17 +55,28 @@
                             <span>Stance</span>
                         </label>
                         <div class="col-sm-9">
-                            <span><input data-bind="checked: stance" id="q10a" name="q10" type="radio" value="support"/><label for="q10a" >In-Support</label></span>
-                            <span><input data-bind="checked: stance" id="q10b" name="q10" type="radio" value="oppose"/><label for="q10b" >Opposed</label></span>
-                            <span><input data-bind="checked: stance" id="q10c" name="q10" type="radio" value="neutral"/><label for="q10c" >Neutral</label></span>
+                           <div class="fs-radio-group fs-radio-custom clearfix ">
+								<span>
+									<input data-bind="checked: stance" id="q10a" name="q10" type="radio" value="support" class="supportRadio">
+									<label for="q10a"><h2>In-Support</h2></label>
+								</span>
+								<span>
+									<input data-bind="checked: stance" id="q10b" name="q10" type="radio" value="oppose" class="opposedRadio">
+									<label for="q10b"><h2>Opposed</h2></label>
+								</span>
+								<span>
+									<input data-bind="checked: stance" id="q10c" name="q10" type="radio" value="neutral" class="neutralRadio">
+									<label for="q10c"><h2>Neutral</h2></label>
+								</span>
+							</div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">
                             <span>Notes</span>
                         </label>
-                        <div class="col-sm-9">
-                            <input data-bind="textInput: notes" type="text"></input>
+                        <div class="col-sm-9 form-group">
+                            <textarea class="form-control" data-bind="textInput: notes" type="text"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
