@@ -14,7 +14,7 @@
 			<div class="meetingWrap" data-bind="foreach: meetings">	
 				<div class="row">
 					<div class="pull-left col-sm-6 col-md-8 col-xs-6">
-						<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingName)"></span>
+						<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span>
 					</div>
 					<div data-bind="visible: status !== 'started'">
 						<button class="btn btn-info" data-bind="click: $root.editMeeting, enable: status !== 'started'">

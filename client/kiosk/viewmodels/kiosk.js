@@ -132,10 +132,10 @@ function(http, app, observable, Items, event, $) {
     }.bind(ret);
 
     ret.selectItem = function(data) {
-        if(data === null) {
+        if(data.itemOrder === 0) {
             this.request.offAgenda = true;
-            this.request.item = null;
-            this.request.timeToSpeak = 0;
+            this.request.item = data;
+            this.request.timeToSpeak = data.timeToSpeak;
             this.itemSelector = false;
         } else {
             this.request.offAgenda = false;

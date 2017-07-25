@@ -20,6 +20,7 @@ router.post("/request", function(req, res) {
     request.firstName = request.firstName.toUpperCase();
     request.lastName = request.lastName.toUpperCase();
     request.agency = request.agency.toUpperCase();
+    request.dateAdded = new Date();
 
     logger.trace("Add request with DbApi");
     rtsDbApi.addRequest(request).then(function(id) {
