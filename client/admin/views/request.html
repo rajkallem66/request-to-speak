@@ -53,9 +53,8 @@
 								<div>
 									<span data-bind="text: firstName"></span>
 									<span data-bind="text: lastName"></span>
-								</div>
-								<div>
-									<span data-bind="text: $root.format(dateAdded)"></span>
+									|
+									<small class="time" data-bind="text: $root.format(dateAdded)"></small>
 								</div>
 							</div>
 							<div class="col-xs-3 col-sm-3 col-md-5 btns">
