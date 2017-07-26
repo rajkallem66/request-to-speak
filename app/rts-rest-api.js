@@ -40,7 +40,7 @@ router.post("/request", function(req, res) {
     });
 });
 
-router.patch("/request", function(req, res) {
+router.put("/request", function(req, res) {
     let request = req.body;
     logger.info("Updating request from: " + req._remoteAddress);
     logger.debug("Request data.", request);
@@ -58,6 +58,27 @@ router.patch("/request", function(req, res) {
             res.status(204).end();
         }, function(err) {
             logger.error("Error notifying WS clients of updated request.", err);
+            res.status(500).send("Unable to send updated request to admin.");
+        });
+    }, function(err) {
+        logger.error("Error updating request to database: " + err);
+        res.status(500).send("Unable to update request to database.");
+    });
+});
+
+router.post("/activateRequest", function(req, res) {
+    let request = req.body;
+    logger.info("Activating request from: " + req._remoteAddress);
+    logger.debug("Request data.", request);
+
+    logger.trace("Update request with DbApi");
+    rtsDbApi.updateRequest(request).then(function() {
+        logger.trace("Notify WS clients of activated request");
+        rtsWsApi.activateRequest(request).then(function() {
+            logger.info("Request activated.");
+            res.status(204).end();
+        }, function(err) {
+            logger.error("Error notifying WS clients of activated request.", err);
             res.status(500).send("Unable to send updated request to admin.");
         });
     }, function(err) {
@@ -108,6 +129,21 @@ router.put("/meeting/:meetingId", function(req, res) {
     });
 });
 
+router.delete("/meeting/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    logger.info("Deleting meeting from: " + req._remoteAddress);
+    logger.debug("Meeting ID.", meetingId);
+
+    logger.trace("Delete meeting with DbApi");
+    rtsDbApi.deleteMeeting(meetingId).then(function() {
+        logger.info("Meeting deleted: " + meetingId);
+        res.status(204).end();
+    }, function(err) {
+        logger.error("Error deleting meeting from database: " + err);
+        res.status(500).send("Unable to delete meeting from database.");
+    });
+});
+
 router.post("/startMeeting/:meetingId", function(req, res) {
     let meetingId = req.params.meetingId;
     logger.info("Starting meeeting id: " + meetingId);
@@ -142,8 +178,11 @@ router.post("/endMeeting/:meetingId", function(req, res) {
 
 router.post("/refreshWall", function(req, res) {
     logger.info("Refreshing display wall.");
-    rtsWsApi.refreshWall();
-    res.status(204).end();
+    rtsWsApi.refreshWall().then(function() {
+        res.status(204).end();
+    }, function(err) {
+        res.status(500).send(err);
+    });
 });
 
 router.get("/meeting", function(req, res) {

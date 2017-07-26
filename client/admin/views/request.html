@@ -33,18 +33,20 @@
 						<span class="hidden-xs">End Meeting</span>
 					</button>
 				</div>
-				<div data-bind="with: meeting">
+				<div data-bind="visible: isMeetingActive, with: meeting">
 					<div class="row meetingName">
 						<small>CURRENT MEETING:</small>
 						<h3><span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate, 'MMM Do YYYY')"></span></h3>
 					</div>
 					<div class="row ">
-						<div class="col-xs-4">
-							<label for="exampleSelect1">Filter</label>
-							<select class="form-control" id="exampleSelect1">
-								<option>Time Entered</option>
-								<option>Stance</option>
-							</select>
+						<div class="col-xs-8">
+							<div class="form-inline">
+								<label for="exampleSelect1">Sort</label>
+								<select class="form-control" id="exampleSelect1">
+									<option>Time Entered</option>
+									<option>Stance</option>
+								</select>
+							</div>
 						</div>
 					</div>
 					<div class="adminNamesWrap" data-bind="foreach: requests">
@@ -90,11 +92,11 @@
 								</div>
 								<div class="col-md-3 col-xs-5">
 									<label class="activeChk">
-									  <input type="checkbox" />
+									  <input type="checkbox" data-bind="enable: approvedForDisplay, checked: (status === 'active'), click: $root.activateRequest"/>
 									  <i></i>
 									</label>
 									<label class="approvedChk">
-									  <input type="checkbox" data-bind="checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest"/>
+									  <input type="checkbox" data-bind="enable: status !== 'active', checked: approvedForDisplay, click: $root.approveRequest"/>
 									  <i></i>
 									</label>
 								</div>

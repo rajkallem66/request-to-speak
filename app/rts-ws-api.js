@@ -138,7 +138,9 @@ function notify(group, data) {
     let sparks = [];
     switch(group) {
     case "wall":
-        sparks.push(wallSpark);
+        if(wallSpark) {
+            sparks.push(wallSpark);
+        }
         break;
     case "kiosks" :
         sparks = kioskSparks;
@@ -267,6 +269,14 @@ function updateRequest(request) {
             return r.requestId === request.requestId;
         });
         meeting.requests.splice(old, 1, request);
+        notify("watchers", {
+            "messageType": "request",
+            "message": {
+                "event": "update",
+                "request": request
+            }
+        });
+        fulfill();
     });
 }
 
@@ -288,6 +298,34 @@ function deleteRequest(requestId) {
             "message": {
                 "event": "remove",
                 "requestId": requestId
+            }
+        });
+        fulfill();
+    });
+}
+
+/**
+ * Activates a request in the live meeting.
+ * @param {Request} request
+ * @return {Promise}
+ */
+function activateRequest(request) {
+    logger.debug("Activating request.");
+
+    return new Promise(function(fulfill, reject) {
+        meeting.requests.splice(meeting.requests.findIndex(function(r) {
+            return r.requestId === request.requestId;
+        }), 1, request);
+        
+        displayRequests.splice(displayRequests.findIndex(function(r) {
+            return r.requestId === request.requestId;
+        }),1, request);
+        
+        notify("wall", {
+            "messageType": "refresh",
+            "message": {
+                "meeting": meeting,
+                "requests": displayRequests
             }
         });
         fulfill();
@@ -322,13 +360,16 @@ function startMeeting(newMeeting) {
 function endActiveMeeting() {
     logger.debug("Ending active meeting.");
 
-    meeting = {};
+    return new Promise(function(fulfill, reject){
+        meeting = {};
 
-    notify("all", {
-        "messageType": "meeting",
-        "message": {
-            "event": "ended"
-        }
+        notify("all", {
+            "messageType": "meeting",
+            "message": {
+                "event": "ended"
+            }
+        });
+        fulfill();
     });
 }
 
@@ -337,17 +378,21 @@ function endActiveMeeting() {
  */
 function refreshWall() {
     logger.debug("Refreshing wall.");
+    return new Promise(function(fulfill, reject) {
+        displayRequests = meeting.requests.filter(function(r) {
+            return r.approvedForDisplay === true;
+        });
 
-    displayRequests = meeting.requests.filter(function(r) {
-        r.approvedForDisplay === true;
-    });
+        logger.trace("Refreshing wall with", displayRequests);
 
-    notify("wall", {
-        "messageType": "refresh",
-        "mesage": {
-            "meeting": meeting,
-            "requests": displayRequests
-        }
+        notify("wall", {
+            "messageType": "refresh",
+            "message": {
+                "meeting": meeting,
+                "requests": displayRequests
+            }
+        });
+        fulfill();
     });
 }
 
@@ -361,6 +406,7 @@ module.exports = function(primus, log) {
         addRequest: addRequest,
         updateRequest: updateRequest,
         deleteRequest: deleteRequest,
+        activateRequest: activateRequest,
         startMeeting: startMeeting,
         endActiveMeeting: endActiveMeeting,
         refreshWall: refreshWall

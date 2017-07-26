@@ -91,20 +91,23 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             }, function(err) {
                 app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
             });
-        },
-        deleteMeeting: function(meeting) {
-            if(app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]) === "Yes") {
-                var self = this;
-                http.delete(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
-                    meeting.meetingId = response.meetingId;
-                    self.meetings.splice(meeting);
+        }
+    };
+
+    ret.deleteMeeting = function(meeting) {
+        var self = this;
+        app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]).then(function(result) {
+            if(result === "Yes") {
+                http.remove(location.href.replace(/[^/]*$/, "") + "meeting/" + meeting.meetingId).then(function() {
+                    self.meetings.splice(self.meetings.findIndex(function(f) { return f.meetingId === meeting.meetingId; }), 1);
                     console.log("Meeting deleted.");
                 }, function(err) {
                     app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
                 });
             }
-        }
-    };
+        });
+    }.bind(ret);
+
 
     ret.format = function(date) {
         return moment(date).format("MMM Do YYYY");
