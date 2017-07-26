@@ -152,6 +152,8 @@ function(http, app, event, Edit, moment) {
                 this.meeting.requests.push(message.request);
                 break;
             case "remove":
+                this.meeting.requests.splice(this.meeting.requests.findIndex(function(r) { return r.requestId === message.requestId; }), 1);
+                break;
             }
         };
         this.blankMeeting = function() {

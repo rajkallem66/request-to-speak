@@ -92,25 +92,25 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
         }, 0);
     }.bind(ret);
 
-    ret.removeFromList = function() {
+    ret.removeFromList = function(requestId) {
         var toRemove = this.requests.find(function(r) {
             return r.requestId === requestId;
         });
         if(toRemove) {
-            this.requests.splice(requests.indexOf(toRemove), 1);
-        }
-
-        var items = this.items;
-        //remove removeRequests.
-        var item = items.find(function(i) {
-            return i.itemId === r.item.itemId;
-        });
-        if(item) {
-            item.requests.splice(item.requests.findIndex(function(f) {
-                return f.requestId === r.requestId;
-            }), 1);
-        } else {
-            // problem!
+            this.requests.splice(this.requests.indexOf(toRemove), 1);
+            
+            var items = this.items;
+            //remove removeRequests.
+            var item = items.find(function(i) {
+                return i.itemId === toRemove.item.itemId;
+            });
+            if(item) {
+                item.requests.splice(item.requests.findIndex(function(f) {
+                    return f.requestId === toRemove.requestId;
+                }), 1);
+            } else {
+                // problem!
+            }
         }
 
         // sum time to speak
