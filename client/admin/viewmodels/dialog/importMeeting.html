@@ -1,4 +1,4 @@
- <div class="modal fade meetingDialog">
+ <div class="modal fade meetingDialog importMeetings">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,9 +6,9 @@
       </div>
 		  <div class="modal-body">
 			<div data-bind="foreach: meetings">
-				<div data-bind="click: $parent.selectMeeting"> 
-					<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span>
-					<hr>
+				<div class="form-group row" data-bind="click: $parent.selectMeeting,css: { importSelectd: $data === $root.selectedMeeting }"> 
+						<span data-bind="text: meetingName"></span><span> - </span>
+						<span data-bind="text: $root.format(meetingDate)"></span>
 				</div>
 			</div>
 			<div class="modal-footer">

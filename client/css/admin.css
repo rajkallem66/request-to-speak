@@ -46,6 +46,34 @@ a:hover, a:focus {
 	color: #000;
 	margin-top: -7px;
 }
+.importMeetings .form-group.row span {
+    cursor: pointer;
+}
+.importMeetings .form-group.row:before{
+	content:'\f046';
+	font-family:FontAwesome;
+	transition:all .5s;
+	display:block;
+	float:left;
+	padding-right:10px;
+	color:#ccc;
+	font-size:22px;
+}
+.importMeetings .form-group.row.importSelectd{
+	
+	transition: all .5s;
+	font-weight:bold;
+}
+.importMeetings .form-group.row.importSelectd:before{
+	content:'\f046';
+	font-family:FontAwesome;
+	transition:all .5s;
+	display:block;
+	float:left;
+	padding-right:10px;
+	color:#20781f;
+	font-size:25px;
+}
 .meetingDialog .modal-footer{
 	position: relative;
 }
@@ -57,6 +85,7 @@ a:hover, a:focus {
 .meetingDialog .form-group.row{
 	border-bottom:1px solid #ddd;
 	padding-bottom:13px;
+	transition: all .5s;
 }
 .meetingDialog .form-group.row:last-of-type{
 	border-bottom:none;
@@ -613,6 +642,7 @@ input.faChkSqr {
 	display: inline-block;
 }
 input.faChkSqr:checked:after {
+
 	content: '\f14a';
 }
 input.faChkSqr:after {
