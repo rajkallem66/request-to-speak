@@ -36,7 +36,7 @@
 				<div data-bind="with: meeting">
 					<div class="row meetingName">
 						<small>CURRENT MEETING:</small>
-						<h3><span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span></h3>
+						<h3><span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate, 'MMM Do YYYY')"></span></h3>
 					</div>
 					<div class="row ">
 						<div class="col-xs-4">
@@ -54,7 +54,19 @@
 									<span data-bind="text: firstName"></span>
 									<span data-bind="text: lastName"></span>
 									|
-									<small class="time" data-bind="text: $root.format(dateAdded)"></small>
+									<small class="time" data-bind="text: $root.format(dateAdded,'HH:mm:ss A')"></small>
+								</div>
+								<div data-bind="visible: official">
+									<span data-bind="text: agency"></span>
+								</div>
+								<div>
+									<span data-bind="text: item.itemName"></span>
+								</div>
+								<div data-bind="visible: subTopic">
+									<span data-bind="text: subTopic"></span>
+								</div>
+								<div data-bind="visible: notes">
+									<span data-bind="text: notes"></span>
 								</div>
 							</div>
 							<div class="col-xs-3 col-sm-3 col-md-5 btns">
@@ -65,7 +77,7 @@
 									</button>
 								</div>
 								<div class="col-md-3">
-									<button class="btn btn-danger">
+									<button class="btn btn-danger" data-bind="click: function() { $root.deleteRequest($data); }">
 										<i class="fa fa-trash"></i>
 										<span class="hidden-xs">Delete</span>
 									</button>

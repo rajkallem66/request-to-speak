@@ -43,11 +43,8 @@
                             <span>Item</span>
                         </label>
                         <div class="col-sm-9">
-                           	<select class="form-control" id="exampleSelect1">
-								<option>Item 1</option>
-								<option>Item 2</option>
+                           	<select class="form-control" id="exampleSelect1" data-bind="options: $root.items, optionsText: 'itemName', value: item">
 							</select>
-                            <input data-bind="textInput: item" type="text"></input>
                         </div>
                     </div>
                     <div class="form-group row">
