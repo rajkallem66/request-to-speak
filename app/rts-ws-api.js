@@ -255,7 +255,7 @@ function addRequest(request) {
 }
 
 /**
- * Adds a request to the live meeting.
+ * Updates a request in the live meeting.
  * @param {Request} request
  * @return {Promise}
  */
@@ -267,6 +267,30 @@ function updateRequest(request) {
             return r.requestId === request.requestId;
         });
         meeting.requests.splice(old, 1, request);
+    });
+}
+
+/**
+ * Deletes a request from the live meeting.
+ * @param {String} requestId
+ * @return {Promise}
+ */
+function deleteRequest(requestId) {
+    logger.debug("Delete request.");
+
+    return new Promise(function(fulfill, reject) {
+        let old = meeting.requests.findIndex(function(r) {
+            return r.requestId === requestId;
+        });
+        meeting.requests.splice(old, 1);
+        notify("watchers", {
+            "messageType": "request",
+            "message": {
+                "event": "remove",
+                "requestId": requestId
+            }
+        });
+        fulfill();
     });
 }
 
@@ -336,6 +360,7 @@ module.exports = function(primus, log) {
         version: "1.0",
         addRequest: addRequest,
         updateRequest: updateRequest,
+        deleteRequest: deleteRequest,
         startMeeting: startMeeting,
         endActiveMeeting: endActiveMeeting,
         refreshWall: refreshWall

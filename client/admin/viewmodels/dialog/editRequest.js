@@ -1,8 +1,9 @@
 /* eslint no-console: "off" */
 define(["plugins/http", "plugins/dialog"], function(http, dialog) {
     var ctor = function() {
-        this.activate = function(req) {
-            this.request = req;
+        this.activate = function(data) {
+            this.request = data.request;
+            this.items = data.items;
         };
         this.request = {};
         this.save = function() {

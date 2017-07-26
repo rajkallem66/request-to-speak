@@ -129,9 +129,6 @@
 		<div data-bind="style: { display: itemSelector === true ? 'block' : 'none' }">
 			<div class="agendaItems container">
 				<div data-bind="visible: !showSubTopics">
-					<div class="itemSelection row">
-						<div class="itemName col-md-12" data-bind="click: function() { $root.selectItem(null); }">I would like to speak off topic</div>
-					</div>
 					<div data-bind="foreach: meeting.items">
 						<div class="itemSelection row">
 							<div class="itemNum col-md-1" data-bind="text: itemOrder"></div>

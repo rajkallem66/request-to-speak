@@ -24,7 +24,7 @@ router.post("/request", function(req, res) {
 
     logger.trace("Add request with DbApi");
     rtsDbApi.addRequest(request).then(function(id) {
-        request.id = id;
+        request.requestId = id;
 
         logger.trace("Notify WS clients of new request");
         rtsWsApi.addRequest(request).then(function() {
@@ -63,6 +63,27 @@ router.patch("/request", function(req, res) {
     }, function(err) {
         logger.error("Error updating request to database: " + err);
         res.status(500).send("Unable to update request to database.");
+    });
+});
+
+router.delete("/request/:requestId", function(req, res) {
+    let requestId = req.params.requestId;
+    logger.info("Deleting request from: " + req._remoteAddress);
+    logger.debug("Request ID.", requestId);
+
+    logger.trace("Delete request with DbApi");
+    rtsDbApi.deleteRequest(requestId).then(function() {
+        logger.trace("Notify WS clients of new request");
+        rtsWsApi.deleteRequest(requestId).then(function() {
+            logger.info("Request deleted: " + requestId);
+            res.status(204).end();
+        }, function(err) {
+            logger.error("Error notifying WS clients of deleted request.", err);
+            res.status(500).send("Unable to send update to admin.");
+        });
+    }, function(err) {
+        logger.error("Error deleting request from database: " + err);
+        res.status(500).send("Unable to delete request from database.");
     });
 });
 

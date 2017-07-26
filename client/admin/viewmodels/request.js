@@ -22,7 +22,7 @@ function(http, app, event, Edit, moment) {
         };
         this.editRequest = function(request) {
             var self = this;
-            app.showDialog(new Edit(), request).then(function(response) {
+            app.showDialog(new Edit(), {request: request, items: this.meeting.items}).then(function(response) {
                 if(response !== undefined) {
                     self.meetings.push(response);
                     self.selectedMeeting = response;
@@ -130,8 +130,20 @@ function(http, app, event, Edit, moment) {
         };
     };
 
-    ctor.prototype.format = function(date) {
-        return moment(date).format("HH:mm:ss A");
+    ctor.prototype.deleteRequest = function(request) {
+        app.showMessage("Delete request?", "Delete Request", ["Yes", "No"]).then(function(response) {
+            if(response === "Yes") {
+                http.remove(location.href.replace(/[^/]*$/, "") + "request/" + request.requestId).then(function() {
+                }, function(err) {
+                    // do error stuff
+                    console.log(err);
+                });
+            }
+        });
+    };
+
+    ctor.prototype.format = function(date, format) {
+        return moment(date).format(format);
     };
 
     return ctor;

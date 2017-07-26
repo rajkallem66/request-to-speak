@@ -101,7 +101,7 @@ function getMeetings() {
         pool.request().query(meetingQuery).then(function(meetingResult) {
             logger.debug("Meeting query result.", meetingResult.recordset);
             let itemQuery = "SELECT i.meetingId, i.itemId, i.itemOrder, i.itemName, i.timeToSpeak FROM Meeting m " +
-                "INNER JOIN Item i ON m.meetingId = i.meetingId";
+                "INNER JOIN Item i ON m.meetingId = i.meetingId ORDER BY i.itemOrder";
             logger.debug("Item statement: " + itemQuery);
             pool.request().query(itemQuery).then(function(itemResult) {
                 logger.debug("Item query result.", itemResult.recordset);
@@ -204,7 +204,7 @@ function addRequest(newRequest) {
         request.output("id");
         request.execute("InsertRequest").then(function(result) {
             logger.debug("New request inserted.", result);
-            fulfill(result);
+            fulfill(result.returnValue);
         }).catch(function(err) {
             logger.error("Error in calling insert stored procedure.", err);
             reject(err);
@@ -248,6 +248,27 @@ function updateRequest(updateRequest) {
 }
 
 /**
+ * Update a request in the database.
+ * @param {Request} deleteRequest
+ * @return {Promise}
+ */
+function deleteRequest(requestId) {
+    return new Promise(function(fulfill, reject) {
+        // Query
+        let request = pool.request();
+
+        request.input("requestId", requestId);
+        request.query("Delete from request where requestId = @requestId").then(function(result) {
+            logger.debug("Request deleted.", result);
+            fulfill();
+        }).catch(function(err) {
+            logger.error("Error in calling update stored procedure.", err);
+            reject(err);
+        });
+    });
+}
+
+/**
  * returns information on an active meeting
  * @return {Promise}
  */
@@ -276,7 +297,7 @@ function getActiveMeeting() {
                     });
                     meeting.items = [];
                     let itemQuery = "SELECT i.meetingId, i.itemId, i.itemOrder, i.itemName, i.timeToSpeak FROM " +
-                        "Item i WHERE meetingId = @meetingId";
+                        "Item i WHERE meetingId = @meetingId ORDER BY i.itemOrder";
                     logger.debug("Item statement: " + itemQuery);
                     let itemRequest = pool.request();
                     itemRequest.input("meetingId", meeting.meetingId);
@@ -338,6 +359,7 @@ module.exports = function(cfg, log) {
         dbType: "Microsoft SQL Server",
         addRequest: addRequest,
         updateRequest: updateRequest,
+        deleteRequest: deleteRequest,
         addMeeting: addMeeting,
         getMeetings: getMeetings,
         getActiveMeeting: getActiveMeeting,
