@@ -164,6 +164,13 @@ function(http, app, event, Edit, moment) {
                 items: []
             };
         };
+        this.approveAll = function() {
+            this.requests.forEach(function(r) {
+                if(!(r.status === "approved" || r.status === "active")) {
+                    r.status = "approved";
+                }
+            });
+        };
     };
 
     ctor.prototype.deleteRequest = function(request) {

@@ -62,6 +62,11 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             var self = this;
             app.showDialog(new Import()).then(function(response) {
                 if(response !== undefined) {
+                    // Since it is an import, add the OffAgenda item.
+                    response.items.push({
+                        itemOrder: 0,
+                        itemName: "Off Agenda"
+                    });
                     // Make sure not already in list
                     if(self.meetings.filter(function(m) {
                         return m.sireId === response.sireId;
@@ -70,6 +75,9 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
                         app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?",
                             "Meeting exists", ["Yes", "No"]).then(function(resp) {
                                 if(resp === "Yes") {
+                                    // delete meeting
+                                    // splice meeting
+                                    // add meeting
                                     self.addMeeting(response);
                                 }
                             });

@@ -85,6 +85,7 @@ function(http, app, observable, Items, event, $) {
                 email: "",
                 address: "",
                 timeToSpeak: 0,
+                status: "new",
                 approvedForDisplay: false
             };
             observable.defineProperty(req, "name", {
