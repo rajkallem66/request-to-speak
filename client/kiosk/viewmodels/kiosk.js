@@ -32,10 +32,11 @@ function(http, app, observable, Items, event, $) {
             console.log("Meeting message");
             if(message.event === "started") {
                 this.isMeetingActive = true;
+                this.meeting = message.meeting;
             } else {
                 this.isMeetingActive = false;
+                this.meeting = { items: [] }
             }
-            this.meeting = message.meetingData;
             this.request = this.newRequest();
         },
         initializeMessage: function(message) {
@@ -83,7 +84,9 @@ function(http, app, observable, Items, event, $) {
                 phone: "",
                 email: "",
                 address: "",
-                timeToSpeak: 0
+                timeToSpeak: 0,
+                status: "new",
+                approvedForDisplay: false
             };
             observable.defineProperty(req, "name", {
                 read: function() {

@@ -24,8 +24,18 @@ function(http, app, event, Edit, moment) {
             var self = this;
             app.showDialog(new Edit(), {request: request, items: this.meeting.items}).then(function(response) {
                 if(response !== undefined) {
-                    self.meetings.push(response);
-                    self.selectedMeeting = response;
+                    // update with changes.
+                    http.put(location.href.replace(/[^/]*$/, "") + "request", response).then(function() {
+                    }, function(err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                } else {
+                    // replace with a fresh copy from server
+                    http.get(location.href.replace(/[^/]*$/, "") + "request/" + request.requestId).then(function(request) {
+                        self.requests.splice(self.requests.findIndex(function(r) { return r.requestId === response.requestId; }), 1, request);
+                    }, function() {
+                        app.showMessage("Unable to cancel changes. Please refresh.");
+                    });
                 }
             }, function(err) {
                 // Do error stuff
@@ -35,9 +45,31 @@ function(http, app, event, Edit, moment) {
             var status = "";
             if(request.status === "approved" || request.status === "display" || request.status === "active") {
                 request.status = "new";
+                request.approvedForDisplay = false;
             } else {
-                request.status = "approved";
+                request.status = "display";
+                request.approvedForDisplay = true;
             }
+            // update with changes.
+            http.put(location.href.replace(/[^/]*$/, "") + "request", request).then(function() {
+            }, function(err) {
+                app.showMessage("Unable to update changes. Please refresh.");
+            });
+            return true;
+        }
+        this.activateRequest = function(request) {
+            var status = "";
+            if(request.status === "active") {
+                request.status = "display";
+                request.approvedForDisplay = true;
+            } else {
+                request.status = "active";
+            }
+            // update with changes.
+            http.post(location.href.replace(/[^/]*$/, "") + "activateRequest", request).then(function() {
+            }, function(err) {
+                app.showMessage("Unable to update changes. Please refresh.");
+            });
             return true;
         }
         this.refreshWall = function() {
@@ -120,13 +152,24 @@ function(http, app, event, Edit, moment) {
                 this.meeting.requests.push(message.request);
                 break;
             case "remove":
+                this.meeting.requests.splice(this.meeting.requests.findIndex(function(r) { return r.requestId === message.requestId; }), 1);
+                break;
             }
         };
         this.blankMeeting = function() {
             return {
                 meetingName: "No active meeting.",
-                requests: []
+                meetingDate: "",
+                requests: [],
+                items: []
             };
+        };
+        this.approveAll = function() {
+            this.requests.forEach(function(r) {
+                if(!(r.status === "approved" || r.status === "active")) {
+                    r.status = "approved";
+                }
+            });
         };
     };
 

@@ -19,7 +19,7 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
             } else {
                 this.isMeetingActive = false;
             }
-            this.requests = message.meeting.requests;
+            this.requests = message.requests;
             this.setDisplay();
         },
         meetingMessage: function(message) {
@@ -28,6 +28,8 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
             } else {
                 this.isMeetingActive = false;
             }
+            this.requests = [];
+            this.setDisplay();
         },
         refreshMessage: function(message) {
             this.requests = message.requests;
@@ -36,7 +38,15 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
     };
 
     ret.setDisplay = function() {
-        this.displayRequests = this.requests.slice(0, 10);
+        this.displayRequests = this.requests.sort(function(a,b) {
+            if(a.status === "active") {
+                return -1;
+            } else if(b.status === "active") {
+                return 1;
+            } else {
+                return a.item.itemOrder - b.item.itemOrder;
+            }
+        }).slice(0, 10);
     };
     return ret;
 });

@@ -60,6 +60,7 @@ winston.info("RTS DB API Version: " + rtsDbApi.version);
 rtsDbApi.getActiveMeeting().then(function(mtg) {
     if(mtg !== undefined) {
         rtsWsApi.startMeeting(mtg);
+        rtsWsApi.refreshWall();
     }
 }, function(err) {
     winston.error("Unable to check for active meeting.");

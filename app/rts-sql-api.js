@@ -178,6 +178,27 @@ function updateMeetingStatus(meetingId, status) {
 }
 
 /**
+ * Delete a meeting in the database.
+ * @param {String} meetingId
+ * @return {Promise}
+ */
+function deleteMeeting(meetingId) {
+    return new Promise(function(fulfill, reject) {
+        // Query
+        let request = pool.request();
+
+        request.input("meetingId", meetingId);
+        request.query("Delete from meeting where meetingId = @meetingId").then(function(result) {
+            logger.debug("Meeting deleted.", result);
+            fulfill();
+        }).catch(function(err) {
+            logger.error("Error executing delete query.", err);
+            reject(err);
+        });
+    });
+}
+
+/**
  * Insert new request into database.
  * @param {Request} newRequest
  * @return {Promise}
@@ -248,8 +269,8 @@ function updateRequest(updateRequest) {
 }
 
 /**
- * Update a request in the database.
- * @param {Request} deleteRequest
+ * Delete a request in the database.
+ * @param {String} requestId
  * @return {Promise}
  */
 function deleteRequest(requestId) {
@@ -262,7 +283,7 @@ function deleteRequest(requestId) {
             logger.debug("Request deleted.", result);
             fulfill();
         }).catch(function(err) {
-            logger.error("Error in calling update stored procedure.", err);
+            logger.error("Error executing delete query.", err);
             reject(err);
         });
     });
@@ -285,7 +306,7 @@ function getActiveMeeting() {
                 logger.debug("There is an active meeting: " + meeting.meetingId);
                 meeting.requests = [];
                 let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, item, " +
-                    "offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status FROM Request " +
+                    "offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, approvedForDisplay FROM Request " +
                     "WHERE meetingId = @meetingId";
                 logger.debug("Statement: " + query);
                 let requestRequest = pool.request();
@@ -365,6 +386,7 @@ module.exports = function(cfg, log) {
         getActiveMeeting: getActiveMeeting,
         startMeeting: startMeeting,
         endMeeting: endMeeting,
+        deleteMeeting: deleteMeeting,
         setupSql: setupSql
     };
 };
