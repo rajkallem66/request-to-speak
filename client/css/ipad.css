@@ -883,6 +883,38 @@ li.fsCurrent {
 input[type=text]::-ms-clear {
     display: none;
 }
+.successMesg:after{
+	content:"\f05d";
+	font-family:'fontAwesome';
+	font-size:280px;
+	color:#f1f1f1;
+	font-weight:normal;
+}
+
+.successMesg{
+	position: absolute;
+    z-index: 10000;
+    padding-top: 15%;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    padding-left: 0%;
+    text-align: center;
+    background: rgba(255,255,255,1);
+    color: #414141;
+    font-size: 28px;
+    font-weight: bold;
+}
+.model-par{
+	display:block;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	padding:10px;
+	width:80%;
+	margin:0 auto;
+	line-height:2em;
+	background:#fbfbfb;
+}
 
 /* Adjust form for smaller screens */
 @media screen and (max-width: 52.5em) {
@@ -1160,6 +1192,7 @@ div.cs-select:focus {
 .clearfix:after { clear: both; }
 
 html, body, .container {
+
 	/* height: 100%; */
 }
 
