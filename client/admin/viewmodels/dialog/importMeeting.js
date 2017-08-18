@@ -16,7 +16,8 @@ define(["plugins/http", "plugins/dialog", "moment"], function(http, dialog, mome
         }.bind(this),
         this.confirmSelection = function() {
             var self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" + this.selectedMeeting.sireId).then(function(data) {
+            http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" +
+            this.selectedMeeting.sireId).then(function(data) {
                 self.selectedMeeting.items = data;
                 dialog.close(self, self.selectedMeeting);
             }, function() {
@@ -31,6 +32,6 @@ define(["plugins/http", "plugins/dialog", "moment"], function(http, dialog, mome
     ctor.prototype.closeDialog = function() {
         dialog.close(this);
     };
-    
+
     return ctor;
 });

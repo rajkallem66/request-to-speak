@@ -7,6 +7,7 @@ function(http, app, event, Edit, moment) {
         this.isMeetingActive = false;
         this.messages = [];
         this.meeting = null;
+        this.totalTimeRemaining = 0;
         this.wallConnected = false;
         this.connectedKiosks = 0;
         this.connectedAdmins = 0;
@@ -32,7 +33,9 @@ function(http, app, event, Edit, moment) {
                 } else {
                     // replace with a fresh copy from server
                     http.get(location.href.replace(/[^/]*$/, "") + "request/" + request.requestId).then(function(request) {
-                        self.requests.splice(self.requests.findIndex(function(r) { return r.requestId === response.requestId; }), 1, request);
+                        self.requests.splice(self.requests.findIndex(function(r) {
+                            return r.requestId === response.requestId;
+                        }), 1, request);
                     }, function() {
                         app.showMessage("Unable to cancel changes. Please refresh.");
                     });
@@ -42,7 +45,6 @@ function(http, app, event, Edit, moment) {
             });
         }.bind(this);
         this.approveRequest = function(request) {
-            var status = "";
             if(request.status === "approved" || request.status === "display" || request.status === "active") {
                 request.status = "new";
                 request.approvedForDisplay = false;
@@ -56,9 +58,8 @@ function(http, app, event, Edit, moment) {
                 app.showMessage("Unable to update changes. Please refresh.");
             });
             return true;
-        }
+        };
         this.activateRequest = function(request) {
-            var status = "";
             if(request.status === "active") {
                 request.status = "display";
                 request.approvedForDisplay = true;
@@ -71,14 +72,14 @@ function(http, app, event, Edit, moment) {
                 app.showMessage("Unable to update changes. Please refresh.");
             });
             return true;
-        }
+        };
         this.refreshWall = function() {
             http.post(location.href.replace(/[^/]*$/, "") + "refreshWall").then(function() {
             }, function(err) {
                 // do error stuff
                 console.log(err);
             });
-        }.bind(this);
+        };
         this.endMeeting = function() {
             var self = this;
             app.showMessage("Are you sure?", "End meeting", ["Yes", "No"]).then(function(response) {
@@ -152,7 +153,9 @@ function(http, app, event, Edit, moment) {
                 this.meeting.requests.push(message.request);
                 break;
             case "remove":
-                this.meeting.requests.splice(this.meeting.requests.findIndex(function(r) { return r.requestId === message.requestId; }), 1);
+                this.meeting.requests.splice(this.meeting.requests.findIndex(function(r) {
+                    return r.requestId === message.requestId;
+                }), 1);
                 break;
             }
         };

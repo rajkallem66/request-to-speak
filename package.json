@@ -50,8 +50,6 @@
     "moment": "^2.18.1",
     "morgan": "^1.8.1",
     "mssql": "^4.0.1",
-    "passport": "^0.3.2",
-    "passport-saml": "^0.15.0",
     "path": "^0.12.7",
     "phantomjs-prebuilt": "^2.1.14",
     "primus": "^7.0.0",

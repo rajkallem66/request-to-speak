@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
+define(["durandal/app", "eventHandler"], function(app, event) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -38,7 +38,7 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
     };
 
     ret.setDisplay = function() {
-        this.displayRequests = this.requests.sort(function(a,b) {
+        this.displayRequests = this.requests.sort(function(a, b) {
             if(a.status === "active") {
                 return -1;
             } else if(b.status === "active") {

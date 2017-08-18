@@ -316,11 +316,11 @@ function activateRequest(request) {
         meeting.requests.splice(meeting.requests.findIndex(function(r) {
             return r.requestId === request.requestId;
         }), 1, request);
-        
+
         displayRequests.splice(displayRequests.findIndex(function(r) {
             return r.requestId === request.requestId;
-        }),1, request);
-        
+        }), 1, request);
+
         notify("wall", {
             "messageType": "refresh",
             "message": {
@@ -356,11 +356,12 @@ function startMeeting(newMeeting) {
 
 /**
  * Ends an active meeting by sending event to everyone.
+ * @return {Promise}
  */
 function endActiveMeeting() {
     logger.debug("Ending active meeting.");
 
-    return new Promise(function(fulfill, reject){
+    return new Promise(function(fulfill, reject) {
         meeting = {};
 
         notify("all", {
@@ -375,6 +376,7 @@ function endActiveMeeting() {
 
 /**
  * Send updated list of requests to the wall
+ * @return {Promise}
  */
 function refreshWall() {
     logger.debug("Refreshing wall.");

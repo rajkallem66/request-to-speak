@@ -21,7 +21,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
         var activeMeetingData = {
             event: "started",
-            meetingData: {
+            meeting: {
                 meetingId: 12,
                 meetingName: "The first one",
                 confirmationDuration: 5,
@@ -37,7 +37,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
         var endedMeetingData = {
             event: "ended",
-            meetingData: {
+            meeting: {
                 meetingId: 12
             }
         };
@@ -56,7 +56,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
             it("meetingMessage should set proper values for ended meeting.", function() {
                 a.meetingMessage(endedMeetingData);
-                expect(a.meeting.meetingId).toBe(12);
+                expect(a.meeting.meetingId).not.toBeDefined();
                 expect(a.request).toEqual(a.newRequest());
                 expect(a.isMeetingActive).toBe(false);
             });

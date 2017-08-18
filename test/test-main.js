@@ -32,7 +32,8 @@ require.config({
         "primus": "client/lib/primus/primus",
         "eventHandler": "client/lib/rts/eventHandler",
         "dialog": "client/admin/viewmodels/dialog",
-        "kioskDialog": "client/kiosk/viewmodels/dialog"
+        "kioskDialog": "client/kiosk/viewmodels/dialog",
+        "moment": "client/lib/moment/moment.min"
     },
     shim: {
         "bootstrap": {

@@ -1,5 +1,5 @@
 /* global jasmine, describe, beforeEach, it, expect, require */
-define(["dialog/import"], function(Import) {
+define(["dialog/importMeeting"], function(Import) {
     describe("Import ViewModel definitions.", function() {
         "use strict";
 

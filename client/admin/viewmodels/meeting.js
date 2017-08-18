@@ -1,13 +1,13 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting", "moment"],
-function(http, app, router, observable, dialog, Import, Edit, moment) {
+define(["plugins/http", "plugins/router", "durandal/app", "dialog/importMeeting", "dialog/editMeeting", "moment"],
+function(http, router, app, Import, Edit, moment) {
     var ret = {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
         activate: function() {
             var self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
+            http.get(app.apiLocation + "meeting").then(function(response) {
                 self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {
@@ -22,12 +22,12 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             });
         },
         startMeeting: function(meeting) {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + meeting.meetingId).then(function(result) {
+            http.post(app.apiLocation + "startMeeting/" + meeting.meetingId).then(function(result) {
                 app.showMessage("Meeting started successfully.").then(function() {
                     router.navigate("/request");
                 });
             }, function(err) {
-                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
+                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err.responseText));
             });
         },
         newMeeting: function() {
@@ -91,13 +91,10 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             });
         },
         addMeeting: function(meeting) {
-            var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
-                meeting.meetingId = response.meetingId;
-                self.meetings.push(meeting);
-                console.log("Meeting added.");
-            }, function(err) {
-                app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
+            this.editMeeting({
+                meetingName: "",
+                meetingDate: "",
+                items: []
             });
         }
     };
@@ -106,8 +103,10 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
         var self = this;
         app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]).then(function(result) {
             if(result === "Yes") {
-                http.remove(location.href.replace(/[^/]*$/, "") + "meeting/" + meeting.meetingId).then(function() {
-                    self.meetings.splice(self.meetings.findIndex(function(f) { return f.meetingId === meeting.meetingId; }), 1);
+                http.remove(app.apiLocation + "meeting/" + meeting.meetingId).then(function() {
+                    self.meetings.splice(self.meetings.findIndex(function(f) {
+                        return f.meetingId === meeting.meetingId;
+                    }), 1);
                     console.log("Meeting deleted.");
                 }, function(err) {
                     app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
@@ -125,7 +124,22 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
         var self = this;
         app.showDialog(new Edit(), meeting).then(function(response) {
             if(response !== undefined) {
-                self.meetings.push(response);
+                if(self.meeting.includes(response)) {
+                    http.put(app.apiLocation + "meeting/" + meeting.meetingId, meeting).then(function(response) {
+                        self.meetings.push(meeting);
+                        console.log("Meeting added.");
+                    }, function(err) {
+                        app.showMessage("Unable to update meeting. Please refresh.\n" + JSON.stringify(err));
+                    });
+                } else {
+                    http.post(app.apiLocation + "meeting", meeting).then(function(response) {
+                        meeting.meetingId = response.meetingId;
+                        self.meetings.push(meeting);
+                        console.log("Meeting added.");
+                    }, function(err) {
+                        app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
+                    });
+                }
             }
         }, function(err) {
             // Do error stuff

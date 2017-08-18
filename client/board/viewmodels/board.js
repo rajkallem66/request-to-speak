@@ -1,5 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "moment"], function(http, app, observable, event, moment) {
+define(["durandal/app", "plugins/observable", "eventHandler", "moment"],
+function(app, observable, event, moment) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -19,17 +20,21 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
         initializeMessage: function(message) {
             if(message.meeting.meetingId !== undefined) {
                 this.isMeetingActive = true;
-                message.meeting.items.forEach(function(i) {i.requests = []; i.timeRemaining = 0;});
+                message.meeting.items.forEach(function(i) {
+                    i.requests = []; i.timeRemaining = 0;
+                });
                 this.items = message.meeting.items;
                 this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
                 this.addToList();
-            } 
+            }
         },
         meetingMessage: function(message) {
             if(message.event === "started") {
                 this.isMeetingActive = true;
-                message.meeting.items.forEach(function(i) {i.requests = []; i.timeRemaining = 0;});
+                message.meeting.items.forEach(function(i) {
+                    i.requests = []; i.timeRemaining = 0;
+                });
                 this.items = message.meeting.items;
                 this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
@@ -98,9 +103,9 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
         });
         if(toRemove) {
             this.requests.splice(this.requests.indexOf(toRemove), 1);
-            
+
             var items = this.items;
-            //remove removeRequests.
+            // remove removeRequests.
             var item = items.find(function(i) {
                 return i.itemId === toRemove.item.itemId;
             });
@@ -130,14 +135,16 @@ define(["plugins/http", "durandal/app", "plugins/observable", "eventHandler", "m
     }.bind(ret);
 
     ret.updateList = function(updatedRequest) {
-        this.requests.splice(this.requests.findIndex(function(r) { return r.requestId === updatedRequest.requestId; }), 1, updatedRequest);
+        this.requests.splice(this.requests.findIndex(function(r) {
+            return r.requestId === updatedRequest.requestId;
+        }), 1, updatedRequest);
 
-        //remove removeRequests.
+        // remove removeRequests.
         var item = this.items.find(function(i) {
             return i.itemId === updatedRequest.item.itemId;
         });
 
-        //TODO: what if change Item in edit.
+        // TODO: what if change Item in edit.
         if(item) {
             item.requests.splice(item.requests.findIndex(function(f) {
                 return f.requestId === updatedRequest.requestId;

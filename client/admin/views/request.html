@@ -39,7 +39,7 @@
 						<h3><span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate, 'MMM Do YYYY')"></span></h3>
 					</div>
 					<div class="row ">
-						<div class="col-xs-8">
+						<div class="col-xs-4">
 							<div class="form-inline">
 								<label for="exampleSelect1">Sort</label>
 								<select class="form-control" id="exampleSelect1">
@@ -48,7 +48,17 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-xs-4">
+						<div class="col-xs-3">
+							<div class="pull-right">
+								<span><span>Time Remaining: </span><span data-bind="text: $root.timeRemaining"></span></span>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="pull-right">
+								<span><span>Total Requests: </span><span data-bind="text: requests.length"></span></span>
+							</div>
+						</div>
+						<div class="col-xs-2">
 							<div class="pull-right">
 								<button class="btn btn-info" data-bind="click: $root.approveAll">
 									<i class="fa fa-check"></i>

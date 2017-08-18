@@ -35,7 +35,7 @@ function(http, app, observable, Items, event, $) {
                 this.meeting = message.meeting;
             } else {
                 this.isMeetingActive = false;
-                this.meeting = { items: [] }
+                this.meeting = {items: []};
             }
             this.request = this.newRequest();
         },
@@ -55,7 +55,7 @@ function(http, app, observable, Items, event, $) {
         submitRequest: function() {
             this.isSubmitting = true;
             var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
                 self.isSubmitting = false;
                 self.confirmSubmission = true;
                 setTimeout(function() {
@@ -156,7 +156,7 @@ function(http, app, observable, Items, event, $) {
         if(this.request.offAgenda === true) {
             return "Off Agenda";
         } else if(this.request.item && this.request.item.itemName) {
-            return this.request.item.itemName
+            return this.request.item.itemName;
         } else {
             return "";
         }
@@ -173,18 +173,15 @@ function(http, app, observable, Items, event, $) {
         var agency = this.request.agency;
         var stance = this.request.stance;
 
-        switch(this.step) {
-            case 0:
-                return (name.trim().length > 2);
-                break;
-            case 1:
-                return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
-                break;
-            case 2:
-                return (stance !== "" && this.displayItem);
-                break;
-            default:
-                return true;
+        switch(step) {
+        case 0:
+            return (name.trim().length > 2);
+        case 1:
+            return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
+        case 2:
+            return (stance !== "" && this.displayItem);
+        default:
+            return true;
         }
     });
 

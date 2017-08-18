@@ -66,7 +66,7 @@ rtsDbApi.getActiveMeeting().then(function(mtg) {
     winston.error("Unable to check for active meeting.");
 });
 
-app.use(require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
+app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
 
 // Sacramento County agenda management system access.
 let agendaApi = config.get("SIRE.dbApi");
