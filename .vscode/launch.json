@@ -8,7 +8,12 @@
         }
     ],
     "configurations": [
-
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "port": 5858
+        },
         {
             "type": "node",
             "request": "launch",
@@ -47,7 +52,7 @@
             "webRoot": "${workspaceRoot}/client"
         },
         {
-            "type": "node",
+            "type": "node2",
             "request": "launch",
             "name": "nodemon",
             "runtimeExecutable": "nodemon",

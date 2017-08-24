@@ -317,6 +317,8 @@ function activateRequest(request) {
             return r.requestId === request.requestId;
         }), 1, request);
 
+        // If displayRequests includes then splice. otherwise push
+
         displayRequests.splice(displayRequests.findIndex(function(r) {
             return r.requestId === request.requestId;
         }), 1, request);

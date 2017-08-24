@@ -43,8 +43,11 @@ define(["durandal/app", "eventHandler"], function(app, event) {
                 return -1;
             } else if(b.status === "active") {
                 return 1;
+            } else if(a.item.itemOrder === b.item.itemOrder) {
+                return a.dateAdded.valueOf() - b.dateAdded.valueOf();
             } else {
-                return a.item.itemOrder - b.item.itemOrder;
+                // send Off Agenda to the bottom
+                return ((a.item.itemName === "Off Agenda") ? 1000 : a.item.itemOrder) - ((b.item.itemName === "Off Agenda") ? 1000 : b.item.itemOrder);
             }
         }).slice(0, 10);
     };

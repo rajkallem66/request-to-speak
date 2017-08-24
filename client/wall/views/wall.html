@@ -16,13 +16,17 @@
       </div>
     </nav>
     <div class="wallWrap"  data-bind="foreach: displayRequests, visible: isMeetingActive">
-           <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
-            <div class="itemOrder col-md-2" data-bind="text: item.itemOrder">
-            </div>
-            <div class="infoName col-md-10">
-				      <span data-bind="text: firstName"></span>
-				      <span data-bind="text: lastName"></span>
-			      </div>
+        <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
+          <div class="itemOrder col-md-2" data-bind="text: item.itemOrder">
+          </div>
+          <div class="infoName col-md-10">
+            <span data-bind="text: firstName"></span>
+            <span data-bind="text: lastName"></span>
+          </div>
         </div>
+    </div>
+    <div class="remaining pull-right">
+      <span>Remaining Speakers: <span>
+      <span data-bind="text: requests.length"></span>
     </div>
 </div>

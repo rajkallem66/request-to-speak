@@ -27,7 +27,7 @@
                             <span>Official</span>
                         </label>
                         <div class="col-sm-9">
-                            <input class="faChkSqr" data-bind="value: official" type="checkbox"></input>
+                            <input class="faChkSqr" data-bind="checked: official" type="checkbox"></input>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -100,6 +100,14 @@
                             <input data-bind="textInput: phone" type="text"></input>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                            <span>Speak Time</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input data-bind="textInput: timeToSpeak" type="text"></input>
+                        </div>
+                    </div>    
                 </div>
             </div>
             <div class="modal-footer">

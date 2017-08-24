@@ -28,6 +28,9 @@
 					<div class="row">
 						<div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
 						<div class="itemName pull-left" data-bind="text: itemName"></div>
+						<div class="pull-right itemTime">Total Speakers: 	
+							<span class="" data-bind="text: requests.length"></span>
+						</div>
 						<div class="pull-right itemTime">Time Remaining: 	
 							<span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
 						</div>
@@ -63,12 +66,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" data-bind="foreach: messages">
+<!-- 				<div class="row" data-bind="foreach: messages">
 					<div class="col-sm-6 col-md-3">
 						<span href="#" class="thumbnail" data-bind="text: message">
 						</span>
 					</div>
 				</div>
-			</div>
+ -->			</div>
 		</div>
 	</div>

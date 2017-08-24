@@ -30,34 +30,6 @@ function(http, router, app, Import, Edit, moment) {
                 app.showMessage("Unable to start meeting.\n" + JSON.stringify(err.responseText));
             });
         },
-        newMeeting: function() {
-            return {
-                meetingId: "12",
-                meetingName: "The twelfth one",
-                items: [
-                    {
-                        itemId: "100",
-                        itemName: "1",
-                        defaultTimeToSpeak: 2
-                    },
-                    {
-                        itemId: "101",
-                        itemName: "2",
-                        defaultTimeToSpeak: 3,
-                        subTopics: [
-                            {
-                                subTopicId: "1",
-                                subTopicName: "First sub-topic"
-                            },
-                            {
-                                subTopicId: "2",
-                                subTopicName: "The second sub-topic"
-                            }
-                        ]
-                    }
-                ]
-            };
-        },
         importMeeting: function() {
             var self = this;
             app.showDialog(new Import()).then(function(response) {
@@ -65,7 +37,8 @@ function(http, router, app, Import, Edit, moment) {
                     // Since it is an import, add the OffAgenda item.
                     response.items.push({
                         itemOrder: 0,
-                        itemName: "Off Agenda"
+                        itemName: "Off Agenda",
+                        timeToSpeak: 3
                     });
                     // Make sure not already in list
                     if(self.meetings.filter(function(m) {
@@ -75,10 +48,21 @@ function(http, router, app, Import, Edit, moment) {
                         app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?",
                             "Meeting exists", ["Yes", "No"]).then(function(resp) {
                                 if(resp === "Yes") {
-                                    // delete meeting
-                                    // splice meeting
-                                    // add meeting
-                                    self.addMeeting(response);
+                                    var old = self.meetings.find(function(m) {
+                                        return m.sireId === response.sireId;
+                                    });
+
+                                    http.remove(app.apiLocation + "meeting/" + old.meetingId).then(function() {
+                                        self.meetings.splice(self.meetings.findIndex(function(f) {
+                                            return f.meetingId === old.meetingId;
+                                        }), 1);
+                                        console.log("Meeting deleted.");
+                                        // splice meeting
+                                        // add meeting
+                                        self.addMeeting(response);
+                                    }, function(err) {
+                                        app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
+                                    });
                                 }
                             });
                     } else {
@@ -91,6 +75,16 @@ function(http, router, app, Import, Edit, moment) {
             });
         },
         addMeeting: function(meeting) {
+            var self = this;
+            http.post(app.apiLocation + "meeting", meeting).then(function(response) {
+                meeting.meetingId = response.meetingId;
+                self.meetings.push(meeting);
+                console.log("Meeting added.");
+            }, function(err) {
+                app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
+            });
+        },
+        newMeeting: function() {
             this.editMeeting({
                 meetingName: "",
                 meetingDate: "",
@@ -115,7 +109,6 @@ function(http, router, app, Import, Edit, moment) {
         });
     }.bind(ret);
 
-
     ret.format = function(date) {
         return moment(date).format("MMM Do YYYY");
     };
@@ -124,9 +117,8 @@ function(http, router, app, Import, Edit, moment) {
         var self = this;
         app.showDialog(new Edit(), meeting).then(function(response) {
             if(response !== undefined) {
-                if(self.meeting.includes(response)) {
+                if(self.meetings.includes(response)) {
                     http.put(app.apiLocation + "meeting/" + meeting.meetingId, meeting).then(function(response) {
-                        self.meetings.push(meeting);
                         console.log("Meeting added.");
                     }, function(err) {
                         app.showMessage("Unable to update meeting. Please refresh.\n" + JSON.stringify(err));
@@ -140,6 +132,10 @@ function(http, router, app, Import, Edit, moment) {
                         app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
                     });
                 }
+            } else {
+                http.get(app.apiLocation + "meeting/" + meeting.meetingId).then(function(response) {
+                    self.meetings.splice(self.meetings.indexOf(meeting), 1, response);
+                });
             }
         }, function(err) {
             // Do error stuff

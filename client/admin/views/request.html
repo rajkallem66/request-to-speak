@@ -50,7 +50,7 @@
 						</div>
 						<div class="col-xs-3">
 							<div class="pull-right">
-								<span><span>Time Remaining: </span><span data-bind="text: $root.timeRemaining"></span></span>
+								<span><span>Time Remaining: </span><span data-bind="text: $root.totalTimeRemaining"></span></span>
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -67,69 +67,92 @@
 							</div>
 						</div>
 					</div>
-					<div class="adminNamesWrap" data-bind="foreach: requests">
-						<div class="row">
-							<div class="pull-left col-xs-9 col-sm-9 col-md-7">
-								<div>
-									<span data-bind="text: firstName"></span>
-									<span data-bind="text: lastName"></span>
-									|
-									<small class="time" data-bind="text: $root.format(dateAdded,'HH:mm:ss A')"></small>
+					<div data-bind="foreach: items">
+						<div class="adminItemsWrap" data-bind="visible: requests.length > 0">
+							<div class="row">
+								<div class="col-md-6">
+									<span>Item: </span>
+									<span data-bind="text: itemOrder">
 								</div>
-								<div data-bind="visible: official">
-									<span data-bind="text: agency"></span>
+								<div class="col-md-3">
+									<span>Requests: </span>
+									<span data-bind="text: requests.length"></span>
 								</div>
-								<div>
-									<span data-bind="text: item.itemName"></span>
-								</div>
-								<div data-bind="visible: subTopic">
-									<span data-bind="text: subTopic"></span>
-								</div>
-								<div data-bind="visible: notes">
-									<span data-bind="text: notes"></span>
+								<div class="col-md-3">
+										<span>Speaker Time: </span>
+										<span data-bind="text: timeRemaining"></span>
 								</div>
 							</div>
-							<div class="col-xs-3 col-sm-3 col-md-5 btns">
-								<div class="col-md-3">
-									<button class="btn btn-primary" data-bind="click: $root.editRequest">
-										<i class="fa fa-pencil"></i> 
-										<span class="hidden-xs">Edit</span>
-									</button>
-								</div>
-								<div class="col-md-3">
-									<button class="btn btn-danger" data-bind="click: function() { $root.deleteRequest($data); }">
-										<i class="fa fa-trash"></i>
-										<span class="hidden-xs">Delete</span>
-									</button>
-								</div>
-								<div class="col-md-3">
-									<button class="btn btn-danger">
-										<i class="fa fa-minus"></i>
-										<span class="hidden-xs">Remove</span>
-									</button>
-								</div>
-								<div class="col-md-3 col-xs-5">
-									<label class="activeChk">
-									  <input type="checkbox" data-bind="enable: approvedForDisplay, checked: (status === 'active'), click: $root.activateRequest"/>
-									  <i></i>
-									</label>
-									<label class="approvedChk">
-									  <input type="checkbox" data-bind="enable: status !== 'active', checked: approvedForDisplay, click: $root.approveRequest"/>
-									  <i></i>
-									</label>
+							<div class="adminNamesWrap" data-bind="foreach: requests">
+								<div class="row">
+									<div class="pull-left col-xs-9 col-sm-9 col-md-7">
+										<div>
+											<span data-bind="text: firstName"></span>
+											<span data-bind="text: lastName"></span>
+											|
+											<small class="time" data-bind="text: stance"></small>
+											<small class="time" data-bind="text: $root.format(dateAdded,'HH:mm:ss A')"></small>
+										</div>
+										<div data-bind="visible: official">
+											<span data-bind="text: agency"></span>
+										</div>
+										<div>
+											<span data-bind="text: item.itemName"></span>
+										</div>
+										<div data-bind="visible: subTopic">
+											<span data-bind="text: subTopic"></span>
+										</div>
+										<div data-bind="visible: notes">
+											<span data-bind="text: notes"></span>
+										</div>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-5 btns">
+										<div class="col-md-3">
+											<button class="btn btn-primary" data-bind="click: $root.editRequest">
+												<i class="fa fa-pencil"></i> 
+												<span class="hidden-xs">Edit</span>
+											</button>
+										</div>
+										<div class="col-md-3" data-bind="visible: status !== 'active'">
+											<button class="btn btn-danger" data-bind="click: function() { $root.deleteRequest($data); }">
+												<i class="fa fa-trash"></i>
+												<span class="hidden-xs">Delete</span>
+											</button>
+										</div>
+										<div class="col-md-3" data-bind="visible: status === 'active'">
+											<button class="btn btn-danger">
+												<i class="fa fa-minus"></i>
+												<span class="hidden-xs">Remove</span>
+											</button>
+										</div>
+										<div class="col-md-3 col-xs-5">
+											<label class="activeChk">
+											<input type="checkbox" data-bind="enable: approvedForDisplay, checked: (status === 'active'), click: $root.activateRequest"/>
+											<i></i>
+											</label>
+											<label class="displayChk">
+												<input type="checkbox" data-bind="enable: status !== 'active', checked: approvedForDisplay, click: $root.displayRequest"/>
+												<i></i>
+											</label>	
+ 											<label class="approvedChk">
+												<input type="checkbox" data-bind="enable: approvedForDisplay === false, checked: (status === 'approved' || approvedForDisplay === true), click: $root.approveRequest"/>
+												<i></i>
+											</label>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row" data-bind="foreach: messages">
+<!-- 			<div class="row" data-bind="foreach: messages">
 				<div class="col-sm-6 col-md-3">
 					<span href="#" class="thumbnail" data-bind="text: message">
 					</span>
 				</div>
 			</div>
-
+ -->
 		</div>
 	</div>
 </div>

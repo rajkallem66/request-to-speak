@@ -171,3 +171,11 @@ hr {
 	margin-left: -6px;
 	margin-right: -100%;
 }
+.remaining {
+	font-size: 40px;
+	line-height: 55px;
+	height: 100%;
+	margin-bottom: 12px;
+	font-weight: bold;
+	color: #bebebe;
+}

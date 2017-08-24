@@ -8,7 +8,6 @@ function(app, observable, event, moment) {
         requests: [],
         newRequests: [],
         items: [],
-        requestSort: "",
         totalTimeRemaining: 0,
         primus: null,
         activate: function() {
@@ -51,6 +50,7 @@ function(app, observable, event, moment) {
             if(message.event === "add") {
                 requests.push(message.request);
                 this.newRequests.push(message.request);
+                this.addToList();
             } else if(message.event === "update") {
                 this.updateList(message.request);
             } else {
