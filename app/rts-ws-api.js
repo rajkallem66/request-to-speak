@@ -290,17 +290,21 @@ function deleteRequest(requestId) {
 
     return new Promise(function(fulfill, reject) {
         let old = meeting.requests.findIndex(function(r) {
-            return r.requestId === requestId;
+            return r.requestId === parseInt(requestId);
         });
-        meeting.requests.splice(old, 1);
-        notify("watchers", {
-            "messageType": "request",
-            "message": {
-                "event": "remove",
-                "requestId": requestId
-            }
-        });
-        fulfill();
+        if((!isNan(old)) && (old > -1)) {
+            meeting.requests.splice(old, 1);
+            notify("watchers", {
+                "messageType": "request",
+                "message": {
+                    "event": "remove",
+                    "requestId": requestId
+                }
+            });
+            fulfill();            
+        } else {
+            reject("Invalid requestId.")
+        } 
     });
 }
 

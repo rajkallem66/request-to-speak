@@ -50,7 +50,6 @@ function(app, observable, event, moment) {
             if(message.event === "add") {
                 requests.push(message.request);
                 this.newRequests.push(message.request);
-                this.addToList();
             } else if(message.event === "update") {
                 this.updateList(message.request);
             } else {
@@ -155,12 +154,11 @@ function(app, observable, event, moment) {
 
         // sum time to speak
         this.items.forEach(function(i) {
+            i.timeRemaining = 0;
             if(i.requests) {
-                i.timeRemaining = i.requests.reduce(function(a, b) {
-                    return a + b.timeToSpeak;
-                }, 0);
-            } else {
-                i.timeRemaining = 0;
+                i.requests.forEach(function(r) {
+                    i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                });
             }
         });
 

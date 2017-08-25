@@ -342,6 +342,7 @@ function addRequest(newRequest) {
         request.input("email", newRequest.email);
         request.input("address", newRequest.address);
         request.input("timeToSpeak", newRequest.timeToSpeak);
+        request.input("status", newRequest.status);        
         request.output("id");
         request.execute("InsertRequest").then(function(result) {
             logger.debug("New request inserted.", result);
@@ -363,7 +364,7 @@ function updateRequest(updateRequest) {
         // Query
         let request = pool.request();
 
-        request.input("requestId", updateRequest.meetingId);
+        request.input("requestId", updateRequest.requestId);
         request.input("firstName", updateRequest.firstName);
         request.input("lastName", updateRequest.lastName);
         request.input("official", updateRequest.official);
@@ -376,6 +377,7 @@ function updateRequest(updateRequest) {
         request.input("phone", updateRequest.phone);
         request.input("email", updateRequest.email);
         request.input("address", updateRequest.address);
+        request.input("status", updateRequest.status);
         request.input("timeToSpeak", updateRequest.timeToSpeak);
         request.input("approvedForDisplay", updateRequest.approvedForDisplay);
         request.execute("UpdateRequest").then(function(result) {
@@ -448,7 +450,7 @@ function getActiveMeeting() {
                 meeting.requests = [];
                 let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, " +
                     "item, offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
-                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId";
+                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId AND status NOT IN ('deleted','removed')";
                 logger.debug("Statement: " + query);
                 let requestRequest = pool.request();
                 requestRequest.input("meetingId", meeting.meetingId);

@@ -174,9 +174,10 @@ function(http, app, event, Edit, moment) {
             switch(message.event) {
             case "add":
                 this.meeting.requests.push(message.request);
+                this.addToList([message.request]);
                 break;
             case "remove":
-                this.removeFromList(message.request);
+                this.removeFromList(message.requestId);
                 break;
             case "update":
                 this.updateList(message.request);
@@ -222,21 +223,19 @@ function(http, app, event, Edit, moment) {
         }.bind(this);
 
         this.removeFromList = function(requestId) {
-            var toRemove = this.requests.find(function(r) {
+            var toRemove = this.meeting.requests.find(function(r) {
                 return r.requestId === requestId;
             });
             if(toRemove) {
-                this.requests.splice(this.requests.indexOf(toRemove), 1);
+                this.meeting.requests.splice(this.meeting.requests.indexOf(toRemove), 1);
 
-                var items = this.items;
+                var items = this.meeting.items;
                 // remove removeRequests.
                 var item = items.find(function(i) {
                     return i.itemId === toRemove.item.itemId;
                 });
                 if(item) {
-                    item.requests.splice(item.requests.findIndex(function(f) {
-                        return f.requestId === toRemove.requestId;
-                    }), 1);
+                    item.requests.splice(item.requests.indexOf(toRemove), 1);
                 } else {
                     // problem!
                 }
@@ -286,7 +285,7 @@ function(http, app, event, Edit, moment) {
     ctor.prototype.deleteRequest = function(request) {
         app.showMessage("Delete request?", "Delete Request", ["Yes", "No"]).then(function(response) {
             if(response === "Yes") {
-                http.remove(location.href.replace(/[^/]*$/, "") + "request/" + request.requestId).then(function() {
+                http.remove(app.apiLocation + "request/" + request.requestId).then(function() {
                 }, function(err) {
                     // do error stuff
                     console.log(err);
