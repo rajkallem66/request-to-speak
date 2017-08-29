@@ -301,10 +301,10 @@ function deleteRequest(requestId) {
                     "requestId": requestId
                 }
             });
-            fulfill();            
+            fulfill();
         } else {
-            reject("Invalid requestId.")
-        } 
+            reject("Invalid requestId.");
+        }
     });
 }
 

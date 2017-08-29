@@ -88,7 +88,9 @@ function(http, router, app, Import, Edit, moment) {
             this.editMeeting({
                 meetingName: "",
                 meetingDate: "",
-                items: []
+                status: "new",
+                items: [],
+                requests: []
             });
         }
     };

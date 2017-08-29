@@ -56,14 +56,19 @@ let rtsDbApi = require(dbApi)(dbConfig, winston);
 winston.info("RTS DB API Type: " + rtsDbApi.dbType);
 winston.info("RTS DB API Version: " + rtsDbApi.version);
 
-// In case the app died with an active meeting.
-rtsDbApi.getActiveMeeting().then(function(mtg) {
-    if(mtg !== undefined) {
-        rtsWsApi.startMeeting(mtg);
-        rtsWsApi.refreshWall();
-    }
-}, function(err) {
-    winston.error("Unable to check for active meeting.");
+rtsDbApi.init().then(function() {
+    // In case the app died with an active meeting.
+    rtsDbApi.getActiveMeeting().then(function(mtg) {
+        if(mtg !== undefined) {
+            winston.info("Active meeting: " + mtg.meetingId);
+            rtsWsApi.startMeeting(mtg);
+            rtsWsApi.refreshWall();
+        } else {
+            winston.info("No active meeting.");
+        }
+    }, function(err) {
+        winston.error("Unable to check for active meeting.");
+    });
 });
 
 app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));

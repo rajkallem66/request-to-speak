@@ -10,8 +10,8 @@ let pool = null;
  * @param {config} config
  */
 function setupSql(config) {
-    pool = new sql.ConnectionPool(config).connect().then(function(p) {
-        return new Promise(function(fulfill, reject) {
+    return new Promise(function(fulfill, reject){
+        pool = new sql.ConnectionPool(config).connect().then(function(p) {
             logger.debug("RTS DB Connected.");
             pool = p;
             pool.on("error", function(err) {
@@ -21,6 +21,7 @@ function setupSql(config) {
         });
     }, function(err) {
         logger.error(err);
+        reject(err);
     });
 }
 
@@ -261,7 +262,7 @@ function deleteMeeting(meetingId) {
 }
 
 /**
- * 
+ * Returns a specific request.
  * @param {String} requestId
  * @return {Promise}
  */
@@ -342,7 +343,7 @@ function addRequest(newRequest) {
         request.input("email", newRequest.email);
         request.input("address", newRequest.address);
         request.input("timeToSpeak", newRequest.timeToSpeak);
-        request.input("status", newRequest.status);        
+        request.input("status", newRequest.status);
         request.output("id");
         request.execute("InsertRequest").then(function(result) {
             logger.debug("New request inserted.", result);
@@ -541,8 +542,6 @@ module.exports = function(cfg, log) {
 
     logger = log;
 
-    setupSql(config);
-
     return {
         version: "1.0",
         dbType: "Microsoft SQL Server",
@@ -550,6 +549,7 @@ module.exports = function(cfg, log) {
         addRequest: addRequest,
         updateRequest: updateRequest,
         deleteRequest: deleteRequest,
+        removeRequest: removeRequest,
         addMeeting: addMeeting,
         getMeetings: getMeetings,
         updateMeeting: updateMeeting,

@@ -110,11 +110,21 @@ function(http, app, observable, Items, event, $) {
             return req;
         },
         additionalRequest: function() {
-            this.request.item = {};
-            this.request.offAgenda = false;
-            this.request.subTopic = "";
-            this.request.stance = "";
-            this.request.notes = "";
+            this.isSubmitting = true;
+            var self = this;
+            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
+                self.isSubmitting = false;
+                self.confirmSubmission = true;
+                self.request.item = {};
+                self.request.offAgenda = false;
+                self.request.subTopic = "";
+                self.request.stance = "";
+                self.request.notes = "";
+            }, function(err) {
+                self.isSubmitting = false;
+                // do error stuff
+                console.log(err);
+            });
         }
     };
 

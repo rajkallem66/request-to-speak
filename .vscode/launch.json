@@ -3,7 +3,7 @@
     "compounds": [
         {
             "name": "Dev Serve",
-            "configurations": ["Attach to Node","Gulp BrowserSync", "Launch Board", "Launch Kiosk", "Launch Admin", "Launch Wall"],
+            "configurations": ["Attach to Node","Gulp BrowserSync", "Launch Admin"],
             "preLaunchTask": "eslint"
         }
     ],
@@ -57,6 +57,7 @@
             "name": "nodemon",
             "runtimeExecutable": "nodemon",
             "runtimeArgs": [
+                "--ignore loki.json",                
                 "--debug=5858"
             ],
             "program": "${workspaceRoot}/index.js",
