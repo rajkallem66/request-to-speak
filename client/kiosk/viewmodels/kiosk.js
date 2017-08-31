@@ -7,11 +7,9 @@ function(http, app, observable, Items, event, $) {
         step: 0,
         request: {},
         meeting: {},
-        selectedItem: {},
         isSubmitting: false,
         confirmSubmission: false,
         itemSelector: false,
-        showSubTopics: false,
         messages: [],
         primus: null,
         attached: function() {
@@ -154,11 +152,7 @@ function(http, app, observable, Items, event, $) {
             this.request.offAgenda = false;
             this.request.item = data;
             this.request.timeToSpeak = data.timeToSpeak;
-            if(this.selectedItem.subTopics) {
-                this.showSubTopics = true;
-            } else {
-                this.itemSelector = false;
-            }
+            this.itemSelector = false;
         }
     }.bind(ret);
 
@@ -190,6 +184,9 @@ function(http, app, observable, Items, event, $) {
             return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
         case 2:
             return (stance !== "" && this.displayItem);
+        case 3:
+            // Notes required for Off Agenda requests.
+            return (this.request.item.itemName !== "Off Agenda" || this.request.notes.length > 2);
         default:
             return true;
         }

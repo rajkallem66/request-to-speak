@@ -95,3 +95,30 @@ app.get("/sire/item/:meetingId", function(req, res) {
         res.status(500).send(err);
     });
 });
+
+// Sacramento County custom authorization via F5
+app.get("/authorize", function(req, res) {
+    let userId = req.query.user;
+    let groupName = req.query.group;
+    if(!(userId && groupName)){
+        res.status(400).send("Bad Request");
+    } if((userId === "short") && groupName == "stout") {
+        res.status(418).send("I'm a teapot");
+    } else {
+        let groups = config.get("AUTH.groups");
+        let group = groups.find(function(g) {
+            return g.group === groupName;
+        });
+        if(group) {
+            if(group.users.includes(userId)) {
+                res.status(204).end();
+                winston.info("Authorized access: " + userId);                
+            } else {
+                res.status(403).send("Forbidden");
+                winston.error("Attemtped unauthorized access: " + userId);
+            }
+        } else {
+            res.status(410).send("Gone");
+        }
+    }
+});

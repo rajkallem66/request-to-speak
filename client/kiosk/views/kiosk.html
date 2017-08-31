@@ -36,9 +36,7 @@
 							<div class="" id="subColumns">
 								<section >
 									<label for="q7"><span class="fs-field-label ">Which agenda item? </span></label>
-									
-									<button class="agendaBtn" data-bind="click: $parent.openItemSelector">Choose Item here <i class="fa fa-hand-pointer-o" aria-hidden="true"></i></button>
-									
+									<button type="button" class="agendaBtn" data-bind="click: $parent.openItemSelector">Choose Item here <i class="fa fa-hand-pointer-o" aria-hidden="true"></i></button>
 									<p data-bind="text: $parent.displayItem"></p>
 								</section>
 							</div>
@@ -54,7 +52,7 @@
 								</div>
 							</div>
 						</li>
-						<li data-bind="css: {fsCurrent: $parent.step === 3, fsStale: $parent.step !== 3}">
+						<li data-bind="css: {fsCurrent: $parent.step === 3, fsStale: $parent.step !== 3, optional: item !== null && item.itemName !== 'Off Agenda'}">
 							<label for="q4"><span class="fs-field-label ">Any notes you would like to share?</span></label>
 							<textarea data-bind="textInput: notes, css:{optional: $parent.displayItem === 'Off Agenda'"  id="q4" name="q4" placeholder="Describe here" maxlength="250"></textarea>
 							<div class=" countdown">
@@ -83,7 +81,7 @@
 							<i class="fa fa-2x fa-angle-left"></i> <span class="btn-text-left">Last</span> 
 						</button>
 
-						<button type="button" data-bind="click: nextStep,css: {hide: step === 6}, enable: enableNext" class="fs-continue progress-button">
+						<button type="submit" data-bind="click: nextStep,css: {hide: step === 6}, enable: enableNext" class="fs-continue progress-button">
 							<span class="btn-text ">Next</span> <i class="fa fa-2x fa-angle-right"></i>
 						</button>
 					</div>	
@@ -124,17 +122,10 @@
 		</div>
 		<div data-bind="style: { display: itemSelector === true ? 'block' : 'none' }">
 			<div class="agendaItems container">
-				<div data-bind="visible: !showSubTopics">
-					<div data-bind="foreach: meeting.items">
-						<div class="itemSelection row">
-							<div class="itemNum col-md-1" data-bind="text: itemOrder"></div>
-							<div class="itemName col-md-11" data-bind="text: itemName, click: $root.selectItem"></div>
-						</div>
-					</div>
-				</div>
-				<div data-bind="visible: showSubTopics">
-					<div data-bind="foreach: selectedItem.subTopics">
-						<span data-bind="text: $data"></span>
+				<div data-bind="foreach: meeting.items">
+					<div class="itemSelection row">
+						<div class="itemNum col-md-1" data-bind="text: itemOrder"></div>
+						<div class="itemName col-md-11" data-bind="text: itemName, click: $root.selectItem"></div>
 					</div>
 				</div>
 			</div>

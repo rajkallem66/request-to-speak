@@ -2,6 +2,7 @@
 
 // SQL Connection
 let sql = require("mssql");
+let config = null;
 let logger = null;
 let pool = null;
 
@@ -9,7 +10,7 @@ let pool = null;
  * initialize SQL connection.
  * @param {config} config
  */
-function setupSql(config) {
+function setupSql() {
     return new Promise(function(fulfill, reject){
         pool = new sql.ConnectionPool(config).connect().then(function(p) {
             logger.debug("RTS DB Connected.");
@@ -532,7 +533,7 @@ function addItem(newItem) {
 
 module.exports = function(cfg, log) {
     // config is delivered frozen and this causes problems in mssql. So, just copy over.
-    let config = {
+    config = {
         server: cfg.server,
         database: cfg.database,
         user: cfg.user,
@@ -558,6 +559,6 @@ module.exports = function(cfg, log) {
         endMeeting: endMeeting,
         deleteMeeting: deleteMeeting,
         addItem: addItem,
-        setupSql: setupSql
+        init: setupSql
     };
 };
