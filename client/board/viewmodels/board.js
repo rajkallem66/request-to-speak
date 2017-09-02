@@ -22,7 +22,7 @@ function(app, observable, event, moment) {
                 message.meeting.items.forEach(function(i) {
                     i.requests = []; i.timeRemaining = 0;
                 });
-                this.items = message.meeting.items;
+                this.items = message.meeting.items.sort(this.itemSort);
                 this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
                 this.addToList();
@@ -34,7 +34,7 @@ function(app, observable, event, moment) {
                 message.meeting.items.forEach(function(i) {
                     i.requests = []; i.timeRemaining = 0;
                 });
-                this.items = message.meeting.items;
+                this.items = message.meeting.items.sort(this.itemSort);
                 this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
                 this.addToList();
@@ -66,12 +66,14 @@ function(app, observable, event, moment) {
     ret.addToList = function() {
         var items = this.items;
         // add new requests
+        var self = this;
         this.newRequests.forEach(function(r) {
             var item = items.find(function(i) {
                 return i.itemId === r.item.itemId;
             });
             if(item) {
                 item.requests.push(r);
+                item.requests = item.requests.sort(self.requestSort);
             } else {
                 // problem!
             }
@@ -79,21 +81,7 @@ function(app, observable, event, moment) {
 
         // trunc newMessages array
         this.newRequests = [];
-
-        // sum time to speak
-        items.forEach(function(i) {
-            if(i.requests) {
-                i.timeRemaining = i.requests.reduce(function(a, b) {
-                    return a + b.timeToSpeak;
-                }, 0);
-            } else {
-                i.timeRemaining = 0;
-            }
-        });
-
-        this.totalTimeRemaining = this.items.reduce(function(p, c) {
-            return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
-        }, 0);
+        this.timeTotal();
     }.bind(ret);
 
     ret.removeFromList = function(requestId) {
@@ -102,7 +90,6 @@ function(app, observable, event, moment) {
         });
         if(toRemove) {
             this.requests.splice(this.requests.indexOf(toRemove), 1);
-
             var items = this.items;
             // remove removeRequests.
             var item = items.find(function(i) {
@@ -116,21 +103,7 @@ function(app, observable, event, moment) {
                 // problem!
             }
         }
-
-        // sum time to speak
-        items.forEach(function(i) {
-            if(i.requests) {
-                i.timeRemaining = i.requests.reduce(function(a, b) {
-                    return a + b.timeToSpeak;
-                }, 0);
-            } else {
-                i.timeRemaining = 0;
-            }
-        });
-
-        this.totalTimeRemaining = this.items.reduce(function(p, c) {
-            return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
-        }, 0);
+        this.timeTotal();
     }.bind(ret);
 
     ret.updateList = function(updatedRequest) {
@@ -151,7 +124,10 @@ function(app, observable, event, moment) {
         } else {
             // problem!
         }
+        this.timeTotal();
+    }.bind(ret);
 
+    ret.timeTotal = function() {
         // sum time to speak
         this.items.forEach(function(i) {
             i.timeRemaining = 0;
@@ -165,6 +141,22 @@ function(app, observable, event, moment) {
         this.totalTimeRemaining = this.items.reduce(function(p, c) {
             return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
         }, 0);
+    }.bind(ret);
+
+    ret.itemSort = function(a, b) {
+        var c = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
+        var d = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
+        return c - d;
+    }.bind(ret);
+
+    ret.requestSort = function(a, b) {
+        if(a.official === b.official) {
+            return moment(a.dateAdded).diff(moment(b.dateAdded));
+        } else if (a.official === true) {
+            return -1;
+        } else {
+            return 1;
+        }
     }.bind(ret);
 
     return ret;

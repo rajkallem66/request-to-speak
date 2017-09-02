@@ -42,9 +42,7 @@
 						<div class="col-xs-4">
 							<div class="form-inline">
 								<label for="exampleSelect1">Sort</label>
-								<select class="form-control" id="exampleSelect1">
-									<option>Time Entered</option>
-									<option>Stance</option>
+								<select data-bind="options: $root.sorts, value: $root.selectedSort" class="form-control" id="exampleSelect1">
 								</select>
 							</div>
 						</div>
@@ -120,7 +118,7 @@
 											</button>
 										</div>
 										<div class="col-md-3" data-bind="visible: status === 'active'">
-											<button class="btn btn-danger">
+											<button class="btn btn-danger" data-bind="click: function() { $root.removeRequest($data); }">
 												<i class="fa fa-minus"></i>
 												<span class="hidden-xs">Remove</span>
 											</button>

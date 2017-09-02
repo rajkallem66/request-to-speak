@@ -97,6 +97,27 @@ router.post("/activateRequest", function(req, res) {
     });
 });
 
+router.post("/removeRequest", function(req, res) {
+    let request = req.body;
+    logger.info("Removing request from: " + req._remoteAddress);
+    logger.debug("Request data.", request);
+
+    logger.trace("Update request with DbApi");
+    rtsDbApi.updateRequest(request).then(function() {
+        logger.trace("Notify WS clients of removed request");
+        rtsWsApi.deleteRequest(request).then(function() {
+            logger.info("Request removed.");
+            res.status(204).end();
+        }, function(err) {
+            logger.error("Error notifying WS clients of removed request.", err);
+            res.status(500).send("Unable to send remove request from admin.");
+        });
+    }, function(err) {
+        logger.error("Error updating request to database: " + err);
+        res.status(500).send("Unable to update request to database.");
+    });
+});
+
 router.delete("/request/:requestId", function(req, res) {
     let requestId = req.params.requestId;
     logger.info("Deleting request from: " + req._remoteAddress);

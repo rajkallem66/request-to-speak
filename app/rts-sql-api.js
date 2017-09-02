@@ -8,10 +8,10 @@ let pool = null;
 
 /**
  * initialize SQL connection.
- * @param {config} config
+ * @return {Promise}
  */
 function setupSql() {
-    return new Promise(function(fulfill, reject){
+    return new Promise(function(fulfill, reject) {
         pool = new sql.ConnectionPool(config).connect().then(function(p) {
             logger.debug("RTS DB Connected.");
             pool = p;
@@ -19,10 +19,10 @@ function setupSql() {
                 logger.error(err);
             });
             fulfill();
+        }, function(err) {
+            logger.error(err);
+            reject(err);
         });
-    }, function(err) {
-        logger.error(err);
-        reject(err);
     });
 }
 

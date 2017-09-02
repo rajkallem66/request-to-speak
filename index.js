@@ -100,7 +100,7 @@ app.get("/sire/item/:meetingId", function(req, res) {
 app.get("/authorize", function(req, res) {
     let userId = req.query.user;
     let groupName = req.query.group;
-    if(!(userId && groupName)){
+    if(!(userId && groupName)) {
         res.status(400).send("Bad Request");
     } if((userId === "short") && groupName == "stout") {
         res.status(418).send("I'm a teapot");
@@ -112,7 +112,7 @@ app.get("/authorize", function(req, res) {
         if(group) {
             if(group.users.includes(userId)) {
                 res.status(204).end();
-                winston.info("Authorized access: " + userId);                
+                winston.info("Authorized access: " + userId);
             } else {
                 res.status(403).send("Forbidden");
                 winston.error("Attemtped unauthorized access: " + userId);

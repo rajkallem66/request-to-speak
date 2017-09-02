@@ -1,12 +1,14 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
-function(http, app, event, Edit, moment) {
+define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
+function(http, observable, app, event, Edit, moment) {
     var ctor = function() {
         this.displayName = "Request";
         this.isConnected = false;
         this.isMeetingActive = false;
         this.messages = [];
         this.meeting = null;
+        this.sorts = ["Time Entered","Stance"];
+        this.selectedSort = 
         this.totalTimeRemaining = 0;
         this.wallConnected = false;
         this.connectedKiosks = 0;
@@ -86,6 +88,23 @@ function(http, app, event, Edit, moment) {
             });
             return true;
         };
+        this.removeRequest = function(request) {
+            var self = this;
+            var next = null;
+            if(request.status === "active" && orderedRequests.length > 1) {
+                next = orderedRequests[1];
+            }
+            request.status = "removed";
+            // update with changes.
+            http.post(app.apiLocation + "removeRequest", request).then(function() {
+                if(next) {
+                    self.activateRequest(next);
+                }
+            }, function(err) {
+                app.showMessage("Unable to update changes. Please refresh.");
+            });
+            return true;
+        };
         this.refreshWall = function() {
             http.post(app.apiLocation + "refreshWall").then(function() {
             }, function(err) {
@@ -145,6 +164,7 @@ function(http, app, event, Edit, moment) {
                 message.meeting.items.forEach(function(i) {
                     i.requests = []; i.timeRemaining = 0;
                 });
+                message.meeting.items = message.meeting.items.sort(this.itemSort);
                 this.meeting = message.meeting;
                 this.addToList(message.meeting.requests);
             } else {
@@ -163,6 +183,7 @@ function(http, app, event, Edit, moment) {
                 this.meeting.items.forEach(function(i) {
                     i.requests = []; i.timeRemaining = 0;
                 });
+                message.meeting.items = message.meeting.items.sort(this.itemSort);                
                 this.addToList(message.meeting.requests);
             } else {
                 this.isMeetingActive = false;
@@ -280,6 +301,35 @@ function(http, app, event, Edit, moment) {
                 return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
             }, 0);
         }.bind(this);
+
+        this.itemSort = function(a, b) {
+            var c = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
+            var d = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
+            return c - d;
+        }.bind(this);
+
+        this.requestSort = function(a, b) {
+            if(a.official === b.official) {
+                if((a.stance === b.stance) || this.selectedSort === "Time Entered") {
+                    return moment(a.dateAdded).diff(moment(b.dateAdded));
+                } else {
+                    return a.stance.charCodeAt(0) - b.stance.charCodeAt(0);
+                }
+            } else if (a.official === true) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }.bind(this);
+
+        this.sortAll = function(value) {
+            var self = this;
+            this.meeting.items.forEach(function(i) {
+                i.requests = i.requests.sort(self.requestSort);
+            });
+        }.bind(this);
+
+        observable(this, "selectedSort").subscribe(this.sortAll);
     };
 
     ctor.prototype.deleteRequest = function(request) {

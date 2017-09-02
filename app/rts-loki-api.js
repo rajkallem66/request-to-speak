@@ -8,6 +8,10 @@ let logger = null;
 let config = null;
 const uuid = require("uuid/v1");
 
+/**
+ * Initialize the Loki DB
+ * @return {Promise}
+ */
 function lokiInit() {
     return new Promise(function(fulfill, reject) {
         config.options.autoloadCallback = function() {
