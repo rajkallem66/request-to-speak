@@ -228,6 +228,7 @@ function(http, observable, app, event, Edit, moment) {
         // List management
         this.addToList = function(addList) {
             var items = this.meeting.items;
+            var self = this;
             // add new requests
             addList.forEach(function(r) {
                 var item = items.find(function(i) {
@@ -235,6 +236,7 @@ function(http, observable, app, event, Edit, moment) {
                 });
                 if(item) {
                     item.requests.push(r);
+                    item.requests = item.requests.sort(self.requestSort);                    
                 } else {
                     // problem!
                 }
