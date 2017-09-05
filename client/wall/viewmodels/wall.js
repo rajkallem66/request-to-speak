@@ -34,6 +34,13 @@ define(["durandal/app", "eventHandler"], function(app, event) {
         refreshMessage: function(message) {
             this.requests = message.requests;
             this.setDisplay();
+        },
+        requestMessage: function(message) {
+            switch(message.event) {
+            case "remove":
+                this.removeFromList(message.requestId);
+                break;
+            }
         }
     };
 
@@ -51,5 +58,17 @@ define(["durandal/app", "eventHandler"], function(app, event) {
             }
         }).slice(0, 10);
     };
+
+    ret.removeFromList = function(requestId) {
+        var toRemove = this.requests.find(function(r) {
+            return r.requestId === parseInt(requestId);
+        });
+        if(toRemove) {
+            this.requests.splice(this.requests.indexOf(toRemove), 1);
+        }
+
+        this.setDisplay();
+    }.bind(ret);
+
     return ret;
 });

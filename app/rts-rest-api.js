@@ -105,7 +105,7 @@ router.post("/removeRequest", function(req, res) {
     logger.trace("Update request with DbApi");
     rtsDbApi.updateRequest(request).then(function() {
         logger.trace("Notify WS clients of removed request");
-        rtsWsApi.deleteRequest(request).then(function() {
+        rtsWsApi.deleteRequest(request.requestId).then(function() {
             logger.info("Request removed.");
             res.status(204).end();
         }, function(err) {

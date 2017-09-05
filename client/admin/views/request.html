@@ -125,15 +125,15 @@
 										</div>
 										<div class="col-md-3 col-xs-5">
 											<label class="activeChk">
-											<input type="checkbox" data-bind="enable: approvedForDisplay, checked: (status === 'active'), click: $root.activateRequest"/>
+											<input type="checkbox" data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest"/>
 											<i></i>
 											</label>
 											<label class="displayChk">
-												<input type="checkbox" data-bind="enable: status !== 'active', checked: approvedForDisplay, click: $root.displayRequest"/>
+												<input type="checkbox" data-bind="enable: status !== 'active', checked: (status === 'display' || status === 'active'), click: $root.displayRequest"/>
 												<i></i>
 											</label>	
  											<label class="approvedChk">
-												<input type="checkbox" data-bind="enable: approvedForDisplay === false, checked: (status === 'approved' || approvedForDisplay === true), click: $root.approveRequest"/>
+												<input type="checkbox" data-bind="enable: (status !== 'active' && status !== 'display'), checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest"/>
 												<i></i>
 											</label>
 										</div>

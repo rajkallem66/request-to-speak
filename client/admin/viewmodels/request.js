@@ -74,6 +74,10 @@ function(http, observable, app, event, Edit, moment) {
             return true;
         };
         this.activateRequest = function(request) {
+            var current = this.meeting.requests.find(function(r) {
+               return r.status === "active";
+            });
+
             if(request.status === "active") {
                 request.status = "display";
                 request.approvedForDisplay = true;
@@ -81,18 +85,38 @@ function(http, observable, app, event, Edit, moment) {
                 request.status = "active";
                 request.approvedForDisplay = true;
             }
-            // update with changes.
-            http.post(app.apiLocation + "activateRequest", request).then(function() {
-            }, function(err) {
-                app.showMessage("Unable to update changes. Please refresh.");
-            });
+
+            if(current && current !== request) {
+                current.status = "display";
+                // update current then new.
+                http.post(app.apiLocation + "activateRequest", current).then(function() {
+                    // update with changes.
+                    http.post(app.apiLocation + "activateRequest", request).then(function() {
+                    }, function(err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                }, function(err) {
+                    app.showMessage("Unable to update changes. Please refresh.");
+                });
+            } else {
+                // update with changes.
+                http.post(app.apiLocation + "activateRequest", request).then(function() {
+                }, function(err) {
+                    app.showMessage("Unable to update changes. Please refresh.");
+                });
+            }
             return true;
-        };
+        }.bind(this);
         this.removeRequest = function(request) {
             var self = this;
             var next = null;
-            if(request.status === "active" && orderedRequests.length > 1) {
-                next = orderedRequests[1];
+            if(request.status === "active") {
+                var orderedDisplayed = this.meeting.requests.filter(function(r){
+                    return r.status === "display";
+                }).sort(this.requestSort);
+                if(orderedDisplayed.length > 0) {
+                    next = orderedDisplayed[0];
+                }
             }
             request.status = "removed";
             // update with changes.
@@ -247,7 +271,7 @@ function(http, observable, app, event, Edit, moment) {
 
         this.removeFromList = function(requestId) {
             var toRemove = this.meeting.requests.find(function(r) {
-                return r.requestId === requestId;
+                return r.requestId === parseInt(requestId);
             });
             if(toRemove) {
                 this.meeting.requests.splice(this.meeting.requests.indexOf(toRemove), 1);
@@ -311,16 +335,20 @@ function(http, observable, app, event, Edit, moment) {
         }.bind(this);
 
         this.requestSort = function(a, b) {
-            if(a.official === b.official) {
-                if((a.stance === b.stance) || this.selectedSort === "Time Entered") {
-                    return moment(a.dateAdded).diff(moment(b.dateAdded));
+            if(a.item.itemOrder === b.item.itemOrder) {
+                if(a.official === b.official) {
+                    if((a.stance === b.stance) || this.selectedSort === "Time Entered") {
+                        return moment(a.dateAdded).diff(moment(b.dateAdded));
+                    } else {
+                        return a.stance.charCodeAt(0) - b.stance.charCodeAt(0);
+                    }
+                } else if (a.official === true) {
+                    return -1;
                 } else {
-                    return a.stance.charCodeAt(0) - b.stance.charCodeAt(0);
+                    return 1;
                 }
-            } else if (a.official === true) {
-                return -1;
             } else {
-                return 1;
+                return a.item.itemOrder - b.item.itemOrder;
             }
         }.bind(this);
 

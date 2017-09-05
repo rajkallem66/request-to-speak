@@ -162,6 +162,9 @@ function notify(group, data) {
     case "watchers":
         sparks.push.apply(sparks, adminSparks);
         sparks.push.apply(sparks, boardSparks);
+        if(wallSpark) {
+            sparks.push(wallSpark);
+        }
         break;
     }
     sparks.forEach(function(spark) {
@@ -289,16 +292,18 @@ function deleteRequest(requestId) {
     logger.debug("Delete request.");
 
     return new Promise(function(fulfill, reject) {
-        let old = meeting.requests.findIndex(function(r) {
-            return r.requestId === parseInt(requestId);
+        var rId = parseInt(requestId);
+        let old = meeting.requests.find(function(r) {
+            return (r.requestId === rId);
         });
-        if((!isNan(old)) && (old > -1)) {
-            meeting.requests.splice(old, 1);
+        if(old) {
+            meeting.requests.splice(meeting.requests.indexOf(old), 1);
+            displayRequests.splice(displayRequests.indexOf(old), 1);
             notify("watchers", {
                 "messageType": "request",
                 "message": {
                     "event": "remove",
-                    "requestId": requestId
+                    "requestId": rId
                 }
             });
             fulfill();
@@ -388,7 +393,7 @@ function refreshWall() {
     logger.debug("Refreshing wall.");
     return new Promise(function(fulfill, reject) {
         displayRequests = meeting.requests.filter(function(r) {
-            return r.approvedForDisplay === true;
+            return (r.status === "display" || r.status === "active");
         });
 
         logger.trace("Refreshing wall with", displayRequests);
