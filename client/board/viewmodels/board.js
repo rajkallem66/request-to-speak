@@ -43,6 +43,7 @@ function(app, observable, event, moment) {
                 this.totalTimeRemaining = 0;
                 this.items = [];
                 this.requests = [];
+                this.newRequests = [];
             }
         },
         requestMessage: function(message) {
@@ -144,19 +145,20 @@ function(app, observable, event, moment) {
     }.bind(ret);
 
     ret.itemSort = function(a, b) {
-        var c = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
-        var d = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
-        return c - d;
+        var aVal = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
+        var bVal = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
+        return aVal - bVal;
     }.bind(ret);
 
     ret.requestSort = function(a, b) {
-        if(a.official === b.official) {
-            return moment(a.dateAdded).diff(moment(b.dateAdded));
-        } else if (a.official === true) {
-            return -1;
-        } else {
-            return 1;
-        }
+        var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
+        var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();            
+        aVal += ((a.official) ? "0" : "1");
+        bVal += ((b.official) ? "0" : "1");
+        aVal += moment(a.dateAdded).valueOf().toString();
+        bVal += moment(b.dateAdded).valueOf().toString();
+
+        return parseInt(aVal) - parseInt(bVal);
     }.bind(ret);
 
     return ret;

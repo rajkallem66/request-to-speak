@@ -335,21 +335,18 @@ function(http, observable, app, event, Edit, moment) {
         }.bind(this);
 
         this.requestSort = function(a, b) {
-            if(a.item.itemOrder === b.item.itemOrder) {
-                if(a.official === b.official) {
-                    if((a.stance === b.stance) || this.selectedSort === "Time Entered") {
-                        return moment(a.dateAdded).diff(moment(b.dateAdded));
-                    } else {
-                        return a.stance.charCodeAt(0) - b.stance.charCodeAt(0);
-                    }
-                } else if (a.official === true) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            } else {
-                return a.item.itemOrder - b.item.itemOrder;
+            var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
+            var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();            
+            aVal += ((a.official) ? "0" : "1");
+            bVal += ((b.official) ? "0" : "1");
+            if(this.selectedSort === "Stance") {
+                aVal += a.stance.charCodeAt(0).toString();
+                bVal += b.stance.charCodeAt(0).toString();
             }
+            aVal += moment(a.dateAdded).valueOf().toString();
+            bVal += moment(b.dateAdded).valueOf().toString();
+
+            return parseInt(aVal) - parseInt(bVal);
         }.bind(this);
 
         this.sortAll = function(value) {

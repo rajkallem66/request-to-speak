@@ -538,7 +538,10 @@ module.exports = function(cfg, log) {
         database: cfg.database,
         user: cfg.user,
         password: cfg.password,
-        port: cfg.port
+        port: cfg.port,
+        options: {
+            useUTC: false
+        }
     };
 
     logger = log;

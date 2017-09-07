@@ -107,17 +107,21 @@ function(http, app, observable, Items, event, $) {
             });
             return req;
         },
+        cancelRequest: function() {
+            this.request = this.newRequest();
+            this.step = 0;
+        },
         additionalRequest: function() {
             this.isSubmitting = true;
             var self = this;
             http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
                 self.isSubmitting = false;
-                self.confirmSubmission = true;
                 self.request.item = {};
                 self.request.offAgenda = false;
                 self.request.subTopic = "";
                 self.request.stance = "";
                 self.request.notes = "";
+                self.step = 0;
             }, function(err) {
                 self.isSubmitting = false;
                 // do error stuff
