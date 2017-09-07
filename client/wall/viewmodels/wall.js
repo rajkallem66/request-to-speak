@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["durandal/app", "eventHandler"], function(app, event) {
+define(["durandal/app", "eventHandler", "moment"], function(app, event, moment) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
