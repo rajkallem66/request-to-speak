@@ -46,8 +46,8 @@ define(["durandal/app", "eventHandler", "moment"], function(app, event, moment) 
 
     ret.setDisplay = function() {
         this.displayRequests = this.requests.sort(function(a, b) {
-            var aVal = (a.status === "active" ? "1" : "0");
-            var bVal = (b.status === "active" ? "1" : "0");
+            var aVal = (a.status === "active" ? "0" : "1");
+            var bVal = (b.status === "active" ? "0" : "1");
             aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
             bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
             aVal += ((a.official) ? "0" : "1");

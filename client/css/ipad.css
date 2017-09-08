@@ -419,8 +419,6 @@ li.optional:after{
 	cursor: pointer;
 }
 
-
-
 .fs-fields .fs-radio-custom label.radio-mobile::after {
 	background-image: url(img/mobile.svg);
 }
@@ -1002,7 +1000,9 @@ input[type=text]::-ms-clear {
 	}
 }
 /* Agenda selection */
-
+.agendaText{
+  color: #1C619B;
+}
 .agendaBtn{
 	border: 3px solid rgba(148, 148, 148, 0.09) !important;
 	padding: 18px;
@@ -1066,7 +1066,7 @@ margin: 10px;
 .agendaItems div.itemSelection .itemName{
 	border: 3px solid rgba(148, 148, 148, 0.09);
 	background: #ececec;
-	color: #1c619b;
+	color: #1C609B;
 	border-radius: 0px;
 	font-weight: bold;
 	font-size: 16px;

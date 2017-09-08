@@ -167,7 +167,7 @@ function(http, app, observable, Items, event, $) {
         if(this.request.offAgenda === true) {
             return "Off Agenda";
         } else if(this.request.item && this.request.item.itemName) {
-            return this.request.item.itemName;
+            return this.request.item.itemOrder + ": " + this.request.item.itemName;
         } else {
             return "";
         }
