@@ -60,8 +60,35 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
                 expect(a.request).toEqual(a.newRequest());
                 expect(a.isMeetingActive).toBe(false);
             });
+        });
+        describe("Additional Request Submission.", function() {
+            var u;
+            var r;
+            var c;
+            beforeAll(function() {
+                spyOn(http, "post").and.callFake(function(url, request) {
+                    u = url;
+                    r = request;
+                    return {
+                        then: function(cb) {
+                            c = cb;
+                        }
+                    };
+                });
+                spyOn(a, "confirmSubmission");
+            });
+
+            it("submitRequest should post request object to server.", function() {
+                a.request = a.newRequest();
+                a.submitRequest();
+                expect(http.post).toHaveBeenCalled();
+                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "api/request");
+                expect(r).toBe(a.request);
+                expect(a.isSubmitting).toBe(true);
+            });
 
             it("additionalRequest should clear specific values for additional request.", function() {
+                c();
                 a.request = requestData;
                 a.additionalRequest();
                 expect(a.request.firstName).toBe("John");
@@ -100,7 +127,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
                 a.request = a.newRequest();
                 a.submitRequest();
                 expect(http.post).toHaveBeenCalled();
-                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "request");
+                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "api/request");
                 expect(r).toBe(a.request);
                 expect(a.isSubmitting).toBe(true);
             });

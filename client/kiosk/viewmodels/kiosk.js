@@ -144,6 +144,9 @@ function(http, app, observable, Items, event, $) {
 
     ret.openItemSelector = function() {
         this.itemSelector = true;
+        $(".agendaItems").animate({
+            scrollTop: 0
+        }, 100);
     }.bind(ret);
 
     ret.selectItem = function(data) {

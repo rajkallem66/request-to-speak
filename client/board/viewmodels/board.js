@@ -148,18 +148,18 @@ function(app, observable, event, moment) {
         var aVal = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
         var bVal = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
         return aVal - bVal;
-    }.bind(ret);
+    };
 
     ret.requestSort = function(a, b) {
         var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
-        var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();            
+        var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();
         aVal += ((a.official) ? "0" : "1");
         bVal += ((b.official) ? "0" : "1");
         aVal += moment(a.dateAdded).valueOf().toString();
         bVal += moment(b.dateAdded).valueOf().toString();
 
         return parseInt(aVal) - parseInt(bVal);
-    }.bind(ret);
+    };
 
     return ret;
 });

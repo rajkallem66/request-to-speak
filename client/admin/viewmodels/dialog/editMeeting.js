@@ -1,5 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable"], function(http, app, dialog, observable) {
+define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable"],
+function(http, app, dialog, observable) {
     var ctor = function() {
         this.activate = function(m) {
             this.meeting = m;

@@ -97,7 +97,8 @@ function(http, router, app, Import, Edit, moment) {
 
     ret.deleteMeeting = function(meeting) {
         var self = this;
-        app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]).then(function(result) {
+        app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting",
+        ["Yes", "No"]).then(function(result) {
             if(result === "Yes") {
                 http.remove(app.apiLocation + "meeting/" + meeting.meetingId).then(function() {
                     self.meetings.splice(self.meetings.findIndex(function(f) {

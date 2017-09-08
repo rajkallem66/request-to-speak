@@ -452,7 +452,8 @@ function getActiveMeeting() {
                 meeting.requests = [];
                 let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, " +
                     "item, offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
-                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId AND status NOT IN ('deleted','removed')";
+                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId AND status NOT IN " +
+                    "('deleted','removed')";
                 logger.debug("Statement: " + query);
                 let requestRequest = pool.request();
                 requestRequest.input("meetingId", meeting.meetingId);

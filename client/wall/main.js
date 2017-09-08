@@ -10,7 +10,7 @@ requirejs.config({
         "jquery": "../lib/jquery/jquery-1.9.1",
         "primus": "../primus/primus",
         "eventHandler": "../lib/rts/eventHandler",
-        "moment": "../lib/moment/moment.min"        
+        "moment": "../lib/moment/moment.min"
     },
     shim: {
         "bootstrap": {

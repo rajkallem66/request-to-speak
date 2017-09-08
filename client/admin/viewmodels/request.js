@@ -7,8 +7,8 @@ function(http, observable, app, event, Edit, moment) {
         this.isMeetingActive = false;
         this.messages = [];
         this.meeting = null;
-        this.sorts = ["Time Entered","Stance"];
-        this.selectedSort = 
+        this.sorts = ["Time Entered", "Stance"];
+        this.selectedSort = "Time Entered";
         this.totalTimeRemaining = 0;
         this.wallConnected = false;
         this.connectedKiosks = 0;
@@ -75,7 +75,7 @@ function(http, observable, app, event, Edit, moment) {
         };
         this.activateRequest = function(request) {
             var current = this.meeting.requests.find(function(r) {
-               return r.status === "active";
+                return r.status === "active";
             });
 
             if(request.status === "active") {
@@ -111,7 +111,7 @@ function(http, observable, app, event, Edit, moment) {
             var self = this;
             var next = null;
             if(request.status === "active") {
-                var orderedDisplayed = this.meeting.requests.filter(function(r){
+                var orderedDisplayed = this.meeting.requests.filter(function(r) {
                     return r.status === "display";
                 }).sort(this.requestSort);
                 if(orderedDisplayed.length > 0) {
@@ -207,7 +207,7 @@ function(http, observable, app, event, Edit, moment) {
                 this.meeting.items.forEach(function(i) {
                     i.requests = []; i.timeRemaining = 0;
                 });
-                message.meeting.items = message.meeting.items.sort(this.itemSort);                
+                message.meeting.items = message.meeting.items.sort(this.itemSort);
                 this.addToList(message.meeting.requests);
             } else {
                 this.isMeetingActive = false;
@@ -260,7 +260,7 @@ function(http, observable, app, event, Edit, moment) {
                 });
                 if(item) {
                     item.requests.push(r);
-                    item.requests = item.requests.sort(self.requestSort);                    
+                    item.requests = item.requests.sort(self.requestSort);
                 } else {
                     // problem!
                 }
@@ -292,24 +292,24 @@ function(http, observable, app, event, Edit, moment) {
         }.bind(this);
 
         this.updateList = function(updatedRequest) {
+            // find old one
+            var old = this.meeting.requests.find(function(r) {
+                return r.requestId === updatedRequest.requestId;
+            });
+            // splice updated one in
             this.meeting.requests.splice(this.meeting.requests.findIndex(function(r) {
                 return r.requestId === updatedRequest.requestId;
             }), 1, updatedRequest);
-
-            // remove removeRequests.
+            // find old item
             var item = this.meeting.items.find(function(i) {
-                return i.itemId === updatedRequest.item.itemId;
+                return i.itemId === old.item.itemId;
             });
-
-            // TODO: what if change Item in edit.
-            if(item) {
-                item.requests.splice(item.requests.findIndex(function(f) {
-                    return f.requestId === updatedRequest.requestId;
-                }), 1, updatedRequest);
-            } else {
-                // problem!
-            }
-            this.timeTotal();
+            // remove old from old item
+            item.requests.splice(item.requests.findIndex(function(f) {
+                return f.requestId === updatedRequest.requestId;
+            }), 1);
+            // add the new one in.
+            this.addToList([updatedRequest]);
         }.bind(this);
 
         this.timeTotal = function() {
@@ -332,11 +332,11 @@ function(http, observable, app, event, Edit, moment) {
             var c = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
             var d = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
             return c - d;
-        }.bind(this);
+        };
 
         this.requestSort = function(a, b) {
             var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
-            var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();            
+            var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();
             aVal += ((a.official) ? "0" : "1");
             bVal += ((b.official) ? "0" : "1");
             if(this.selectedSort === "Stance") {
