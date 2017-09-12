@@ -1,5 +1,5 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, event) {
+define(["durandal/app", "eventHandler", "moment"], function(app, event, moment) {
     var ret = {
         isConnected: false,
         isMeetingActive: false,
@@ -34,19 +34,41 @@ define(["plugins/http", "durandal/app", "eventHandler"], function(http, app, eve
         refreshMessage: function(message) {
             this.requests = message.requests;
             this.setDisplay();
+        },
+        requestMessage: function(message) {
+            switch(message.event) {
+            case "remove":
+                this.removeFromList(message.requestId);
+                break;
+            }
         }
     };
 
     ret.setDisplay = function() {
-        this.displayRequests = this.requests.sort(function(a,b) {
-            if(a.status === "active") {
-                return -1;
-            } else if(b.status === "active") {
-                return 1;
-            } else {
-                return a.item.itemOrder - b.item.itemOrder;
-            }
+        this.displayRequests = this.requests.sort(function(a, b) {
+            var aVal = (a.status === "active" ? "0" : "1");
+            var bVal = (b.status === "active" ? "0" : "1");
+            aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
+            bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
+            aVal += ((a.official) ? "0" : "1");
+            bVal += ((b.official) ? "0" : "1");
+            aVal += moment(a.dateAdded).valueOf().toString();
+            bVal += moment(b.dateAdded).valueOf().toString();
+
+            return parseInt(aVal) - parseInt(bVal);
         }).slice(0, 10);
     };
+
+    ret.removeFromList = function(requestId) {
+        var toRemove = this.requests.find(function(r) {
+            return r.requestId === parseInt(requestId);
+        });
+        if(toRemove) {
+            this.requests.splice(this.requests.indexOf(toRemove), 1);
+        }
+
+        this.setDisplay();
+    }.bind(ret);
+
     return ret;
 });

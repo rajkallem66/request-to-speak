@@ -38,5 +38,34 @@
             "password": "stored locally",
             "port": 1433
         }
+    },
+    "AUTH": {
+        "groups": [
+            {
+                "group": "wall",
+                "users": [
+                     "abc@saccounty.net"
+                ]
+            },
+            {
+                "group": "kiosk",
+                "users": [
+                    "abc@saccounty.net"
+                ]
+            },
+            {
+                "group": "admin",
+                "users": [
+                    "abc@saccounty.net"
+                ]
+            },
+            {
+                "group": "board",
+                "users": [
+                    "abc@saccounty.net"
+                ]
+                
+            }
+        ]
     }
 }

@@ -3,12 +3,17 @@
     "compounds": [
         {
             "name": "Dev Serve",
-            "configurations": ["nodemon","Gulp BrowserSync", "Launch Board", "Launch Kiosk", "Launch Admin", "Launch Wall"],
+            "configurations": ["Attach to Node","Gulp BrowserSync", "Launch Admin"],
             "preLaunchTask": "eslint"
         }
     ],
     "configurations": [
-
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Node",
+            "port": 5858
+        },
         {
             "type": "node",
             "request": "launch",
@@ -47,11 +52,12 @@
             "webRoot": "${workspaceRoot}/client"
         },
         {
-            "type": "node",
+            "type": "node2",
             "request": "launch",
             "name": "nodemon",
             "runtimeExecutable": "nodemon",
             "runtimeArgs": [
+                "--ignore loki.json",                
                 "--debug=5858"
             ],
             "program": "${workspaceRoot}/index.js",

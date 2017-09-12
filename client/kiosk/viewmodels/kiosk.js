@@ -7,11 +7,9 @@ function(http, app, observable, Items, event, $) {
         step: 0,
         request: {},
         meeting: {},
-        selectedItem: {},
         isSubmitting: false,
         confirmSubmission: false,
         itemSelector: false,
-        showSubTopics: false,
         messages: [],
         primus: null,
         attached: function() {
@@ -35,7 +33,7 @@ function(http, app, observable, Items, event, $) {
                 this.meeting = message.meeting;
             } else {
                 this.isMeetingActive = false;
-                this.meeting = { items: [] }
+                this.meeting = {items: []};
             }
             this.request = this.newRequest();
         },
@@ -55,7 +53,7 @@ function(http, app, observable, Items, event, $) {
         submitRequest: function() {
             this.isSubmitting = true;
             var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "request", this.request).then(function() {
+            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
                 self.isSubmitting = false;
                 self.confirmSubmission = true;
                 setTimeout(function() {
@@ -109,12 +107,26 @@ function(http, app, observable, Items, event, $) {
             });
             return req;
         },
+        cancelRequest: function() {
+            this.request = this.newRequest();
+            this.step = 0;
+        },
         additionalRequest: function() {
-            this.request.item = {};
-            this.request.offAgenda = false;
-            this.request.subTopic = "";
-            this.request.stance = "";
-            this.request.notes = "";
+            this.isSubmitting = true;
+            var self = this;
+            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
+                self.isSubmitting = false;
+                self.request.item = {};
+                self.request.offAgenda = false;
+                self.request.subTopic = "";
+                self.request.stance = "";
+                self.request.notes = "";
+                self.step = 0;
+            }, function(err) {
+                self.isSubmitting = false;
+                // do error stuff
+                console.log(err);
+            });
         }
     };
 
@@ -132,6 +144,9 @@ function(http, app, observable, Items, event, $) {
 
     ret.openItemSelector = function() {
         this.itemSelector = true;
+        $(".agendaItems").animate({
+            scrollTop: 0
+        }, 100);
     }.bind(ret);
 
     ret.selectItem = function(data) {
@@ -144,11 +159,7 @@ function(http, app, observable, Items, event, $) {
             this.request.offAgenda = false;
             this.request.item = data;
             this.request.timeToSpeak = data.timeToSpeak;
-            if(this.selectedItem.subTopics) {
-                this.showSubTopics = true;
-            } else {
-                this.itemSelector = false;
-            }
+            this.itemSelector = false;
         }
     }.bind(ret);
 
@@ -156,7 +167,7 @@ function(http, app, observable, Items, event, $) {
         if(this.request.offAgenda === true) {
             return "Off Agenda";
         } else if(this.request.item && this.request.item.itemName) {
-            return this.request.item.itemName
+            return this.request.item.itemOrder + ": " + this.request.item.itemName;
         } else {
             return "";
         }
@@ -173,18 +184,18 @@ function(http, app, observable, Items, event, $) {
         var agency = this.request.agency;
         var stance = this.request.stance;
 
-        switch(this.step) {
-            case 0:
-                return (name.trim().length > 2);
-                break;
-            case 1:
-                return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
-                break;
-            case 2:
-                return (stance !== "" && this.displayItem);
-                break;
-            default:
-                return true;
+        switch(step) {
+        case 0:
+            return (name.trim().length > 2);
+        case 1:
+            return ((official === "official" && agency.trim().length > 2) || (official === "constituent"));
+        case 2:
+            return (stance !== "" && this.displayItem);
+        case 3:
+            // Notes required for Off Agenda requests.
+            return (this.request.item.itemName !== "Off Agenda" || this.request.notes.length > 2);
+        default:
+            return true;
         }
     });
 

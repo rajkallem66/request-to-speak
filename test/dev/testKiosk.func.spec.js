@@ -21,7 +21,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
         var activeMeetingData = {
             event: "started",
-            meetingData: {
+            meeting: {
                 meetingId: 12,
                 meetingName: "The first one",
                 confirmationDuration: 5,
@@ -37,7 +37,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
         var endedMeetingData = {
             event: "ended",
-            meetingData: {
+            meeting: {
                 meetingId: 12
             }
         };
@@ -56,12 +56,39 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
 
             it("meetingMessage should set proper values for ended meeting.", function() {
                 a.meetingMessage(endedMeetingData);
-                expect(a.meeting.meetingId).toBe(12);
+                expect(a.meeting.meetingId).not.toBeDefined();
                 expect(a.request).toEqual(a.newRequest());
                 expect(a.isMeetingActive).toBe(false);
             });
+        });
+        describe("Additional Request Submission.", function() {
+            var u;
+            var r;
+            var c;
+            beforeAll(function() {
+                spyOn(http, "post").and.callFake(function(url, request) {
+                    u = url;
+                    r = request;
+                    return {
+                        then: function(cb) {
+                            c = cb;
+                        }
+                    };
+                });
+                spyOn(a, "confirmSubmission");
+            });
+
+            it("submitRequest should post request object to server.", function() {
+                a.request = a.newRequest();
+                a.submitRequest();
+                expect(http.post).toHaveBeenCalled();
+                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "api/request");
+                expect(r).toBe(a.request);
+                expect(a.isSubmitting).toBe(true);
+            });
 
             it("additionalRequest should clear specific values for additional request.", function() {
+                c();
                 a.request = requestData;
                 a.additionalRequest();
                 expect(a.request.firstName).toBe("John");
@@ -100,7 +127,7 @@ define(["kiosk", "plugins/http"], function(kiosk, http) {
                 a.request = a.newRequest();
                 a.submitRequest();
                 expect(http.post).toHaveBeenCalled();
-                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "request");
+                expect(u).toBe(location.href.replace(/[^/]*$/, "") + "api/request");
                 expect(r).toBe(a.request);
                 expect(a.isSubmitting).toBe(true);
             });

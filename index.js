@@ -56,17 +56,22 @@ let rtsDbApi = require(dbApi)(dbConfig, winston);
 winston.info("RTS DB API Type: " + rtsDbApi.dbType);
 winston.info("RTS DB API Version: " + rtsDbApi.version);
 
-// In case the app died with an active meeting.
-rtsDbApi.getActiveMeeting().then(function(mtg) {
-    if(mtg !== undefined) {
-        rtsWsApi.startMeeting(mtg);
-        rtsWsApi.refreshWall();
-    }
-}, function(err) {
-    winston.error("Unable to check for active meeting.");
+rtsDbApi.init().then(function() {
+    // In case the app died with an active meeting.
+    rtsDbApi.getActiveMeeting().then(function(mtg) {
+        if(mtg !== undefined) {
+            winston.info("Active meeting: " + mtg.meetingId);
+            rtsWsApi.startMeeting(mtg);
+            rtsWsApi.refreshWall();
+        } else {
+            winston.info("No active meeting.");
+        }
+    }, function(err) {
+        winston.error("Unable to check for active meeting.");
+    });
 });
 
-app.use(require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
+app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
 
 // Sacramento County agenda management system access.
 let agendaApi = config.get("SIRE.dbApi");
@@ -89,4 +94,31 @@ app.get("/sire/item/:meetingId", function(req, res) {
     }, function(err) {
         res.status(500).send(err);
     });
+});
+
+// Sacramento County custom authorization via F5
+app.get("/authorize", function(req, res) {
+    let userId = req.query.user;
+    let groupName = req.query.group;
+    if(!(userId && groupName)) {
+        res.status(400).send("Bad Request");
+    } if((userId === "short") && groupName == "stout") {
+        res.status(418).send("I'm a teapot");
+    } else {
+        let groups = config.get("AUTH.groups");
+        let group = groups.find(function(g) {
+            return g.group === groupName;
+        });
+        if(group) {
+            if(group.users.includes(userId)) {
+                res.status(204).end();
+                winston.info("Authorized access: " + userId);
+            } else {
+                res.status(403).send("Forbidden");
+                winston.error("Attemtped unauthorized access: " + userId);
+            }
+        } else {
+            res.status(410).send("Gone");
+        }
+    }
 });

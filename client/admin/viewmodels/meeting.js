@@ -1,13 +1,13 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/router", "plugins/observable", "plugins/dialog", "dialog/importMeeting", "dialog/editMeeting", "moment"],
-function(http, app, router, observable, dialog, Import, Edit, moment) {
+define(["plugins/http", "plugins/router", "durandal/app", "dialog/importMeeting", "dialog/editMeeting", "moment"],
+function(http, router, app, Import, Edit, moment) {
     var ret = {
         displayName: "Meeting",
         activeMeeting: null,
         meetings: [],
         activate: function() {
             var self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "meeting").then(function(response) {
+            http.get(app.apiLocation + "meeting").then(function(response) {
                 self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {
@@ -22,41 +22,13 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             });
         },
         startMeeting: function(meeting) {
-            http.post(location.href.replace(/[^/]*$/, "") + "startMeeting/" + meeting.meetingId).then(function(result) {
+            http.post(app.apiLocation + "startMeeting/" + meeting.meetingId).then(function(result) {
                 app.showMessage("Meeting started successfully.").then(function() {
                     router.navigate("/request");
                 });
             }, function(err) {
-                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err));
+                app.showMessage("Unable to start meeting.\n" + JSON.stringify(err.responseText));
             });
-        },
-        newMeeting: function() {
-            return {
-                meetingId: "12",
-                meetingName: "The twelfth one",
-                items: [
-                    {
-                        itemId: "100",
-                        itemName: "1",
-                        defaultTimeToSpeak: 2
-                    },
-                    {
-                        itemId: "101",
-                        itemName: "2",
-                        defaultTimeToSpeak: 3,
-                        subTopics: [
-                            {
-                                subTopicId: "1",
-                                subTopicName: "First sub-topic"
-                            },
-                            {
-                                subTopicId: "2",
-                                subTopicName: "The second sub-topic"
-                            }
-                        ]
-                    }
-                ]
-            };
         },
         importMeeting: function() {
             var self = this;
@@ -65,7 +37,8 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
                     // Since it is an import, add the OffAgenda item.
                     response.items.push({
                         itemOrder: 0,
-                        itemName: "Off Agenda"
+                        itemName: "Off Agenda",
+                        timeToSpeak: 3
                     });
                     // Make sure not already in list
                     if(self.meetings.filter(function(m) {
@@ -75,10 +48,21 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
                         app.showMessage("The meeting you selected is already in RTS. Do you want to overwrite?",
                             "Meeting exists", ["Yes", "No"]).then(function(resp) {
                                 if(resp === "Yes") {
-                                    // delete meeting
-                                    // splice meeting
-                                    // add meeting
-                                    self.addMeeting(response);
+                                    var old = self.meetings.find(function(m) {
+                                        return m.sireId === response.sireId;
+                                    });
+
+                                    http.remove(app.apiLocation + "meeting/" + old.meetingId).then(function() {
+                                        self.meetings.splice(self.meetings.findIndex(function(f) {
+                                            return f.meetingId === old.meetingId;
+                                        }), 1);
+                                        console.log("Meeting deleted.");
+                                        // splice meeting
+                                        // add meeting
+                                        self.addMeeting(response);
+                                    }, function(err) {
+                                        app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
+                                    });
                                 }
                             });
                     } else {
@@ -92,22 +76,34 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
         },
         addMeeting: function(meeting) {
             var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "meeting", meeting).then(function(response) {
+            http.post(app.apiLocation + "meeting", meeting).then(function(response) {
                 meeting.meetingId = response.meetingId;
                 self.meetings.push(meeting);
                 console.log("Meeting added.");
             }, function(err) {
                 app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
             });
+        },
+        newMeeting: function() {
+            this.editMeeting({
+                meetingName: "",
+                meetingDate: "",
+                status: "new",
+                items: [],
+                requests: []
+            });
         }
     };
 
     ret.deleteMeeting = function(meeting) {
         var self = this;
-        app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting", ["Yes", "No"]).then(function(result) {
+        app.showMessage("Are you sure you want to delete this meeting?", "Delete Meeting",
+        ["Yes", "No"]).then(function(result) {
             if(result === "Yes") {
-                http.remove(location.href.replace(/[^/]*$/, "") + "meeting/" + meeting.meetingId).then(function() {
-                    self.meetings.splice(self.meetings.findIndex(function(f) { return f.meetingId === meeting.meetingId; }), 1);
+                http.remove(app.apiLocation + "meeting/" + meeting.meetingId).then(function() {
+                    self.meetings.splice(self.meetings.findIndex(function(f) {
+                        return f.meetingId === meeting.meetingId;
+                    }), 1);
                     console.log("Meeting deleted.");
                 }, function(err) {
                     app.showMessage("Unable to delete meeting.\n" + JSON.stringify(err));
@@ -115,7 +111,6 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
             }
         });
     }.bind(ret);
-
 
     ret.format = function(date) {
         return moment(date).format("MMM Do YYYY");
@@ -125,7 +120,25 @@ function(http, app, router, observable, dialog, Import, Edit, moment) {
         var self = this;
         app.showDialog(new Edit(), meeting).then(function(response) {
             if(response !== undefined) {
-                self.meetings.push(response);
+                if(self.meetings.includes(response)) {
+                    http.put(app.apiLocation + "meeting/" + meeting.meetingId, meeting).then(function(response) {
+                        console.log("Meeting added.");
+                    }, function(err) {
+                        app.showMessage("Unable to update meeting. Please refresh.\n" + JSON.stringify(err));
+                    });
+                } else {
+                    http.post(app.apiLocation + "meeting", meeting).then(function(response) {
+                        meeting.meetingId = response.meetingId;
+                        self.meetings.push(meeting);
+                        console.log("Meeting added.");
+                    }, function(err) {
+                        app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
+                    });
+                }
+            } else {
+                http.get(app.apiLocation + "meeting/" + meeting.meetingId).then(function(response) {
+                    self.meetings.splice(self.meetings.indexOf(meeting), 1, response);
+                });
             }
         }, function(err) {
             // Do error stuff

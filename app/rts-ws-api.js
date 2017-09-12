@@ -162,6 +162,9 @@ function notify(group, data) {
     case "watchers":
         sparks.push.apply(sparks, adminSparks);
         sparks.push.apply(sparks, boardSparks);
+        if(wallSpark) {
+            sparks.push(wallSpark);
+        }
         break;
     }
     sparks.forEach(function(spark) {
@@ -289,18 +292,24 @@ function deleteRequest(requestId) {
     logger.debug("Delete request.");
 
     return new Promise(function(fulfill, reject) {
-        let old = meeting.requests.findIndex(function(r) {
-            return r.requestId === requestId;
+        var rId = parseInt(requestId);
+        let old = meeting.requests.find(function(r) {
+            return (r.requestId === rId);
         });
-        meeting.requests.splice(old, 1);
-        notify("watchers", {
-            "messageType": "request",
-            "message": {
-                "event": "remove",
-                "requestId": requestId
-            }
-        });
-        fulfill();
+        if(old) {
+            meeting.requests.splice(meeting.requests.indexOf(old), 1);
+            displayRequests.splice(displayRequests.indexOf(old), 1);
+            notify("watchers", {
+                "messageType": "request",
+                "message": {
+                    "event": "remove",
+                    "requestId": rId
+                }
+            });
+            fulfill();
+        } else {
+            reject("Invalid requestId.");
+        }
     });
 }
 
@@ -316,11 +325,13 @@ function activateRequest(request) {
         meeting.requests.splice(meeting.requests.findIndex(function(r) {
             return r.requestId === request.requestId;
         }), 1, request);
-        
+
+        // If displayRequests includes then splice. otherwise push
+
         displayRequests.splice(displayRequests.findIndex(function(r) {
             return r.requestId === request.requestId;
-        }),1, request);
-        
+        }), 1, request);
+
         notify("wall", {
             "messageType": "refresh",
             "message": {
@@ -356,11 +367,12 @@ function startMeeting(newMeeting) {
 
 /**
  * Ends an active meeting by sending event to everyone.
+ * @return {Promise}
  */
 function endActiveMeeting() {
     logger.debug("Ending active meeting.");
 
-    return new Promise(function(fulfill, reject){
+    return new Promise(function(fulfill, reject) {
         meeting = {};
 
         notify("all", {
@@ -375,12 +387,13 @@ function endActiveMeeting() {
 
 /**
  * Send updated list of requests to the wall
+ * @return {Promise}
  */
 function refreshWall() {
     logger.debug("Refreshing wall.");
     return new Promise(function(fulfill, reject) {
         displayRequests = meeting.requests.filter(function(r) {
-            return r.approvedForDisplay === true;
+            return (r.status === "display" || r.status === "active");
         });
 
         logger.trace("Refreshing wall with", displayRequests);

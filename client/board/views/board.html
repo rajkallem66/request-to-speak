@@ -1,15 +1,15 @@
 <div class="container-fluid boardHeader navbar-inverse navbar-fixed-top">
   <div class="row">
   	<div class="col-md-12">
-		<div class="col-md-6 col-sm-5 col-xs-8">
+		<div class="col-md-6 col-sm-5 col-xs-6">
 			<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining">0</span><span>mins</span> 
 		</div>
-		<div class="col-md-2 col-sm-1 col-xs-2" data-bind="visible: (newRequests.length > 0)">
+		<div class="col-md-3 col-sm-4 col-xs-4" data-bind="visible: (newRequests.length > 0)">
 			<div style="cursor:pointer" data-bind="click: addToList">
 				<span data-bind="text: newRequests.length"></span><span> new requests.</span>
 			</div>
 		</div>
-		<div class="active col-md-3 col-xs-2 pull-right">
+		<div class="active col-md-3 col-sm-3 col-xs-2 pull-right">
 			<span data-bind="visible: isConnected"><i class="fa fa-circle greenDot" aria-hidden="true"></i><span class="status">Connected</span></span>
 			<span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connceted</span></span>
 		</div>
@@ -28,6 +28,9 @@
 					<div class="row">
 						<div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
 						<div class="itemName pull-left" data-bind="text: itemName"></div>
+						<div class="pull-right itemTime">Total Speakers: 	
+							<span class="" data-bind="text: requests.length"></span>
+						</div>
 						<div class="pull-right itemTime">Time Remaining: 	
 							<span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
 						</div>
@@ -63,12 +66,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" data-bind="foreach: messages">
+<!-- 				<div class="row" data-bind="foreach: messages">
 					<div class="col-sm-6 col-md-3">
 						<span href="#" class="thumbnail" data-bind="text: message">
 						</span>
 					</div>
 				</div>
-			</div>
+ -->			</div>
 		</div>
 	</div>

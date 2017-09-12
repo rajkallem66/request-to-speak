@@ -353,8 +353,8 @@ input[type="radio"]:checked + label::after {
 label.approvedChk {
   display: block;
   position: relative;
-  left: 83px;
-  top: -12px;
+  left: 119px;
+  top: -42px;
   -webkit-transform: translate(-50%, -60%);
   transform: translate(-50%, -60%);
   -webkit-tap-highlight-color: transparent;
@@ -416,6 +416,77 @@ label.approvedChk input:checked + i:after {
 label.approvedChk:hover {
   cursor: pointer;
 }
+
+
+
+
+label.displayChk {
+	display: block;
+	position: relative;
+	left: 83px;
+	top: -12px;
+	-webkit-transform: translate(-50%, -60%);
+	transform: translate(-50%, -60%);
+	-webkit-tap-highlight-color: transparent;
+  }
+  label.displayChk:focus, label.displayChk:active {
+	outline: none;
+  }
+  label.displayChk input {
+	display: none;
+  }
+  label.displayChk i {
+	display: block;
+	width: 25px;
+	height: 25px;
+	background: #CCC;
+	border-radius: 50%;
+	position: relative;
+	-webkit-transition: .2s;
+	transition: .2s;
+  }
+  label.displayChk i:before, label.displayChk i:after {
+	-webkit-transition: .2s;
+	transition: .2s;
+  }
+  label.displayChk i:before {
+	content: "\f06e";
+	display: block;
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	font-family: fontAwesome;
+	font-style: initial;
+	padding-left: 6px;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: normal;
+	color: #aaa;
+  }
+  
+  label.displayChk input:checked + i {
+  
+  }
+  label.displayChk input:checked + i:before {
+	background: #5bc0de;
+	/* border: 15px solid #559a69; */
+	padding-left: 5px;
+	line-height: 25px;
+	font-size: 24px;
+	color: #000;
+  }
+  label.displayChk input:checked + i:after {
+	background: #E64A19;
+  }
+  label.displayChk:hover {
+	cursor: pointer;
+  }
+  
 
 
 
@@ -514,8 +585,9 @@ label.approvedChk:hover {
 }
 .notice {
 	padding: 15px;
-	background-color: #f4f4f4;
+	color: #f4f4f4;
 	border-left: 6px solid #7f7f84;
+	background-color: #f4f4f4;
 	margin-bottom: 10px;
 	-webkit-box-shadow: 4px 5px 5px -6px rgba(0, 0, 0, 0.7);
 	-moz-box-shadow: 4px 5px 5px -6px rgba(0, 0, 0, 0.7);
@@ -530,13 +602,13 @@ label.approvedChk:hover {
 	font-size: large;
 }
 .notice-success {
-	border-color: #80D651;
+	background-color: #5cb85c;
 }
 .notice-success>strong {
-	color: #80D651;
+	color: #5cb85c;
 }
 .notice-info {
-	border-color: #45ABCD;
+	background-color: #43AACD;
 }
 .notice-info>strong {
 	color: #45ABCD;
@@ -548,10 +620,10 @@ label.approvedChk:hover {
 	color: #FEAF20;
 }
 .notice-danger {
-	border-color: #d73814;
+	background-color: #d9534f;
 }
 .notice-danger>strong {
-	color: #d73814;
+	color: #d9534f;
 }
 .meetingWrap {
 	margin-bottom: 30px;
@@ -570,23 +642,17 @@ label.approvedChk:hover {
 .meetingWrap .btn {
 	margin-top: -4px;
 }
-.adminNamesWrap {
+.adminItemsWrap {
 	margin-bottom: 30px;
 	margin-top: 30px;
 }
 .adminNamesWrap .time{
-	
-font-size: 12px;
-	
-line-height: 2px;
-	
-position: relative;
-	
-background: #e2e2e2;
-	
-padding: 4px;
-	
-border: 1px solid #dadada;
+	font-size: 12px;
+	line-height: 2px;
+	position: relative;
+	background: #e2e2e2;
+	padding: 4px;
+	border: 1px solid #dadada;
 }
 .adminNamesWrap>div {
 	margin-bottom: 3px;

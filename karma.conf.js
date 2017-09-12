@@ -39,7 +39,8 @@ module.exports = function (config) {
             'client/admin/viewmodels/dialog/*.js': ['coverage'],
             'client/board/viewmodels/*.js': ['coverage'],
             'client/kiosk/viewmodels/*.js': ['coverage'],
-            'client/wall/viewmodels/*.js': ['coverage']
+            'client/wall/viewmodels/*.js': ['coverage'],
+            'client/lib/rts/*.js': ['coverage']
         },
 
 

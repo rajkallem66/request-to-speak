@@ -27,11 +27,6 @@ define(["kiosk"], function(kiosk) {
                 expect(a.meeting).toBeDefined();
             });
 
-            it("should define selectedItem", function() {
-                expect(a.selectedItem).toBeDefined();
-                expect(a.selectedItem).toEqual(jasmine.any(Object));
-            });
-
             it("should define isSubmitting", function() {
                 expect(a.isSubmitting).toBeDefined();
             });
