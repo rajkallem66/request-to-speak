@@ -15,8 +15,9 @@
         </div>
       </div>
     </nav>
-    <div>
-      <span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''">
+    <div data-bind="visible: isMeetingActive">
+      <span class="infoName">Item </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemOrder : ''"></span>
+      <span class="infoName">: </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''"></span>
     </div>
     <div class="wallWrap"  data-bind="foreach: displayRequests, visible: isMeetingActive">
         <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
