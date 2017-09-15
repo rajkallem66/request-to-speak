@@ -71,7 +71,7 @@
 					</ol><!-- /fs-fields -->
 					
 					<div class="btns-top">
-						<button data-bind="click: submitRequest" class="fs-submit" type="button"><span class="btn-text">Send Now</span> <i class="fa fa-2x fa-check"></i></button>
+						<button data-bind="click: submitRequest" class="fs-submit" type="button"><span class="btn-text">Submit</span> <i class="fa fa-2x fa-check"></i></button>
 						<button data-bind="click: cancelRequest" type="button" class="fs-submit" ><span class="btn-text"> Cancel</span> <i class="fa fa-2x fa-ban"></i></button>
 
 						<button data-bind="click: additionalRequest" type="button" class="fs-submit" ><span class="btn-text"> Add Another</span> <i class="fa fa-2x fa-plus"></i></button>
@@ -81,9 +81,15 @@
 							<i class="fa fa-2x fa-angle-left"></i> <span class="btn-text-left">Last</span> 
 						</button>
 
-						<button type="submit" data-bind="click: nextStep,css: {hide: step === 6}, enable: enableNext" class="fs-continue progress-button">
+						<button type="submit" data-bind="click: nextStep,css: {hide: step === 5}, enable: enableNext" class="fs-continue progress-button">
 							<span class="btn-text ">Next</span> <i class="fa fa-2x fa-angle-right"></i>
 						</button>
+						
+						<span class="optionsBtns">
+							<button data-bind="click: submitRequest" class="fs-continue" type="button"><span class="btn-text">Submit</span> <i class="fa fa-2x fa-check"></i></button>
+							<button data-bind="click: cancelRequest" type="button" class="fs-continue" ><span class="btn-text"> Cancel</span> <i class="fa fa-2x fa-ban"></i></button>
+							<button data-bind="click: additionalRequest" type="button" class="fs-continue" ><span class="btn-text"> Add Another</span> <i class="fa fa-2x fa-plus"></i></button>
+						</span>
 					</div>	
 				</form><!-- /fs-form -->
 			</div><!-- /fs-form-wrap -->		
