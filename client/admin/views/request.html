@@ -83,7 +83,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-8">
-									<span data-bind="text: itemName">
+									<span data-bind="text: itemName" class="itemNameText">
 								</div>		
 							</div>
 							<div class="adminNamesWrap" data-bind="foreach: requests">
@@ -106,7 +106,7 @@
 											<span data-bind="text: subTopic"></span>
 										</div>
 										<div data-bind="visible: notes">
-											<span data-bind="text: notes"></span>
+											<span data-bind="text: notes" class="notesText"></span>
 										</div>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-5 btns">
@@ -129,15 +129,15 @@
 											</button>
 										</div>
 										<div class="col-md-3 col-xs-5">
-											<label class="activeChk">
+											<label data-toggle="tooltip" data-placement="top" title="ACTIVE" class="activeChk">
 											<input type="checkbox" data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest"/>
 											<i></i>
 											</label>
-											<label class="displayChk">
+											<label ata-toggle="tooltip" data-placement="top" title="DISPLAY" class="displayChk">
 												<input type="checkbox" data-bind="enable: status !== 'active', checked: (status === 'display' || status === 'active'), click: $root.displayRequest"/>
 												<i></i>
 											</label>	
- 											<label class="approvedChk">
+ 											<label ata-toggle="tooltip" data-placement="top" title="APPROVED" class="approvedChk">
 												<input type="checkbox" data-bind="enable: (status !== 'active' && status !== 'display'), checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest"/>
 												<i></i>
 											</label>
