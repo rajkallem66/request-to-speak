@@ -204,7 +204,7 @@ font-weight:bold;
 	}
 	.notesText{
 		padding-left: 10px;
-		color: #dbdbdb;
+		color: #555;
 		font-size: 15px;
 		margin-bottom: 20px;
 		display: block;
@@ -701,13 +701,13 @@ padding: 10px;
 	}
 	.adminNamesWrap>div {
 		margin-bottom: 3px;
-		border-bottom: 1px solid #d5d5d5;
+		border-bottom: 1px solid #787575;
 		padding-bottom: 5px;
 		min-height: 30px;
 		border-left: 5px solid #ccc;
 		padding-top: 9px;
-		background: rgb(58, 80, 103);
-		color: #fff;
+		background: #ccc;
+		color: #333;
 	}
 	.adminNamesWrap .btn {
 		margin-top: -4px;
