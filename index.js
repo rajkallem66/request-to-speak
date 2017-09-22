@@ -2,9 +2,10 @@
 "use strict";
 let winston = require("winston");
 let config = require("config");
+
 winston.setLevels(config.get("RTS.log.levels"));
 winston.addColors(config.get("RTS.log.colors"));
-winston.level = config.get("RTS.log.level");
+// winston.level = config.get("RTS.log.level");
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {colorize: true});
 
@@ -19,7 +20,6 @@ let express = require("express");
 let favicon = require("serve-favicon");
 let morgan = require("morgan");
 let bodyParser = require("body-parser");
-let errorHandler = require("errorhandler");
 let http = require("http");
 let path = require("path");
 
@@ -32,10 +32,6 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "client")));
-
-if("development" === app.get("env")) {
-    app.use(errorHandler());
-}
 
 let server = http.createServer(app);
 let transformer = config.get("RTS.wsTransformer");
@@ -73,52 +69,23 @@ rtsDbApi.init().then(function() {
 
 app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
 
-// Sacramento County agenda management system access.
-let agendaApi = config.get("SIRE.dbApi");
-let sireConfig = config.get("SIRE.dbConfig");
-let sireApi = require(agendaApi)(sireConfig, winston);
-app.get("/sire/meeting", function(req, res) {
-    winston.info("Retrieving meetings from agenda management system.");
-    sireApi.getMeetings().then(function(data) {
-        res.send(data);
-    }, function(err) {
-        res.status(500).send(err);
-    });
-});
+ // External system integration.
+if(config.get("AGENDA")) {
+    winston.info("Agenda integration found.");
+    let agendaApi = config.get("AGENDA.dbApi");
+    let agendaConfig = config.get("AGENDA.dbConfig");
+    let agendaDbApi = require(agendaApi)(agendaConfig, winston);
+    winston.info("Agenda DB API Type: " + agendaDbApi.dbType);
+    winston.info("Agenda DB API Version: " + agendaDbApi.version);
 
-app.get("/sire/item/:meetingId", function(req, res) {
-    let meetingId = req.params.meetingId;
-    winston.info("Retrieving items from agenda management system for meetingId: " + meetingId);
-    sireApi.getItems(meetingId).then(function(data) {
-        res.send(data);
-    }, function(err) {
-        res.status(500).send(err);
-    });
-});
+    let agendaRestApi = config.get("AGENDA.restApi");
+    winston.info("Agenda REST API: " + agendaRestApi);    
+    app.use("/agenda", require(agendaRestApi)(winston, agendaDbApi));
+}
 
-// Sacramento County custom authorization via F5
-app.get("/authorize", function(req, res) {
-    let userId = req.query.user;
-    let groupName = req.query.group;
-    if(!(userId && groupName)) {
-        res.status(400).send("Bad Request");
-    } if((userId === "short") && groupName == "stout") {
-        res.status(418).send("I'm a teapot");
-    } else {
-        let groups = config.get("AUTH.groups");
-        let group = groups.find(function(g) {
-            return g.group === groupName;
-        });
-        if(group) {
-            if(group.users.includes(userId)) {
-                res.status(204).end();
-                winston.info("Authorized access: " + userId);
-            } else {
-                res.status(403).send("Forbidden");
-                winston.error("Attemtped unauthorized access: " + userId);
-            }
-        } else {
-            res.status(410).send("Gone");
-        }
-    }
-});
+// Side-chain authorization endpoint for F5 or the like.
+if(config.get("AUTH")) {
+    winston.info("Authorization API found.");
+    let authApi = config.get("AUTH.restApi");
+    app.use("/auth", require(authApi)(winston));
+}
