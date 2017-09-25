@@ -85,13 +85,13 @@ function(http, router, app, Import, Edit, moment) {
             });
         },
         newMeeting: function() {
-            this.editMeeting({
-                meetingName: "",
-                meetingDate: "",
+            return newMeeting = {
+                meetingName: "New Meeting",
+                meetingDate: self.format(new Date()),
                 status: "new",
                 items: [],
                 requests: []
-            });
+            };
         }
     };
 

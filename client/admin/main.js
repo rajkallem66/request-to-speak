@@ -35,7 +35,8 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
     });
 
     app.apiLocation = location.href.replace(/[^/]*$/, "") + "api/";
-
+    app.agendaLocation = location.href.replace(/[^/]*$/, "") + "agenda/";
+    
     app.start().then(function() {
         // Replace 'viewmodels' in the moduleId with 'views' to locate the view.
         // Look for partial views in a 'views' folder in the root.

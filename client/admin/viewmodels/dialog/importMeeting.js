@@ -1,9 +1,9 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "plugins/dialog", "moment"], function(http, dialog, moment) {
+define(["plugins/http", "plugins/dialog", "durandal/app", "moment"], function(http, dialog, app, moment) {
     var ctor = function() {
         this.activate = function() {
             var self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "sire/meeting").then(function(data) {
+            http.get(app.agendaLocation + "meeting").then(function(data) {
                 self.meetings = data;
             }, function() {
                 // do error stuff
@@ -16,7 +16,7 @@ define(["plugins/http", "plugins/dialog", "moment"], function(http, dialog, mome
         }.bind(this),
         this.confirmSelection = function() {
             var self = this;
-            http.get(location.href.replace(/[^/]*$/, "") + "sire/item/" +
+            http.get(app.agendaLocation + "item/" +
             this.selectedMeeting.sireId).then(function(data) {
                 self.selectedMeeting.items = data;
                 dialog.close(self, self.selectedMeeting);
