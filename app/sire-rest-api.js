@@ -6,6 +6,10 @@ let sireDbApi = null;
 // eslint-disable-next-line new-cap
 let router = require("express").Router();
 
+router.get("/", function (req, res) {
+    res.status(204).end();
+});
+
 router.get("/meeting", function(req, res) {
     logger.info("Retrieving meetings from agenda management system.");
     sireDbApi.getMeetings().then(function(data) {

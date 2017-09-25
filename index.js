@@ -70,7 +70,14 @@ rtsDbApi.init().then(function() {
 app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
 
  // External system integration.
-if(config.get("AGENDA")) {
+ let agenda;
+ try {
+    agenda = config.get("AGENDA");
+ } catch(e) {
+    winston.info("No agenda system integration.");
+ }
+ 
+if(agenda) {
     winston.info("Agenda integration found.");
     let agendaApi = config.get("AGENDA.dbApi");
     let agendaConfig = config.get("AGENDA.dbConfig");
@@ -84,7 +91,14 @@ if(config.get("AGENDA")) {
 }
 
 // Side-chain authorization endpoint for F5 or the like.
-if(config.get("AUTH")) {
+let auth;
+try {
+    config.get("AUTH");
+} catch(e) {
+    winston.info("No authentication config.");
+}
+
+if(auth) {
     winston.info("Authorization API found.");
     let authApi = config.get("AUTH.restApi");
     app.use("/auth", require(authApi)(winston));
