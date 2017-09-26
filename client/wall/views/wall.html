@@ -19,6 +19,16 @@
       <span class="infoName">Item </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemOrder : ''"></span>
       <span class="infoName">: </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''"></span>
     </div>
+    <div class="wallWrap"  data-bind="visible: isMeetingActive">
+        <div class="row nameRow">
+          <div class="itemOrder col-md-2">
+            <span>Item #</span>
+          </div>
+          <div class="infoName col-md-10">
+            <span>Speaker Name</span>
+          </div>
+        </div>
+    </div>
     <div class="wallWrap"  data-bind="foreach: displayRequests, visible: isMeetingActive">
         <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
           <div class="itemOrder col-md-2" data-bind="text: item.itemOrder">
