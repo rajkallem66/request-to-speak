@@ -97,28 +97,21 @@ app.get("/sire/item/:meetingId", function(req, res) {
 });
 
 // Sacramento County custom authorization via F5
-app.get("/authorize", function(req, res) {
+app.get("/auth/authorize", function(req, res) {
     let userId = req.query.user;
-    let groupName = req.query.group;
-    if(!(userId && groupName)) {
+    if(!userId) {
         res.status(400).send("Bad Request");
-    } if((userId === "short") && groupName == "stout") {
-        res.status(418).send("I'm a teapot");
     } else {
-        let groups = config.get("AUTH.groups");
-        let group = groups.find(function(g) {
-            return g.group === groupName;
+        let users = config.get("AUTH.users");
+        let user = users.find(function(u) {
+            return u.user === userId;
         });
-        if(group) {
-            if(group.users.includes(userId)) {
-                res.status(204).end();
-                winston.info("Authorized access: " + userId);
-            } else {
-                res.status(403).send("Forbidden");
-                winston.error("Attemtped unauthorized access: " + userId);
-            }
+        if(user) {
+            res.status(200).send(JSON.stringify(user.groups));
+            logger.info("Authorized access: " + userId);
         } else {
-            res.status(410).send("Gone");
+            res.status(403).send("Forbidden");
+            logger.error("Attemtped unauthorized access: " + userId);
         }
     }
 });
