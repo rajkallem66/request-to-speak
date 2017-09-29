@@ -17,25 +17,25 @@ process.on("uncaughtException", function(err) {
 
 let express = require("express");
 let favicon = require("serve-favicon");
-let morgan = require("morgan");
 let bodyParser = require("body-parser");
-let errorHandler = require("errorhandler");
 let http = require("http");
 let path = require("path");
 
 let app = express();
 let Primus = require("primus");
 
-app.set("port", process.env.PORT || 3000);
+let port;
+try {
+    port = config.get("RTS.port");
+} catch(e) {
+    winston.info("No port specified.");
+}
+
+app.set("port", port || 3000);
 app.use(favicon(__dirname + "/client/favicon.ico"));
-app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "client")));
-
-if("development" === app.get("env")) {
-    app.use(errorHandler());
-}
 
 let server = http.createServer(app);
 let transformer = config.get("RTS.wsTransformer");
@@ -108,10 +108,10 @@ app.get("/auth/authorize", function(req, res) {
         });
         if(user) {
             res.status(200).send(JSON.stringify(user.groups));
-            logger.info("Authorized access: " + userId);
+            winston.info("Authorized access: " + userId);
         } else {
             res.status(403).send("Forbidden");
-            logger.error("Attemtped unauthorized access: " + userId);
+            winston.error("Attemtped unauthorized access: " + userId);
         }
     }
 });

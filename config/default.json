@@ -1,5 +1,6 @@
 {
     "RTS": {
+        "port": 3000,
         "wsTransformer": "websockets", // be advised that faye strips js types
         "dbApi": "./app/rts-sql-api",
         "dbConfig": {
@@ -30,7 +31,7 @@
         }
     },
     "SIRE": {
-        "dbApi": "./app/sire-js-api",
+        "dbApi": "./app/sire-sql-api",
         "dbConfig": {
             "server": "crane.saccounty.net",
             "database": "SIRE",
