@@ -54,6 +54,7 @@ gulp.task("browser-sync", function() {
             target: "http://localhost:3000",
             ws: true
         },
+        ghostMode: false,
         open: false,
         port: 7000
     });

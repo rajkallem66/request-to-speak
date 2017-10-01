@@ -18,7 +18,6 @@ process.on("uncaughtException", function(err) {
 
 let express = require("express");
 let favicon = require("serve-favicon");
-let morgan = require("morgan");
 let bodyParser = require("body-parser");
 let http = require("http");
 let path = require("path");
@@ -26,9 +25,15 @@ let path = require("path");
 let app = express();
 let Primus = require("primus");
 
-app.set("port", process.env.PORT || 3000);
+let port;
+try {
+    port = config.get("RTS.port");
+} catch(e) {
+    winston.info("No port specified.");
+}
+
+app.set("port", port || 3000);
 app.use(favicon(__dirname + "/client/favicon.ico"));
-app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "client")));
