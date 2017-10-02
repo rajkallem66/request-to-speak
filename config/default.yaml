@@ -8,7 +8,7 @@ RTS:
             autoload: true
             serializationMethod: pretty
     log:
-        level: debug,
+        level: debug
         levels: 
             emergency: 0
             error: 3

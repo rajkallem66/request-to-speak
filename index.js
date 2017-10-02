@@ -5,7 +5,7 @@ let config = require("config");
 
 winston.setLevels(config.get("RTS.log.levels"));
 winston.addColors(config.get("RTS.log.colors"));
-// winston.level = config.get("RTS.log.level");
+winston.level = config.get("RTS.log.level");
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {colorize: true});
 
