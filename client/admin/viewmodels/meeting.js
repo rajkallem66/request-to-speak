@@ -87,7 +87,7 @@ function(http, router, app, Import, Edit, moment) {
         newMeeting: function() {
             return newMeeting = {
                 meetingName: "New Meeting",
-                meetingDate: self.format(new Date()),
+                meetingDate: this.format(new Date()),
                 status: "new",
                 items: [],
                 requests: []
@@ -113,7 +113,7 @@ function(http, router, app, Import, Edit, moment) {
     }.bind(ret);
 
     ret.format = function(date) {
-        return moment(date).format("MMM Do YYYY");
+        return moment(date, "MMM Do YYYY").format("MMM Do YYYY");
     };
 
     ret.editMeeting = function(meeting) {
