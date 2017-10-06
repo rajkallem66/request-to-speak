@@ -13,7 +13,7 @@
         "log": {
             "level": "debug",
             "levels": {
-                "emergency": 0,
+                "emerg": 0,
                 "error": 3,
                 "warning": 4,
                 "info": 6,
@@ -21,9 +21,9 @@
                 "trace": 8
             },
             "colors": {
-                "emergency": "red",
+                "emerg": "red",
                 "error": "red",
-                "warn": "yellow",
+                "warning": "yellow",
                 "info": "white",
                 "debug": "green",
                 "trace": "blue"
