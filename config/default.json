@@ -27,7 +27,14 @@
                 "info": "white",
                 "debug": "green",
                 "trace": "blue"
-            }
+            },
+            "transports": [{
+                "name": "console",
+                "options": {
+                    "level": "trace",
+                    "colorize": true
+                }
+            }]
         }
     },
     "SIRE": {
