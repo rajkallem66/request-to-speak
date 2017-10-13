@@ -5,8 +5,9 @@ define(["plugins/http", "plugins/dialog", "durandal/app", "moment"], function(ht
             var self = this;
             http.get(app.agendaLocation + "meeting").then(function(data) {
                 self.meetings = data;
-            }, function() {
-                // do error stuff
+            }, function(err) {
+                console.log(err);
+                app.showMessage("Error talking to agenda system.");
             });
         },
         this.meetings = [],

@@ -1,5 +1,6 @@
 {
     "RTS": {
+        "port": 3000,
         "wsTransformer": "websockets", // be advised that faye strips js types
         "dbApi": "./app/rts-sql-api",
         "dbConfig": {
@@ -12,7 +13,7 @@
         "log": {
             "level": "debug",
             "levels": {
-                "emergency": 0,
+                "emerg": 0,
                 "error": 3,
                 "warning": 4,
                 "info": 6,
@@ -20,17 +21,24 @@
                 "trace": 8
             },
             "colors": {
-                "emergency": "red",
+                "emerg": "red",
                 "error": "red",
-                "warn": "yellow",
+                "warning": "yellow",
                 "info": "white",
                 "debug": "green",
                 "trace": "blue"
-            }
+            },
+            "transports": [{
+                "name": "console",
+                "options": {
+                    "level": "trace",
+                    "colorize": true
+                }
+            }]
         }
     },
     "SIRE": {
-        "dbApi": "./app/sire-js-api",
+        "dbApi": "./app/sire-sql-api",
         "dbConfig": {
             "server": "crane.saccounty.net",
             "database": "SIRE",
