@@ -916,7 +916,7 @@ input[type=text]::-ms-clear {
 	line-height:2em;
 	background:#fbfbfb;
 }
-.model-par .ofs{
+.model-par.ofs{
 	background: none;
 }
 
