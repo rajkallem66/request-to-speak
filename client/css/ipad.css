@@ -916,6 +916,9 @@ input[type=text]::-ms-clear {
 	line-height:2em;
 	background:#fbfbfb;
 }
+.model-par .ofs{
+	background: none;
+}
 
 /* Adjust form for smaller screens */
 @media screen and (max-width: 52.5em) {
