@@ -162,9 +162,6 @@ function notify(group, data) {
     case "watchers":
         sparks.push.apply(sparks, adminSparks);
         sparks.push.apply(sparks, boardSparks);
-        if(wallSpark) {
-            sparks.push(wallSpark);
-        }
         break;
     }
     sparks.forEach(function(spark) {
@@ -268,17 +265,32 @@ function updateRequest(request) {
     logger.debug("Updating request.");
 
     return new Promise(function(fulfill, reject) {
-        let old = meeting.requests.findIndex(function(r) {
+        let old = meeting.requests.find(function(r) {
             return r.requestId === request.requestId;
         });
-        meeting.requests.splice(old, 1, request);
-        notify("watchers", {
-            "messageType": "request",
-            "message": {
-                "event": "update",
-                "request": request
-            }
+        if(old) {
+            meeting.requests.splice(meeting.requests.indexOf(old), 1, request);
+            notify("watchers", {
+                "messageType": "request",
+                "message": {
+                    "event": "update",
+                    "request": request
+                }
+            });
+        }
+        let oldDisplay = displayRequests.find(function(r) {
+            return r.requestId === request.requestId;
         });
+        if(oldDisplay) {
+            displayRequests.splice(displayRequests.indexOf(oldDisplay), 1, request);
+            notify("wall", {
+                "messageType": "refresh",
+                "message": {
+                    "meeting": meeting,
+                    "requests": displayRequests
+                }
+            });
+        }
         fulfill();
     });
 }
@@ -298,7 +310,6 @@ function deleteRequest(requestId) {
         });
         if(old) {
             meeting.requests.splice(meeting.requests.indexOf(old), 1);
-            displayRequests.splice(displayRequests.indexOf(old), 1);
             notify("watchers", {
                 "messageType": "request",
                 "message": {
@@ -306,10 +317,22 @@ function deleteRequest(requestId) {
                     "requestId": rId
                 }
             });
-            fulfill();
-        } else {
-            reject("Invalid requestId.");
         }
+
+        let oldDisplay = displayRequests.find(function(r) {
+            return (r.requestId === rId);
+        });
+        if(oldDisplay) {
+            displayRequests.splice(displayRequests.indexOf(oldDisplay), 1);
+            notify("wall", {
+                "messageType": "request",
+                "message": {
+                    "event": "remove",
+                    "requestId": rId
+                }
+            });
+        }
+        fulfill();
     });
 }
 
@@ -327,18 +350,21 @@ function activateRequest(request) {
         }), 1, request);
 
         // If displayRequests includes then splice. otherwise push
-
-        displayRequests.splice(displayRequests.findIndex(function(r) {
+        let oldDisplay = displayRequests.find(function(r) {
             return r.requestId === request.requestId;
-        }), 1, request);
-
-        notify("wall", {
-            "messageType": "refresh",
-            "message": {
-                "meeting": meeting,
-                "requests": displayRequests
-            }
         });
+
+        if(oldDisplay) {
+            displayRequests.splice(displayRequests.indexOf(oldDisplay), 1, request);
+    
+            notify("wall", {
+                "messageType": "refresh",
+                "message": {
+                    "meeting": meeting,
+                    "requests": displayRequests
+                }
+            });
+        }
         fulfill();
     });
 }
