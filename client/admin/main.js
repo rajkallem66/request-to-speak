@@ -36,6 +36,14 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
 
     app.apiLocation = location.href.replace(/[^/]*$/, "") + "api/";
     app.agendaLocation = location.href.replace(/[^/]*$/, "") + "sire/";
+
+    $(document).ajaxError(function(jqXHR, status, errorThrown) {
+        if(status.status === 302) {
+            app.showMessage("You are not authorized for this resource. Please login.").then(function() {
+                location.reload();
+            });
+        }
+    });
     
     app.start().then(function() {
         // Replace 'viewmodels' in the moduleId with 'views' to locate the view.

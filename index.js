@@ -54,8 +54,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "client")));
 
 let server = http.createServer(app);
-let transformer = config.get("RTS.wsTransformer");
-let primus = new Primus(server, {transformer: transformer});
+let primusConfig = config.get("RTS.primus");
+let primus = new Primus(server, primusConfig);
+
+primus.save(__dirname +'/client/lib/primus.js');
 
 server.listen(app.get("port"), function() {
     logger.info("Express server listening on port " + app.get("port"));
@@ -95,11 +97,12 @@ let sireConfig = config.get("SIRE.dbConfig");
 let sireApi = require(agendaApi)(sireConfig, logger);
 app.get("/sire/meeting", function(req, res) {
     logger.info("Retrieving meetings from agenda management system.");
-    sireApi.getMeetings().then(function(data) {
+    res.status(302).end();
+ /*   sireApi.getMeetings().then(function(data) {
         res.send(data);
     }, function(err) {
         res.status(500).send(err);
-    });
+    });*/
 });
 
 app.get("/sire/item/:meetingId", function(req, res) {

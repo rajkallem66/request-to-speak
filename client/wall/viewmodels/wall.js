@@ -7,6 +7,11 @@ define(["durandal/app", "eventHandler", "moment"], function(app, event, moment) 
         displayRequests: [],
         messages: [],
         primus: null,
+        disconnected: function() {
+            app.showMessage("You are not authorized for this resource. Please login.").then(function() {
+                location.reload();                
+            });
+        },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             if(this.primus === null || this.primus.online !== true) {
