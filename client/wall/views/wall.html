@@ -4,13 +4,12 @@
         <div class="navbar-header">
         </div>
         <div class="active">
-          <div class="pull-right">
+          <div class="pull-right wallStatus">
             <div>
               <i class="fa fa-spinner fa-spin fa-fw" data-bind="visible: !isMeetingActive"></i>
             </div>
-            <div data-bind="visible: !isConnected">
-				      <span><i class="fa fa-circle redDot" aria-hidden="true"></i></span>
-			      </div>           
+   		    <span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connected</span></span>
+                     
           </div>
         </div>
       </div>
