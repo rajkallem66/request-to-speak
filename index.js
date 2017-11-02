@@ -32,6 +32,7 @@ process.on("uncaughtException", function(err) {
 });
 
 let express = require("express");
+let passport = require("passport");
 let favicon = require("serve-favicon");
 let bodyParser = require("body-parser");
 let http = require("http");
@@ -51,6 +52,17 @@ app.set("port", port || 3000);
 app.use(favicon(__dirname + "/client/favicon.ico"));
 app.use(bodyParser.json());-
 app.use(bodyParser.urlencoded({extended: false}));
+
+require('./config/passport.js');
+app.post('/login/callback',
+passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+    function(req, res) {
+    res.redirect('/');
+    }
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, "client")));
 
 let server = http.createServer(app);

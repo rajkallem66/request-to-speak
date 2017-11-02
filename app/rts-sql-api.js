@@ -5,6 +5,7 @@ let sql = require("mssql");
 let config = null;
 let logger = null;
 let pool = null;
+let moment = require("moment");
 
 /**
  * initialize SQL connection.
@@ -35,9 +36,9 @@ function addMeeting(meeting) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
 
-        request.input("sireId", meeting.sireId);
+        request.input("sireId", meeting.sireId || "");
         request.input("meetingName", meeting.meetingName);
-        request.input("meetingDate", meeting.meetingDate);
+        request.input("meetingDate", moment(meeting.meetingDate, "MMM Do YYYY"));
         request.input("status", "new");
         request.output("id");
         request.execute("InsertMeeting").then(function(result) {
