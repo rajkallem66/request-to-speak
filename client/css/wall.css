@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
+@import url(fonts.googleapis.com/css?family=Raleway:400,700);
 
 /* MAIN CSS */
 
@@ -40,8 +40,9 @@ a:hover, a:focus {
 	padding: 0;
 	margin: 0px !important;
 }
-.modal-content {
+/*.modal-content {
 	height: auto;
+	max-height: 100vh;
 	min-height: 100vh;
 	border-radius: 0 !important;
 	background-color: rgba(105, 185, 255, 0.65) !important;
@@ -50,6 +51,15 @@ a:hover, a:focus {
 	text-align: center;
 	padding: 10%;
 	text-shadow: 1px 2px #808080;
+}*/
+.modal-content {
+	background-color: rgb(238, 238, 238) !important;
+	position: absolute;
+	top: 5%;
+	left: 26%;
+	margin-top: -25px;
+	margin-left: -200px;
+	padding: 20px;
 }
 .redDot{
 	color:#D30003;
@@ -64,6 +74,13 @@ a:hover, a:focus {
 @-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+
+.wallStatus{
+	margin-top: 20px;
+}
+.status{
+	color: #fff;
+}
 .main {
 	padding: 20px;
 	margin-top: 75px;
@@ -173,8 +190,8 @@ hr {
 	font-weight: bold;
 	color: #4b4b4b;
 	position: absolute;
-	bottom: 170px;
-	right: 40px;
+	bottom: 10px;
+	right: 50px;
 }
 .wallMeetingName{
 	margin-bottom: 10px;
