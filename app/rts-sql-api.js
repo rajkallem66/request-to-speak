@@ -35,9 +35,9 @@ function addMeeting(meeting) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
 
-        request.input("sireId", meeting.sireId);
+        request.input("sireId", meeting.sireId || "");
         request.input("meetingName", meeting.meetingName);
-        request.input("meetingDate", meeting.meetingDate);
+        request.input("meetingDate", sql.DateTime, new Date(meeting.meetingDate));
         request.input("status", "new");
         request.output("id");
         request.execute("InsertMeeting").then(function(result) {

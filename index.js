@@ -97,12 +97,11 @@ let sireConfig = config.get("SIRE.dbConfig");
 let sireApi = require(agendaApi)(sireConfig, logger);
 app.get("/sire/meeting", function(req, res) {
     logger.info("Retrieving meetings from agenda management system.");
-    res.status(302).end();
- /*   sireApi.getMeetings().then(function(data) {
+    sireApi.getMeetings().then(function(data) {
         res.send(data);
     }, function(err) {
         res.status(500).send(err);
-    });*/
+    });
 });
 
 app.get("/sire/item/:meetingId", function(req, res) {
