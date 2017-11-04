@@ -54,11 +54,13 @@ function getItems(meetingId) {
         let request = pool.request();
         request.input("meetingId", meetingId);
 
-        let query = "SELECT ROW_NUMBER() OVER(ORDER BY SL.second_order, item.item_index) as itemOrder, item.item_id as itemId, item.caption as itemName, 3 as timeToSpeak " +
+        let query = "SELECT ROW_NUMBER() OVER(ORDER BY SL.second_order, item.item_index) as itemOrder, " +
+        "item.item_id as itemId, item.caption as itemName, 3 as timeToSpeak " +
         "FROM [sire].[alpha].[ans_meetings] meet " +
         "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
         "INNER JOIN (" +
-                "SELECT ROW_NUMBER() OVER(ORDER BY FL.first_order, item.item_index) as second_order, item.item_id as second_id " +
+                "SELECT ROW_NUMBER() OVER(ORDER BY FL.first_order, item.item_index) as second_order, " +
+                "item.item_id as second_id " +
                 "FROM [sire].[alpha].[ans_meetings] meet " +
                 "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
                 "INNER JOIN (" +
@@ -108,7 +110,7 @@ module.exports = function(cfg, log) {
     setupSql(config);
 
     return {
-        version: "1.0",
+        version: "1.1",
         dbType: "Microsoft SQL Server",
         getMeetings: getMeetings,
         getItems: getItems

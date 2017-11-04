@@ -1,0 +1,26 @@
+RTS:
+    wsTransformer: websockets #be advised that faye strips js types
+    dbApi: ./app/rts-loki-api
+    dbConfig:
+        file: loki.json
+        options:
+            autosave: true
+            autoload: true
+            serializationMethod: pretty
+    log:
+        level: debug
+        levels: 
+            emergency: 0
+            error: 3
+            warning: 4
+            info: 6
+            debug: 7
+            trace: 8
+        colors: 
+            emergency: red
+            error: red
+            warn: yellow
+            info: white
+            debug: green
+            trace: blue
+            

@@ -104,25 +104,23 @@ rtsDbApi.init().then(function() {
 
 app.use("/api", require("./app/rts-rest-api")(logger, rtsDbApi, rtsWsApi));
 
-// Sacramento County agenda management system access.
-let agendaApi = config.get("SIRE.dbApi");
-let sireConfig = config.get("SIRE.dbConfig");
-let sireApi = require(agendaApi)(sireConfig, logger);
-app.get("/sire/meeting", function(req, res) {
-    logger.info("Retrieving meetings from agenda management system.");
-    sireApi.getMeetings().then(function(data) {
-        res.send(data);
-    }, function(err) {
-        res.status(500).send(err);
-    });
-});
+ // External system integration.
+ let agenda;
+ try {
+    agenda = config.get("AGENDA");
+ } catch(e) {
+    winston.info("No agenda system integration.");
+ }
+ 
+if(agenda) {
+    winston.info("Agenda integration found.");
+    let agendaApi = config.get("AGENDA.dbApi");
+    let agendaConfig = config.get("AGENDA.dbConfig");
+    let agendaDbApi = require(agendaApi)(agendaConfig, winston);
+    winston.info("Agenda DB API Type: " + agendaDbApi.dbType);
+    winston.info("Agenda DB API Version: " + agendaDbApi.version);
 
-app.get("/sire/item/:meetingId", function(req, res) {
-    let meetingId = req.params.meetingId;
-    logger.info("Retrieving items from agenda management system for meetingId: " + meetingId);
-    sireApi.getItems(meetingId).then(function(data) {
-        res.send(data);
-    }, function(err) {
-        res.status(500).send(err);
-    });
-});
+    let agendaRestApi = config.get("AGENDA.restApi");
+    winston.info("Agenda REST API: " + agendaRestApi);    
+    app.use("/agenda", require(agendaRestApi)(winston, agendaDbApi));
+}
