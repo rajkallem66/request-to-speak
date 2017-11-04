@@ -10,6 +10,11 @@ function(app, observable, event, moment) {
         items: [],
         totalTimeRemaining: 0,
         primus: null,
+        disconnected: function() {
+            app.showMessage("You are not authorized for this resource. Please login.").then(function() {
+                location.reload();                
+            });
+        },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
             if(this.primus === null || this.primus.online !== true) {
@@ -108,24 +113,35 @@ function(app, observable, event, moment) {
     }.bind(ret);
 
     ret.updateList = function(updatedRequest) {
-        this.requests.splice(this.requests.findIndex(function(r) {
+        var old = this.requests.find(function(r) {
             return r.requestId === updatedRequest.requestId;
-        }), 1, updatedRequest);
-
-        // remove removeRequests.
-        var item = this.items.find(function(i) {
-            return i.itemId === updatedRequest.item.itemId;
         });
 
-        // TODO: what if change Item in edit.
-        if(item) {
-            item.requests.splice(item.requests.findIndex(function(f) {
-                return f.requestId === updatedRequest.requestId;
-            }), 1, updatedRequest);
-        } else {
-            // problem!
+        if(old) {
+            this.requests.splice(this.requests.indexOf(old), 1, updatedRequest);
+            
+            // remove removeRequests.
+            var item = this.items.find(function(i) {
+                return i.itemId === ((updatedRequest.item.itemId) && (i.requests.indexOf(old) >= 0))
+            });
+
+            // TODO: what if change Item in edit.
+            if(item) {
+                item.requests.splice(item.requests.findIndex(function(f) {
+                    return f.requestId === updatedRequest.requestId;
+                }), 1, updatedRequest);
+            } else {
+                var oldNew = this.newRequests.find(function(r) {
+                    return r.requestId === updatedRequest.requestId;
+                });
+        
+                if(oldNew) {
+                    this.newRequests.splice(this.newRequests.indexOf(this.newRequests), 1, updatedRequest);
+                }
+            }
+            this.timeTotal();
         }
-        this.timeTotal();
+
     }.bind(ret);
 
     ret.timeTotal = function() {

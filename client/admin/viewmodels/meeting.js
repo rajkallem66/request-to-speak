@@ -45,6 +45,8 @@ function(http, router, app, Import, Edit, moment) {
                         itemName: "Off Agenda",
                         timeToSpeak: 3
                     });
+                    // Since it is an import, format the date.
+                    response.meetingDate = self.format(response.meetingDate);
                     // Make sure not already in list
                     if(self.meetings.filter(function(m) {
                         return m.sireId === response.sireId;

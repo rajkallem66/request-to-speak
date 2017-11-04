@@ -1,12 +1,15 @@
 /* eslint no-console: "off" */
 define(["primus"], function(Primus) {
     return {
-        createPrimus: function(url) {
-            return new Primus(url);
+        createPrimus: function(url, options) {
+            return new Primus(url, options);
         },
         setupPrimus: function(vm, clientType) {
-            vm.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=" + clientType);
-
+            vm.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=" + clientType, { reconnect: {
+                max: Infinity,
+                min: 500,
+                retries: 7
+            }});
             vm.primus.on("open", function() {
                 console.log("Connection established.");
                 this.isConnected = true;
@@ -15,7 +18,7 @@ define(["primus"], function(Primus) {
                 console.log("Timeout expired: %s", err.message);
             });
             vm.primus.on("reconnect", function(err, opts) {
-                console.log("Reconnecting.", err.message);
+                console.log("Reconnecting attempt ", err.attempt + " of " + err.retries);
                 this.isConnected = false;
             }.bind(vm));
             vm.primus.on("reconnected", function(err, opts) {
@@ -25,6 +28,7 @@ define(["primus"], function(Primus) {
             vm.primus.on("end", function() {
                 console.log("Connection ended.");
                 this.isConnected = false;
+                this.disconnected();
             }.bind(vm));
             vm.primus.on("data", function(data) {
                 console.log(data);

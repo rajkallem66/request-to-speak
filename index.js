@@ -2,25 +2,43 @@
 "use strict";
 let winston = require("winston");
 let config = require("config");
+let logTransports = config.get("RTS.log.transports");
+let logOptions = {
+    transports: [],
+    levels: config.get("RTS.log.levels"),
+    level: config.get("RTS.log.level")
+};
+logTransports.forEach(function(t) {
+    switch(t.name) {
+    case "console": 
+        logOptions.transports.push(new winston.transports.Console(t.options));
+        break;
+    case "syslog":
+        require('winston-syslog').Syslog;
+        let sysTransport = new winston.transports.Syslog(t.options)
+        logOptions.transports.push(sysTransport);
+        break;
+    }
+});
 
-winston.setLevels(config.get("RTS.log.levels"));
+let logger = new winston.Logger(logOptions);
 winston.addColors(config.get("RTS.log.colors"));
-winston.level = config.get("RTS.log.level");
-winston.remove(winston.transports.Console);
-winston.add(winston.transports.Console, {colorize: true});
 
 // Sometimes things to awry.
 process.on("uncaughtException", function(err) {
-    winston.emergency("uncaughtException:", err.message);
-    winston.emergency(err.stack);
+    logger.emerg("uncaughtException:", err.message);
+    logger.emerg(err.stack);
     process.exit(1);
 });
 
 let express = require("express");
+let passport = require("passport");
 let favicon = require("serve-favicon");
 let bodyParser = require("body-parser");
 let http = require("http");
 let path = require("path");
+
+require('./app/rts-passport')(passport, config.get("security.passport"));
 
 let app = express();
 let Primus = require("primus");
@@ -29,50 +47,62 @@ let port;
 try {
     port = config.get("RTS.port");
 } catch(e) {
-    winston.info("No port specified.");
+    logger.info("No port specified.");
 }
 
 app.set("port", port || 3000);
 app.use(favicon(__dirname + "/client/favicon.ico"));
-app.use(bodyParser.json());
+app.use(bodyParser.json());-
 app.use(bodyParser.urlencoded({extended: false}));
+
+app.post('/login/callback',
+passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+    function(req, res) {
+    res.redirect('/');
+    }
+);
+
+app.use(passport.initialize());
+app.use(passport.session(config.get("security.session")));
 app.use(express.static(path.join(__dirname, "client")));
 
 let server = http.createServer(app);
-let transformer = config.get("RTS.wsTransformer");
-let primus = new Primus(server, {transformer: transformer});
+let primusConfig = config.get("RTS.primus");
+let primus = new Primus(server, primusConfig);
+
+primus.save(__dirname +'/client/lib/primus.js');
 
 server.listen(app.get("port"), function() {
-    winston.info("Express server listening on port " + app.get("port"));
+    logger.info("Express server listening on port " + app.get("port"));
 });
 
-let rtsWsApi = require("./app/rts-ws-api")(primus, winston);
-winston.info("RTS WS API Version: " + rtsWsApi.version);
+let rtsWsApi = require("./app/rts-ws-api")(primus, logger);
+logger.info("RTS WS API Version: " + rtsWsApi.version);
 
 let dbApi = config.get("RTS.dbApi");
 let dbConfig = config.get("RTS.dbConfig");
 
 // You can create your own API for Cassandra, Mongo, Oracle, etc. Just adhere to the interface.
-let rtsDbApi = require(dbApi)(dbConfig, winston);
-winston.info("RTS DB API Type: " + rtsDbApi.dbType);
-winston.info("RTS DB API Version: " + rtsDbApi.version);
+let rtsDbApi = require(dbApi)(dbConfig, logger);
+logger.info("RTS DB API Type: " + rtsDbApi.dbType);
+logger.info("RTS DB API Version: " + rtsDbApi.version);
 
 rtsDbApi.init().then(function() {
     // In case the app died with an active meeting.
     rtsDbApi.getActiveMeeting().then(function(mtg) {
         if(mtg !== undefined) {
-            winston.info("Active meeting: " + mtg.meetingId);
+            logger.info("Active meeting: " + mtg.meetingId);
             rtsWsApi.startMeeting(mtg);
             rtsWsApi.refreshWall();
         } else {
-            winston.info("No active meeting.");
+            logger.info("No active meeting.");
         }
     }, function(err) {
-        winston.error("Unable to check for active meeting.");
+        logger.error("Unable to check for active meeting.");
     });
 });
 
-app.use("/api", require("./app/rts-rest-api")(winston, rtsDbApi, rtsWsApi));
+app.use("/api", require("./app/rts-rest-api")(logger, rtsDbApi, rtsWsApi));
 
  // External system integration.
  let agenda;
@@ -93,18 +123,4 @@ if(agenda) {
     let agendaRestApi = config.get("AGENDA.restApi");
     winston.info("Agenda REST API: " + agendaRestApi);    
     app.use("/agenda", require(agendaRestApi)(winston, agendaDbApi));
-}
-
-// Side-chain authorization endpoint for F5 or the like.
-let auth;
-try {
-    config.get("AUTH");
-} catch(e) {
-    winston.info("No authentication config.");
-}
-
-if(auth) {
-    winston.info("Authorization API found.");
-    let authApi = config.get("AUTH.restApi");
-    app.use("/auth", require(authApi)(winston));
 }

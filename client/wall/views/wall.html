@@ -4,20 +4,21 @@
         <div class="navbar-header">
         </div>
         <div class="active">
-          <div class="pull-right">
+          <div class="pull-right wallStatus">
             <div>
               <i class="fa fa-spinner fa-spin fa-fw" data-bind="visible: !isMeetingActive"></i>
             </div>
-            <div data-bind="visible: !isConnected">
-				      <span><i class="fa fa-circle redDot" aria-hidden="true"></i></span>
-			      </div>           
+   		    <span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connected</span></span>
+                     
           </div>
         </div>
       </div>
     </nav>
     <div data-bind="visible: isMeetingActive">
-      <span class="infoName">Item </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemOrder : ''"></span>
-      <span class="infoName">: </span><span class="infoName" data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''"></span>
+      	  <div class="wallMeetingName">
+				Item <span data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemOrder : ''"></span>: 
+	  			<span data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''"></span>
+		  </div>
     </div>
     <div class="wallWrap"  data-bind="visible: isMeetingActive">
         <div class="row nameRow">
@@ -40,7 +41,7 @@
         </div>
     </div>
     <div class="remaining pull-right" data-bind="visible: isMeetingActive">
-      <span>Remaining Speakers: <span>
+      <span>Remaining Speakers: </span>
       <span data-bind="text: requests.length"></span>
     </div>
 </div>
