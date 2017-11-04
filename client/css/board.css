@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
+@import url(fonts.googleapis.com/css?family=Raleway:400,700);
 /* MAIN CSS */
 
 *, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -37,7 +37,7 @@ a:hover, a:focus {
   margin: 0px !important;
 }
 
-.modal-content {
+/*.modal-content {
   height: auto;
   min-height: 100vh;
   border-radius: 0 !important;
@@ -47,6 +47,15 @@ a:hover, a:focus {
   text-align: center;
   padding: 10%;
   text-shadow: 1px 2px #808080;
+}*/
+.modal-content {
+	background-color: rgb(238, 238, 238) !important;
+	position: absolute;
+	top: 5%;
+	left: 26%;
+	margin-top: -25px;
+	margin-left: -200px;
+	padding: 20px;
 }
 .main {
   padding: 20px;
