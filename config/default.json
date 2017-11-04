@@ -49,33 +49,20 @@
             "port": 1433
         }
     },
-    "AUTH": {
-        "groups": [
-            {
-                "group": "wall",
-                "users": [
-                     "abc@saccounty.net"
-                ]
-            },
-            {
-                "group": "kiosk",
-                "users": [
-                    "abc@saccounty.net"
-                ]
-            },
-            {
-                "group": "admin",
-                "users": [
-                    "abc@saccounty.net"
-                ]
-            },
-            {
-                "group": "board",
-                "users": [
-                    "abc@saccounty.net"
-                ]
-                
+    "security": {
+        "passport": {
+            "strategy": "saml",
+            "saml": {
+                "path": "/login/callback",
+                "entryPoint": "https://county-of-sacramento-dev.onelogin.com/trust/saml2/http-post/sso/721385",
+                "issuer": "https://app.onelogin.com/saml/metadata/721385",
+                "callbackUrl": "http://rtsqa.saccounty.net:3000/login/callback"
             }
-        ]
+        },
+        "session": {
+            "resave": true,
+            "saveUninitialized": true,
+            "secret": "the quick brown fox"
+          }
     }
 }

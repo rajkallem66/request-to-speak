@@ -38,6 +38,8 @@ let bodyParser = require("body-parser");
 let http = require("http");
 let path = require("path");
 
+require('./app/rts-passport')(passport, config.get("security.passport"));
+
 let app = express();
 let Primus = require("primus");
 
@@ -53,7 +55,6 @@ app.use(favicon(__dirname + "/client/favicon.ico"));
 app.use(bodyParser.json());-
 app.use(bodyParser.urlencoded({extended: false}));
 
-require('./config/passport.js');
 app.post('/login/callback',
 passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
     function(req, res) {
@@ -62,7 +63,7 @@ passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
 );
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session(config.get("security.session")));
 app.use(express.static(path.join(__dirname, "client")));
 
 let server = http.createServer(app);
@@ -124,24 +125,4 @@ app.get("/sire/item/:meetingId", function(req, res) {
     }, function(err) {
         res.status(500).send(err);
     });
-});
-
-// Sacramento County custom authorization via F5
-app.get("/auth/authorize", function(req, res) {
-    let userId = req.query.user;
-    if(!userId) {
-        res.status(400).send("Bad Request");
-    } else {
-        let users = config.get("AUTH.users");
-        let user = users.find(function(u) {
-            return u.user === userId;
-        });
-        if(user) {
-            res.status(200).send(JSON.stringify(user.groups));
-            logger.info("Authorized access: " + userId);
-        } else {
-            res.status(403).send("Forbidden");
-            logger.error("Attemtped unauthorized access: " + userId);
-        }
-    }
 });
