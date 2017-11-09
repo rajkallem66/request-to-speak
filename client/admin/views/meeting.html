@@ -1,0 +1,41 @@
+<div class="container boardInfoWrap">
+    <div class="row">
+        <div class="col-md-12 main meetingDash">
+            <div class="row">
+					<button class="btn btn-primary" data-bind="click: importMeeting, visible: canImport">
+						<i class="fa fa-download" aria-hidden="true"></i>
+						Import
+					</button>
+					<button class="btn btn-secondary" data-bind="click: function() { addMeeting(newMeeting()); }">
+						<i class="fa fa-plus" aria-hidden="true"></i>
+						Add
+					</button>
+			</div>
+			<div class="meetingWrap" data-bind="foreach: meetings">	
+				<div class="row">
+					<div class="pull-left col-sm-6 col-md-8 col-xs-6">
+						<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span>
+					</div>
+					<div data-bind="visible: status !== 'started'">
+						<button class="btn btn-info" data-bind="click: $root.editMeeting, enable: status !== 'started'">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<span class="hidden-xs">Edit</span>
+						</button>
+						<button class="btn btn-success" data-bind="click: $root.startMeeting, enable: status !== 'started'">
+							<i class="fa fa-check-circle" aria-hidden="true"></i> 
+							<span class="hidden-xs">Start</span>
+						</button>
+						<button class="btn btn-danger" data-bind="click: $root.deleteMeeting, enable: status !== 'started'">
+							<i class="fa fa-ban" aria-hidden="true"></i> 
+							<span class="hidden-xs">Delete</span>
+						</button>
+					</div>
+					<div data-bind="visible: status === 'started'">
+						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+						<span class="hidden-xs">Active Meeting</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <nav class="navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        </div>
+        <div class="active">
+          <div class="pull-right wallStatus">
+            <div>
+              <i class="fa fa-spinner fa-spin fa-fw" data-bind="visible: !isMeetingActive"></i>
+            </div>
+   		    <span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connected</span></span>
+                     
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div data-bind="visible: isMeetingActive">
+      	  <div class="wallMeetingName">
+				Item <span data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemOrder : ''"></span>: 
+	  			<span data-bind="text: (displayRequests[0]) ? displayRequests[0].item.itemName : ''"></span>
+		  </div>
+    </div>
+    <div class="wallWrap"  data-bind="visible: isMeetingActive">
+        <div class="row nameRow">
+          <div class="itemOrder col-md-2">
+            <span>Item #</span>
+          </div>
+          <div class="infoName col-md-10">
+            <span>Speaker Name</span>
+          </div>
+        </div>
+    </div>
+    <div class="wallWrap"  data-bind="foreach: displayRequests, visible: isMeetingActive">
+        <div class="row nameRow" data-bind="css: { activeSpeaker: status === 'active'}" >
+          <div class="itemOrder col-md-2" data-bind="text: item.itemOrder">
+          </div>
+          <div class="infoName col-md-10">
+            <span data-bind="text: firstName"></span>
+            <span data-bind="text: lastName"></span>
+          </div>
+        </div>
+    </div>
+    <div class="remaining pull-right" data-bind="visible: isMeetingActive">
+      <span>Remaining Speakers: </span>
+      <span data-bind="text: requests.length"></span>
+    </div>
+</div>

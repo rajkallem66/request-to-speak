@@ -1,0 +1,23 @@
+﻿<!--Request Menu-->
+<div class="container-fluid boardHeader navbar-fixed-top">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-8 col-sm-6 col-xs-10">
+				<div>
+					<ul class="nav navbar-nav" data-bind="foreach: router.navigationModel">
+						<li data-bind="css: { active: isActive }">
+							<a data-bind="attr: { href: hash }, text: title"></a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right loadingSpinner">
+						<li class="loader" data-bind="css: { active: router.isNavigating }">
+							<i class="fa fa-spinner fa-spin fa-2x"></i>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="page-host" data-bind="router: { transition:'entrance' }"></div>

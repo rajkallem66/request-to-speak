@@ -1,0 +1,61 @@
+{
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Dev Serve",
+            "configurations": ["Attach to Node","Gulp BrowserSync", "Launch Admin"],
+            "preLaunchTask": "eslint"
+        }
+    ],
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceRoot}/index.js"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Node",
+            "port": 5858
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Gulp BrowserSync",
+            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+            "args": [
+                "browser-sync"
+            ]
+        },
+        {
+            "name": "Launch Wall",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:7000/wall.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "name": "Launch Board",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:7000/board.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "name": "Launch Kiosk",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/kiosk.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
+            "name": "Launch Admin",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/#request",
+            "webRoot": "${workspaceRoot}/client"
+        }
+    ]
+}

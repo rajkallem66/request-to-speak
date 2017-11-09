@@ -1,0 +1,23 @@
+ <div class="modal fade meetingDialog importMeetings">
+  <div class="" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Import Meeting</h5>
+      </div>
+		  <div class="modal-body">
+			<div data-bind="foreach: meetings">
+				<div class="form-group row" data-bind="click: $parent.selectMeeting,css: { importSelectd: $data === $root.selectedMeeting }"> 
+						<span data-bind="text: meetingName"></span><span> - </span>
+						<span data-bind="text: $root.format(meetingDate)"></span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"  data-bind="click: function () { confirmSelection(); }">Confirm</button>
+				<button type="button" class="btn btn-secondary" data-bind="click: function () { closeDialog(); }" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	  </div>
+	 </div>
+</div>
+ 
+	 
