@@ -1,5 +1,7 @@
-RTS:
-    wsTransformer: websockets #be advised that faye strips js types
+rts:
+    port: 3000
+    primus:
+        transformer: websockets #be advised that faye strips js types
     dbApi: ./app/rts-loki-api
     dbConfig:
         file: loki.json
@@ -23,4 +25,22 @@ RTS:
             info: white
             debug: green
             trace: blue
-            
+        transports:
+            - name: console
+              options:
+                level: trace
+                colorize: true
+    security:
+        enabled: true
+        component: ./app/rts-saml
+        passport:
+            strategy: saml
+            saml:
+                path: /login/callback
+                entryPoint: https://yourapp.onelogin.com/trust/saml2/http-post/sso/<id>
+                issuer: https://app.onelogin.com/saml/metadata/<id>
+                callbackUrl: http://yourapp.com:3000/login/callback
+        session:
+            resave: true
+            saveUninitialized: true
+            secret: the quick brown fox
