@@ -371,8 +371,14 @@ function(http, observable, app, event, Edit, moment) {
         });
     };
 
-    ctor.prototype.format = function(date, format) {
-        return moment(date).format(format);
+    ctor.prototype.format = function(date) {
+        var ret = moment(date).format(app.dateFormat); 
+        
+       //in case db api saves in our odd format: 
+       if(ret === "Invalid date") { 
+           ret = moment(date, app.dateFormat).format(app.dateFormat); 
+       } 
+       return ret;
     };
 
     return ctor;

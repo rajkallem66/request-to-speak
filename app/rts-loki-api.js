@@ -41,7 +41,7 @@ function addMeeting(meeting) {
             let newMeeting = meetings.insert(meeting);
             newMeeting.meetingId = newMeeting.$loki;
             meetings.update(newMeeting);
-            fulfill(newMeeting.$loki);
+            fulfill(newMeeting);
         } catch(err) {
             logger.error(err);
             reject(err);

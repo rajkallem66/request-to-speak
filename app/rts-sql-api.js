@@ -61,7 +61,8 @@ function addMeeting(meeting) {
                 });
                 p.then(function(ir) {
                     transaction.commit().then(function() {
-                        fulfill(meetingId);
+                        meeting.meetingId = meetingId;
+                        fulfill(meeting);
                     }, function(err) {
                         reject(err);
                     });
