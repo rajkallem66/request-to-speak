@@ -13,8 +13,14 @@ function(http, app, observable, Items, event, $) {
         messages: [],
         primus: null,
         disconnected: function() {
-            app.showMessage("You are not authorized for this resource. Please login.").then(function() {
-                location.reload();                
+            location.reload();                
+        },
+        reconnected: function() {
+            // make http call to check if auth session is dead.
+            http.get("/", function(data) {
+                console.log(data)
+            }, function(err) {
+                console.log(err);
             });
         },
         attached: function() {
@@ -58,13 +64,13 @@ function(http, app, observable, Items, event, $) {
         submitRequest: function() {
             this.isSubmitting = true;
             var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
-                self.isSubmitting = false;
+            http.post(app.apiLocation + "request", this.request).then(function() {
                 self.confirmSubmission = true;
                 setTimeout(function() {
                     self.confirmSubmission = false;
                     self.request = self.newRequest();
                     self.step = 0;
+                    self.isSubmitting = false;                    
                 }, 3000);
             }, function(err) {
                 self.isSubmitting = false;
@@ -119,14 +125,14 @@ function(http, app, observable, Items, event, $) {
         additionalRequest: function() {
             this.isSubmitting = true;
             var self = this;
-            http.post(location.href.replace(/[^/]*$/, "") + "api/request", this.request).then(function() {
-                self.isSubmitting = false;
+            http.post(app.apiLocation + "request", this.request).then(function() {
                 self.request.item = {};
                 self.request.offAgenda = false;
                 self.request.subTopic = "";
                 self.request.stance = "";
                 self.request.notes = "";
                 self.step = 0;
+                self.isSubmitting = false;                
             }, function(err) {
                 self.isSubmitting = false;
                 // do error stuff
@@ -199,6 +205,8 @@ function(http, app, observable, Items, event, $) {
         case 3:
             // Notes required for Off Agenda requests.
             return (this.request.item.itemName !== "Off Agenda" || this.request.notes.length > 2);
+        case 5:
+            return app.enableReview;
         default:
             return true;
         }

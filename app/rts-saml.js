@@ -20,11 +20,12 @@ module.exports = function (passport, config) {
     function (profile, cb) {
       return cb(null,
         {
-          id: profile.uid,
+          id: profile.nameID,
           email: profile.email,
-          displayName: profile.cn,
-          firstName: profile.givenName,
-          lastName: profile.sn
+          displayName: profile.displayName,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          groups: profile.groups
         });
     })
   );

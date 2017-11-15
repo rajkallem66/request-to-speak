@@ -8,9 +8,7 @@ define(["durandal/app", "eventHandler", "moment"], function(app, event, moment) 
         messages: [],
         primus: null,
         disconnected: function() {
-            app.showMessage("You are not authorized for this resource. Please login.").then(function() {
-                location.reload();                
-            });
+            location.reload();                
         },
         activate: function() {
             // the router's activator calls this function and waits for it to complete before proceeding
