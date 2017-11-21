@@ -41,7 +41,7 @@ router.post("/request", function(req, res) {
     rtsDbApi.addRequest(request).then(function(newReq) {
         logger.trace("Notify WS clients of new request");
         rtsWsApi.addRequest(newReq).then(function() {
-            logger.info("Request added: " + id);
+            logger.info("Request added: " + newReq.requestId);
             res.status(204).end();
         }, function(err) {
             logger.error("Error notifying WS clients of new request.", err);
