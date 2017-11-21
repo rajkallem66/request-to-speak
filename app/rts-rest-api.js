@@ -38,10 +38,11 @@ router.post("/request", function(req, res) {
     }
 
     logger.trace("Add request with DbApi");
-    rtsDbApi.addRequest(request).then(function(newReq) {
+    rtsDbApi.addRequest(request).then(function(id) {
+        request.requestId = id;
         logger.trace("Notify WS clients of new request");
-        rtsWsApi.addRequest(newReq).then(function() {
-            logger.info("Request added: " + newReq.requestId);
+        rtsWsApi.addRequest(request).then(function() {
+            logger.info("Request added: " + request.requestId);
             res.status(204).end();
         }, function(err) {
             logger.error("Error notifying WS clients of new request.", err);
