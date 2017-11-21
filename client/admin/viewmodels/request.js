@@ -371,6 +371,10 @@ function(http, observable, app, event, Edit, moment) {
         });
     };
 
+    ctor.prototype.formatTime = function(date) {
+        return moment(date).format("HH:mm:ss A");
+    };
+
     ctor.prototype.format = function(date) {
         var ret = moment(date).format(app.dateFormat); 
         
