@@ -244,7 +244,7 @@ function addRequest(request) {
     logger.debug("Adding request.");
 
     return new Promise(function(fulfill, reject) {
-        meeting.requests.push(request);
+        // meeting.reqts.push(request);
         notify("watchers", {
             "messageType": "request",
             "message": {
@@ -378,7 +378,7 @@ function startMeeting(newMeeting) {
     logger.debug("Starting meeting.");
 
     return new Promise(function(fulfill, reject) {
-        meeting = newMeeting;
+        meeting = Object.assign({}, newMeeting);
 
         notify("all", {
             "messageType": "meeting",
