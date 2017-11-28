@@ -244,7 +244,7 @@ function addRequest(request) {
     logger.debug("Adding request.");
 
     return new Promise(function(fulfill, reject) {
-        // meeting.reqts.push(request);
+        meeting.requests.push(request);
         notify("watchers", {
             "messageType": "request",
             "message": {
@@ -266,7 +266,7 @@ function updateRequest(request) {
 
     return new Promise(function(fulfill, reject) {
         let old = meeting.requests.find(function(r) {
-            return r.requestId === request.requestId;
+            return r.requestId == request.requestId;
         });
         if(old) {
             meeting.requests.splice(meeting.requests.indexOf(old), 1, request);
@@ -304,9 +304,9 @@ function deleteRequest(requestId) {
     logger.debug("Delete request.");
 
     return new Promise(function(fulfill, reject) {
-        var rId = parseInt(requestId);
+        var rId = requestId;
         let old = meeting.requests.find(function(r) {
-            return (r.requestId === rId);
+            return (r.requestId == rId);
         });
         if(old) {
             meeting.requests.splice(meeting.requests.indexOf(old), 1);
@@ -320,7 +320,7 @@ function deleteRequest(requestId) {
         }
 
         let oldDisplay = displayRequests.find(function(r) {
-            return (r.requestId === rId);
+            return (r.requestId == rId);
         });
         if(oldDisplay) {
             displayRequests.splice(displayRequests.indexOf(oldDisplay), 1);
@@ -346,12 +346,12 @@ function activateRequest(request) {
 
     return new Promise(function(fulfill, reject) {
         meeting.requests.splice(meeting.requests.findIndex(function(r) {
-            return r.requestId === request.requestId;
+            return r.requestId == request.requestId;
         }), 1, request);
 
         // If displayRequests includes then splice. otherwise push
         let oldDisplay = displayRequests.find(function(r) {
-            return r.requestId === request.requestId;
+            return r.requestId == request.requestId;
         });
 
         if(oldDisplay) {
@@ -379,6 +379,12 @@ function startMeeting(newMeeting) {
 
     return new Promise(function(fulfill, reject) {
         meeting = Object.assign({}, newMeeting);
+
+        // This API keeps track of active meeting and active requests.
+        // We need to remove previous requests that were deleted or removed.
+        meeting.requests = meeting.requests.filter(function(r) {
+            return (r.status !== "removed" && r.status != "deleted");
+        });
 
         notify("all", {
             "messageType": "meeting",

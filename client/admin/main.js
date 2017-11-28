@@ -1,4 +1,4 @@
-﻿/* global requirejs */
+﻿/* global requirejs $ */
 requirejs.config({
     paths: {
         "text": "../lib/require/text",

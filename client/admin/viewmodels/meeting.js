@@ -119,11 +119,11 @@ function(http, router, app, Import, Edit, moment) {
     }.bind(ret);
 
     ret.format = function(date) {
-        var ret = moment(date).format(app.dateFormat); 
+        var ret = moment(date).format(app.dateFormat);
 
         // in case db api saves in our odd format:
         if(ret === "Invalid date") {
-           ret = moment(date, app.dateFormat).format(app.dateFormat); 
+            ret = moment(date, app.dateFormat).format(app.dateFormat);
         }
         return ret;
     };

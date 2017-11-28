@@ -57,8 +57,7 @@ function(app, observable, event, moment) {
             } else if(message.event === "update") {
                 this.updateList(message.request);
             } else {
-                var requestId = parseInt(message.requestId);
-                this.removeFromList(requestId);
+                this.removeFromList(message.requestId);
             }
         }
     };
@@ -90,7 +89,7 @@ function(app, observable, event, moment) {
 
     ret.removeFromList = function(requestId) {
         var toRemove = this.requests.find(function(r) {
-            return r.requestId === requestId;
+            return r.requestId == requestId;
         });
         if(toRemove) {
             this.requests.splice(this.requests.indexOf(toRemove), 1);
@@ -166,14 +165,14 @@ function(app, observable, event, moment) {
     }.bind(ret);
 
     ret.itemSort = function(a, b) {
-        var aVal = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
-        var bVal = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
+        var aVal = (a.itemName === "Off Agenda") ? 1000 : parseInt(a.itemOrder);
+        var bVal = (b.itemName === "Off Agenda") ? 1000 : parseInt(b.itemOrder);
         return aVal - bVal;
     };
 
     ret.requestSort = function(a, b) {
-        var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
-        var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();
+        var aVal = ((a.item.itemName === "Off Agenda") ? 1000 : parseInt(a.item.itemOrder)).toString();
+        var bVal = ((b.item.itemName === "Off Agenda") ? 1000 : parseInt(b.item.itemOrder)).toString();
         aVal += ((a.official) ? "0" : "1");
         bVal += ((b.official) ? "0" : "1");
         aVal += moment(a.dateAdded).valueOf().toString();

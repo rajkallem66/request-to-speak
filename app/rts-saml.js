@@ -1,3 +1,4 @@
+/* global module,require*/
 const SamlStrategy = require("passport-saml").Strategy;
 
 module.exports = function(passport, config) {
