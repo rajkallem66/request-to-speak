@@ -129,7 +129,7 @@ function(app, observable, event, moment) {
             this.requests.splice(this.requests.indexOf(old), 1, updatedRequest);
             // remove removeRequests.
             var item = this.items.find(function(i) {
-                return i.itemId === ((updatedRequest.item.itemId) && (i.requests.indexOf(old) >= 0));
+                return ((i.itemId === updatedRequest.item.itemId) && (i.requests.indexOf(old) >= 0));
             });
 
             // TODO: what if change Item in edit.
