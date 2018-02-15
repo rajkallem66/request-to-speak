@@ -3,8 +3,7 @@
     "compounds": [
         {
             "name": "Dev Serve",
-            "configurations": ["Attach to Node","Gulp BrowserSync", "Launch Admin"],
-            "preLaunchTask": "eslint"
+            "configurations": ["Launch Program","Launch Admin"]
         }
     ],
     "configurations": [
@@ -15,32 +14,17 @@
             "program": "${workspaceRoot}/index.js"
         },
         {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach to Node",
-            "port": 5858
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Gulp BrowserSync",
-            "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
-            "args": [
-                "browser-sync"
-            ]
-        },
-        {
             "name": "Launch Wall",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:7000/wall.html",
+            "url": "http://localhost:3000/wall.html",
             "webRoot": "${workspaceRoot}/client"
         },
         {
             "name": "Launch Board",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:7000/board.html",
+            "url": "http://localhost:3000/board.html",
             "webRoot": "${workspaceRoot}/client"
         },
         {

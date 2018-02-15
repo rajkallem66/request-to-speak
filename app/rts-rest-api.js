@@ -40,10 +40,9 @@ router.post("/request", function(req, res) {
     logger.trace("Add request with DbApi");
     rtsDbApi.addRequest(request).then(function(id) {
         request.requestId = id;
-
         logger.trace("Notify WS clients of new request");
         rtsWsApi.addRequest(request).then(function() {
-            logger.info("Request added: " + id);
+            logger.info("Request added: " + request.requestId);
             res.status(204).end();
         }, function(err) {
             logger.error("Error notifying WS clients of new request.", err);
@@ -147,10 +146,8 @@ router.delete("/request/:requestId", function(req, res) {
 router.post("/meeting", function(req, res) {
     let meeting = req.body;
     logger.info("Adding meeting sireId: " + meeting.sireId);
-    rtsDbApi.addMeeting(meeting).then(function(id) {
-        res.status(200).send({
-            meetingId: id
-        });
+    rtsDbApi.addMeeting(meeting).then(function(response) {
+        res.status(200).send(response);
     }, function(err) {
         res.status(500).send(err);
     });

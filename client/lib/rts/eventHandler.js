@@ -5,11 +5,12 @@ define(["primus"], function(Primus) {
             return new Primus(url, options);
         },
         setupPrimus: function(vm, clientType) {
-            vm.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=" + clientType, {reconnect: {
-                max: Infinity,
-                min: 500,
-                retries: 7
-            }});
+            vm.primus = this.createPrimus(location.href.replace(location.hash, "") + "?clientType=" + clientType,
+                {reconnect: {
+                    max: Infinity,
+                    min: 500,
+                    retries: 7
+                }});
             vm.primus.on("open", function() {
                 console.log("Connection established.");
                 this.isConnected = true;

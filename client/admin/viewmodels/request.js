@@ -271,7 +271,7 @@ function(http, observable, app, event, Edit, moment) {
 
         this.removeFromList = function(requestId) {
             var toRemove = this.meeting.requests.find(function(r) {
-                return r.requestId === parseInt(requestId);
+                return r.requestId == requestId;
             });
             if(toRemove) {
                 this.meeting.requests.splice(this.meeting.requests.indexOf(toRemove), 1);
@@ -329,14 +329,14 @@ function(http, observable, app, event, Edit, moment) {
         }.bind(this);
 
         this.itemSort = function(a, b) {
-            var c = (parseInt(a.itemOrder) === 0) ? 1000 : parseInt(a.itemOrder);
-            var d = (parseInt(b.itemOrder) === 0) ? 1000 : parseInt(b.itemOrder);
+            var c = (a.itemName === "Off Agenda") ? 1000 : parseInt(a.itemOrder);
+            var d = (b.itemName === "Off Agenda") ? 1000 : parseInt(b.itemOrder);
             return c - d;
         };
 
         this.requestSort = function(a, b) {
-            var aVal = ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString();
-            var bVal = ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString();
+            var aVal = ((a.item.itemName === "Off Agenda") ? 1000 : parseInt(a.item.itemOrder)).toString();
+            var bVal = ((b.item.itemName === "Off Agenda") ? 1000 : parseInt(b.item.itemOrder)).toString();
             aVal += ((a.official) ? "0" : "1");
             bVal += ((b.official) ? "0" : "1");
             if(this.selectedSort === "Stance") {
@@ -371,8 +371,18 @@ function(http, observable, app, event, Edit, moment) {
         });
     };
 
-    ctor.prototype.format = function(date, format) {
-        return moment(date).format(format);
+    ctor.prototype.formatTime = function(date) {
+        return moment(date).format("HH:mm:ss A");
+    };
+
+    ctor.prototype.format = function(date) {
+        var ret = moment(date).format(app.dateFormat);
+
+        // in case db api saves in our odd format:
+        if(ret === "Invalid date") {
+            ret = moment(date, app.dateFormat).format(app.dateFormat);
+        }
+        return ret;
     };
 
     return ctor;

@@ -1,3 +1,4 @@
+/* global module */
 const SamlStrategy = require("passport-saml").Strategy;
 let xmlParser = require("xml2js");
 
@@ -23,7 +24,7 @@ module.exports = function(passport, config) {
         // this is configured under the Advanced tab in AD FS relying party
         // signatureAlgorithm: config.signatureAlgorithm
     }, function(profile, cb) {
-        let profileObject = xmlParser.parseString(profile.getAssertionXml(), function(err, data) {
+        xmlParser.parseString(profile.getAssertionXml(), function(err, data) {
             cb(null, {
                 id: data.Assertion.AttributeStatement[0].Attribute[0].AttributeValue[0],
                 email: data.Assertion.AttributeStatement[0].Attribute[0].AttributeValue[0]

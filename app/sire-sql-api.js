@@ -76,12 +76,14 @@ function getItems(meetingId) {
                             "FROM [sire].[alpha].[ans_meetings] meet " +
                             "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
                             "INNER JOIN (" +
-                                "SELECT ROW_NUMBER() OVER(ORDER BY item.item_index) AS first_order, item.item_id as first_id " +
+                                "SELECT ROW_NUMBER() OVER(ORDER BY item.item_index) AS first_order, " +
+                                "item.item_id as first_id " +
                                 "FROM [sire].[alpha].[ans_meetings] meet " +
                                 "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
                                 "WHERE parent_id = 0 " +
                                 "AND meet.meet_id = @meetingId " +
-                                "GROUP BY  item.parent_id,item.item_index, item.caption, item.item_id,item.item_level " +
+                                "GROUP BY  item.parent_id,item.item_index, item.caption, " +
+                                "item.item_id,item.item_level " +
                             ") FL on item.parent_id = FL.first_id " +
                             "GROUP BY  item_id, FL.first_order, item.item_level,item.item_index, item.caption " +
                         ") SL on item.parent_id = SL.second_id";

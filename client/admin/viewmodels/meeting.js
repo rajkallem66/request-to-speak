@@ -84,8 +84,7 @@ function(http, router, app, Import, Edit, moment) {
         addMeeting: function(meeting) {
             var self = this;
             http.post(app.apiLocation + "meeting", meeting).then(function(response) {
-                meeting.meetingId = response.meetingId;
-                self.meetings.push(meeting);
+                self.meetings.push(response);
                 console.log("Meeting added.");
             }, function(err) {
                 app.showMessage("Unable to add meeting.\n" + JSON.stringify(err));
@@ -120,11 +119,11 @@ function(http, router, app, Import, Edit, moment) {
     }.bind(ret);
 
     ret.format = function(date) {
-        var ret = moment(date).format("MMM Do YYYY");
+        var ret = moment(date).format(app.dateFormat);
 
         // in case db api saves in our odd format:
         if(ret === "Invalid date") {
-            ret = moment(date, "MMM Do YYYY").format("MMM Do YYYY");
+            ret = moment(date, app.dateFormat).format(app.dateFormat);
         }
         return ret;
     };

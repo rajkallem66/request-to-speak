@@ -41,7 +41,7 @@ function addMeeting(meeting) {
             let newMeeting = meetings.insert(meeting);
             newMeeting.meetingId = newMeeting.$loki;
             meetings.update(newMeeting);
-            fulfill(newMeeting.$loki);
+            fulfill(newMeeting);
         } catch(err) {
             logger.error(err);
             reject(err);
@@ -187,7 +187,7 @@ function getRequest(requestId) {
 function addRequest(newRequest) {
     return new Promise(function(fulfill, reject) {
         try {
-            let mtg = meetings.get(parseInt(newRequest.meetingId));
+            let mtg = meetings.get(newRequest.meetingId);
             newRequest.requestId = uuid();
             mtg.requests.push(newRequest);
             meetings.update(mtg);

@@ -162,23 +162,13 @@ function(http, app, observable, Items, event, $) {
     }.bind(ret);
 
     ret.selectItem = function(data) {
-        if(data.itemOrder === 0) {
-            this.request.offAgenda = true;
-            this.request.item = data;
-            this.request.timeToSpeak = data.timeToSpeak;
-            this.itemSelector = false;
-        } else {
-            this.request.offAgenda = false;
-            this.request.item = data;
-            this.request.timeToSpeak = data.timeToSpeak;
-            this.itemSelector = false;
-        }
+        this.request.item = data;
+        this.request.timeToSpeak = data.timeToSpeak;
+        this.itemSelector = false;
     }.bind(ret);
 
     observable.defineProperty(ret, "displayItem", function() {
-        if(this.request.offAgenda === true) {
-            return "Off Agenda";
-        } else if(this.request.item && this.request.item.itemName) {
+        if(this.request.item && this.request.item.itemName) {
             return this.request.item.itemOrder + ": " + this.request.item.itemName;
         } else {
             return "";

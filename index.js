@@ -15,8 +15,7 @@ logTransports.forEach(function(t) {
         break;
     case "syslog":
         require("winston-syslog").Syslog;
-        let sysTransport = new winston.transports.Syslog(t.options);
-        logOptions.transports.push(sysTransport);
+        logOptions.transports.push(new winston.transports.Syslog(t.options));
         break;
     }
 });
@@ -114,7 +113,11 @@ passport.authenticate(config.get("rts.security.passport.strategy"),
 );
 
 app.post("/postResponse",
-passport.authenticate(config.get("rts.security.passport.strategy"), {failureRedirect: "/", successReturnToOrRedirect: true}),
+passport.authenticate(config.get("rts.security.passport.strategy"),
+    {
+        failureRedirect: "/",
+        successReturnToOrRedirect: true
+    }),
     function(req, res) {
     // res.redirect('/');
     }

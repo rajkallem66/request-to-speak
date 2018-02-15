@@ -61,7 +61,8 @@ function addMeeting(meeting) {
                 });
                 p.then(function(ir) {
                     transaction.commit().then(function() {
-                        fulfill(meetingId);
+                        meeting.meetingId = meetingId;
+                        fulfill(meeting);
                     }, function(err) {
                         reject(err);
                     });
@@ -272,7 +273,7 @@ function getRequest(requestId) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
         let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, " +
-        "item, offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
+        "item, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
         "approvedForDisplay FROM Request WHERE status NOT IN('deleted','removed')";
 
         if(requestId) {
@@ -337,7 +338,6 @@ function addRequest(newRequest) {
         request.input("official", newRequest.official);
         request.input("agency", newRequest.agency);
         request.input("item", newRequest.item.itemId);
-        request.input("offAgenda", newRequest.offAgenda);
         request.input("subTopic", newRequest.subTopic);
         request.input("stance", newRequest.stance);
         request.input("notes", newRequest.notes);
@@ -373,7 +373,6 @@ function updateRequest(updateRequest) {
         request.input("official", updateRequest.official);
         request.input("agency", updateRequest.agency);
         request.input("item", updateRequest.item.itemId);
-        request.input("offAgenda", updateRequest.offAgenda);
         request.input("subTopic", updateRequest.subTopic);
         request.input("stance", updateRequest.stance);
         request.input("notes", updateRequest.notes);
@@ -452,9 +451,8 @@ function getActiveMeeting() {
                 logger.debug("There is an active meeting: " + meeting.meetingId);
                 meeting.requests = [];
                 let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, " +
-                    "item, offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
-                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId AND status NOT IN " +
-                    "('deleted','removed')";
+                    "item, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
+                    "approvedForDisplay FROM Request WHERE meetingId = @meetingId";
                 logger.debug("Statement: " + query);
                 let requestRequest = pool.request();
                 requestRequest.input("meetingId", meeting.meetingId);

@@ -1,4 +1,4 @@
-﻿/* global requirejs */
+﻿/* global requirejs $ */
 requirejs.config({
     paths: {
         "text": "../lib/require/text",
@@ -36,6 +36,7 @@ define(["durandal/system", "durandal/app", "durandal/viewLocator", "bootstrap"],
 
     app.apiLocation = location.href.replace(/[^/]*$/, "") + "api/";
     app.agendaLocation = location.href.replace(/[^/]*$/, "") + "agenda/";
+    app.dateFormat = "MMM Do YYYY";
 
     $(document).ajaxError(function(jqXHR, status, errorThrown) {
         if(status.status === 0) {
