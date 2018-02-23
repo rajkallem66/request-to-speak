@@ -323,6 +323,31 @@ function getRequest(requestId) {
 }
 
 /**
+ * Returns a specific request.
+ * @param {String} meetingId
+ * @return {Promise}
+ */
+function getRequests(meetingId) {
+    return new Promise(function(fulfill, reject) {
+        let request = pool.request();
+        let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
+            "official, agency, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
+            "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
+            "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId";
+
+        logger.debug("Request statement: " + requestQuery);
+        request.input("meetingId", meetingId);
+
+        request.query(requestQuery).then(function(requestResult) {
+            fulfill(requestResult.recordset);
+        }, function(err) {
+            logger.error("Request query error.", err);
+            reject(err);
+        });
+    });
+}
+
+/**
  * Insert new request into database.
  * @param {Request} newRequest
  * @return {Promise}
@@ -550,6 +575,7 @@ module.exports = function(cfg, log) {
         version: "1.0",
         dbType: "Microsoft SQL Server",
         getRequest: getRequest,
+        getRequests: getRequests,
         addRequest: addRequest,
         updateRequest: updateRequest,
         deleteRequest: deleteRequest,

@@ -260,6 +260,101 @@ router.post("/item", function(req, res) {
     });
 });
 
+router.get("/report/:meetingId", function(req, res) {
+    let meetingId = req.params.meetingId;
+    logger.info("Retrieving requests from database.");
+    rtsDbApi.getRequests(meetingId).then(function(data) {
+        let requests = data;
+
+        let excel = require("node-excel-export");
+
+        const styles = {
+            headerDark: {
+                fill: {
+                    fgColor: {
+                        rgb: "FF000000"
+                    }
+                },
+                font: {
+                    color: {
+                        rgb: "FFFFFFFF"
+                    },
+                    sz: 14,
+                    bold: true,
+                    underline: true
+                }
+            }
+        };
+
+        let specification = {
+            itemOrder: {
+                displayName: "Item",
+                headerStyle: styles.headerDark,
+                width: "4"
+            },
+            firstName: {
+                displayName: "First Name",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
+            lastName: {
+                displayName: "Last Name",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
+            official: {
+                displayName: "Official",
+                headerStyle: styles.headerDark,
+                width: "5"
+            },
+            agency: {
+                displayName: "Agency",
+                headerStyle: styles.headerDark,
+                width: "6"
+            },
+            stance: {
+                displayName: "Stance",
+                headerStyle: styles.headerDark,
+                width: "7"
+            },
+            address: {
+                displayName: "Address",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
+            phone: {
+                displayName: "Phone",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
+            email: {
+                displayName: "Email",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
+            notes: {
+                displayName: "Notes",
+                headerStyle: styles.headerDark,
+                width: "20"
+            }
+        };
+
+        let report = excel.buildExport(
+            [{
+                name: meetingId,
+                merges: [],
+                specification: specification,
+                data: requests
+            }]
+        );
+        res.setHeader("Content-Type", "application/vnd.ms-excel");
+        res.setHeader("Content-disposition", "attachment;filename=report.xls");
+        res.send(report);
+    }, function(err) {
+        res.status(500).send(err);
+    });
+});
+
 module.exports = function(log, db, ws) {
     logger = log;
     rtsDbApi = db;
