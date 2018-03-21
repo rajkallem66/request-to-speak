@@ -1,4 +1,4 @@
-@import url(fonts.googleapis.com/css?family=Raleway:400,700);
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,700);
 
 /* MAIN CSS */
 
@@ -15,10 +15,10 @@
 }
 html, body, .container {
 	height: 100%;
-	/* cursor: none; */
+	cursor: none;
 }
 body {
-	background: #ebebeb;
+	background: #212e3b;
 	font-weight: 400;
 	font-size: 1.8em;
 	font-family: 'Raleway', Arial, sans-serif;
@@ -40,9 +40,8 @@ a:hover, a:focus {
 	padding: 0;
 	margin: 0px !important;
 }
-/*.modal-content {
+.modal-content {
 	height: auto;
-	max-height: 100vh;
 	min-height: 100vh;
 	border-radius: 0 !important;
 	background-color: rgba(105, 185, 255, 0.65) !important;
@@ -51,15 +50,6 @@ a:hover, a:focus {
 	text-align: center;
 	padding: 10%;
 	text-shadow: 1px 2px #808080;
-}*/
-.modal-content {
-	background-color: rgb(238, 238, 238) !important;
-	position: absolute;
-	top: 5%;
-	left: 26%;
-	margin-top: -25px;
-	margin-left: -200px;
-	padding: 20px;
 }
 .redDot{
 	color:#D30003;
@@ -74,13 +64,6 @@ a:hover, a:focus {
 @-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
-
-.wallStatus{
-	margin-top: 20px;
-}
-.status{
-	color: #fff;
-}
 .main {
 	padding: 20px;
 	margin-top: 75px;
@@ -95,16 +78,13 @@ a:hover, a:focus {
 	margin-top: 40px;
 }
 .infoName {
-	margin-bottom: 3px;
-	padding-bottom: 10px;
-	min-height: 30px;
-	padding-top: 10px;
-	background: #ccc;
-	color: #333;
+	font-size: 40px;
+	line-height: 55px;
+	height: 100%;
+	margin-bottom: 12px;
 	font-weight: bold;
-	font-size: 38px;
-	padding-left:10px;
-	box-shadow: 1px 1px #a3a3a3;
+	border-bottom: 1px solid #575757;
+	color: #bebebe;
 }
 .stance {
 	text-transform: uppercase;
@@ -116,15 +96,24 @@ a:hover, a:focus {
 	margin-top: 15px;
 }
 .itemOrder {
-	margin-bottom: 4px;
-	color: #d0d0d0;
-	padding-bottom: 10px;
-	background-color: #3A5067;
-	max-width: 120px;
+	font-size: 33px;
+	width: 3.8em;
+	height: 1.658em;
+	background: #545454;
+	color: #fff;
 	text-align: center;
-	padding-top: 10px;
-	box-shadow: 1px 1px #333;
-	font-size: 27px;
+	line-height: 1.55em;
+	box-sizing: content-box;
+	font-weight: bold;
+	/* border-bottom: 1px solid #5f5f5f; */
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#636363), to(#545454));
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .25) inset, 0 1px 0 #575757;
+	-moz-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+	border-left: 1px solid #5f5f5f;
 }
 .activeSpeaker .itemOrder {
 	-webkit-box-shadow: 0px -1px 2px rgba(0, 0, 0, .35) inset, 0 1px 0 #575757;
@@ -173,9 +162,9 @@ hr {
 	-moz-transition: all .5s ease-in-out;
 	-webkit-transition: all .5s ease-in-out;
 	transition: all .5s ease-in-out;
-	color: #222;
-	background: rgba(78, 176, 23, 0.38);
-	/* border-bottom: 1px solid #545454; */
+	color: #ffffff;
+	background: rgba(255, 255, 255, .25);
+	border-bottom: 1px solid #545454;
 }
 .nameRow {
 	background: none;
@@ -188,21 +177,8 @@ hr {
 	/* height: 100%; */
 	margin-bottom: 12px;
 	font-weight: bold;
-	color: #4b4b4b;
+	color: #bebebe;
 	position: absolute;
 	bottom: 10px;
 	right: 50px;
-}
-.wallMeetingName{
-	margin-bottom: 10px;
-	color: #d0d0d0;
-	padding-top: 20px;
-	padding-bottom: 10px;
-	background-color: #3A5067;
-	border-bottom: 0.2em solid #c7c7c7;
-	min-height: 80px;
-	margin-left: -15px;
-	padding-left: 20px;
-	margin-right: -15px;
-	font-size: 28px;
 }
