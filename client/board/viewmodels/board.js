@@ -6,7 +6,6 @@ function(app, observable, event, moment) {
         isMeetingActive: false,
         messages: [],
         requests: [],
-        newRequests: [],
         items: [],
         totalTimeRemaining: 0,
         primus: null,
@@ -26,9 +25,8 @@ function(app, observable, event, moment) {
                     i.requests = []; i.timeRemaining = 0;
                 });
                 this.items = message.meeting.items.sort(this.itemSort);
-                this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
-                this.addToList();
+                this.addToList(message.meeting.requests);
             }
         },
         meetingMessage: function(message) {
@@ -38,22 +36,20 @@ function(app, observable, event, moment) {
                     i.requests = []; i.timeRemaining = 0;
                 });
                 this.items = message.meeting.items.sort(this.itemSort);
-                this.newRequests = message.meeting.requests;
                 this.requests = message.meeting.requests;
-                this.addToList();
+                this.addToList(message.meeting.requests);
             } else {
                 this.isMeetingActive = false;
                 this.totalTimeRemaining = 0;
                 this.items = [];
                 this.requests = [];
-                this.newRequests = [];
             }
         },
         requestMessage: function(message) {
             var requests = this.requests;
             if(message.event === "add") {
                 requests.push(message.request);
-                this.newRequests.push(message.request);
+                this.addToList(message.request);
             } else if(message.event === "update") {
                 this.updateList(message.request);
             } else {
@@ -66,24 +62,28 @@ function(app, observable, event, moment) {
         return moment(date).format("HH:mm:ss A");
     };
 
-    ret.addToList = function() {
+    ret.addToList = function(req) {
         var items = this.items;
         // add new requests
         var self = this;
-        this.newRequests.forEach(function(r) {
+        let newRequests = [];
+
+        if(Array.isArray(req)) {
+            newRequests = req;
+        } else {
+            newRequests.push(req);
+        }
+
+        newRequests.forEach(function(r) {
             var item = items.find(function(i) {
                 return i.itemId === r.item.itemId;
             });
             if(item) {
                 item.requests.push(r);
                 item.requests = item.requests.sort(self.requestSort);
-            } else {
-                // problem!
             }
         });
 
-        // trunc newMessages array
-        this.newRequests = [];
         this.timeTotal();
     }.bind(ret);
 
@@ -107,13 +107,6 @@ function(app, observable, event, moment) {
                 item.requests.splice(item.requests.findIndex(function(f) {
                     return f.requestId === toRemove.requestId;
                 }), 1);
-            } else {
-                var oldNew = this.newRequests.find(function(r) {
-                    return r.requestId === toRemove.requestId;
-                });
-                if(oldNew) {
-                    this.newRequests.splice(this.newRequests.indexOf(oldNew), 1);
-                }
             }
         }
         this.timeTotal();
@@ -136,13 +129,7 @@ function(app, observable, event, moment) {
                 item.requests.splice(item.requests.findIndex(function(f) {
                     return f.requestId === updatedRequest.requestId;
                 }), 1, updatedRequest);
-            } else {
-                var oldNew = this.newRequests.find(function(r) {
-                    return r.requestId === updatedRequest.requestId;
-                });
-                if(oldNew) {
-                    this.newRequests.splice(this.newRequests.indexOf(oldNew), 1, updatedRequest);
-                }
+                item.requests = item.requests.sort(this.requestSort);
             }
             this.timeTotal();
         }
