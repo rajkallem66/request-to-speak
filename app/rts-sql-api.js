@@ -94,18 +94,39 @@ function itemRequest(meetingId, item, transaction) {
 }
 
 /**
- * @param {String} meetingId
+ * @param {Object} filter
  * @return {Promise}
  */
-function getMeetings(meetingId) {
+function getMeetings(filter) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
         let meetingQuery = "SELECT meetingId, sireId, meetingName, meetingDate, status FROM Meeting";
 
-        if(meetingId) {
-            logger.debug("Adding for specific meeting");
-            meetingQuery += " WHERE meetingId = @meetingId";
-            request.input("meetingId", meetingId);
+        if(filter) {
+            logger.debug("Adding WHERE");
+            meetingQuery += " WHERE ";
+            let where = "";
+            if(filter.meetingId) {
+                logger.debug("Adding for specific meeting");
+                where += " meetingId = @meetingId";
+                request.input("meetingId", filter.meetingId);
+            }
+            if(filter.status) {
+                logger.debug("Adding for specific status");
+                where += " status = @status";
+                request.input("status", filter.status);
+            }
+            if(filter.meetingDate) {
+                logger.debug("Adding for date range");
+                if(where !== "") {
+                    where += " OR ";
+                }
+                if (filter.meetingDate.gt) {
+                    where += " meetingDate > @meetingDate";
+                    request.input("meetingDate", sql.DateTime, new Date(moment(filter.meetingDate.gt, "MMM Do YYYY").valueOf()));
+                }
+            }
+            meetingQuery += where;
         }
 
         logger.debug("Meeting statement: " + meetingQuery);
@@ -124,7 +145,7 @@ function getMeetings(meetingId) {
                     });
                     meetings.push(meeting);
                 });
-                if(meetingId && meetings.length > 0) {
+                if(filter.meetingId && meetings.length > 0) {
                     fulfill(meetings[0]);
                 } else {
                     fulfill(meetings);
@@ -572,7 +593,7 @@ module.exports = function(cfg, log) {
     logger = log;
 
     return {
-        version: "1.0",
+        version: "1.1",
         dbType: "Microsoft SQL Server",
         getRequest: getRequest,
         getRequests: getRequests,

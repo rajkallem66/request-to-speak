@@ -8,7 +8,7 @@ function(http, router, app, Import, Edit, moment) {
         meetings: [],
         activate: function() {
             var self = this;
-            http.get(app.apiLocation + "meeting").then(function(response) {
+            http.get(app.apiLocation + "meeting", {meetingDate: {gt: this.format(new Date().setDate(new Date().getDate() - 7))}, status: "new"}).then(function(response) {
                 self.selectedMeeting = null;
                 self.meetings = response;
                 var startedMeetings = self.meetings.filter(function(meeting) {

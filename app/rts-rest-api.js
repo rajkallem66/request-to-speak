@@ -231,7 +231,7 @@ router.post("/refreshWall", function(req, res) {
 
 router.get("/meeting", function(req, res) {
     logger.info("Retrieving meetings from database.");
-    rtsDbApi.getMeetings().then(function(data) {
+    rtsDbApi.getMeetings(req.query).then(function(data) {
         res.send(data);
     }, function(err) {
         res.status(500).send(err);
@@ -241,7 +241,7 @@ router.get("/meeting", function(req, res) {
 router.get("/meeting/:meetingId", function(req, res) {
     let meetingId = req.params.meetingId;
     logger.info("Retrieving meeting from database.");
-    rtsDbApi.getMeetings(meetingId).then(function(data) {
+    rtsDbApi.getMeetings({meetingId: meetingId}).then(function(data) {
         res.send(data);
     }, function(err) {
         res.status(500).send(err);
@@ -348,7 +348,7 @@ router.get("/report/:meetingId", function(req, res) {
             }]
         );
         res.setHeader("Content-Type", "application/vnd.ms-excel");
-        res.setHeader("Content-disposition", "attachment;filename=report.xls");
+        res.setHeader("Content-disposition", "attachment;filename=report-" + meetingId + ".xls");
         res.send(report);
     }, function(err) {
         res.status(500).send(err);
