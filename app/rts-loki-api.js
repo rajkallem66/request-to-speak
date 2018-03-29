@@ -180,6 +180,29 @@ function getRequest(requestId) {
 }
 
 /**
+ * Returns a specific request.
+ * @param {String} meetingId
+ * @return {Promise}
+ */
+function getRequests(meetingId) {
+    return new Promise(function(fulfill, reject) {
+        try {
+            let mtg = meetings.where(function(m) {
+                return m.meetingId === meetingId;
+            });
+            if (mtg.length === 1) {
+                return mtg[0].requests;
+            } else {
+                reject("Meeting does not exist.");
+            }
+        } catch(err) {
+            logger.error(err);
+            reject(err);
+        }
+    });
+}
+
+/**
  * Insert new request into database.
  * @param {Request} newRequest
  * @return {Promise}
@@ -345,6 +368,7 @@ module.exports = function(cfg, log) {
         dbType: "LokiJS",
         init: lokiInit,
         getRequest: getRequest,
+        getRequests: getRequests,
         addRequest: addRequest,
         updateRequest: updateRequest,
         deleteRequest: deleteRequest,

@@ -1,0 +1,24 @@
+<div class="container boardInfoWrap">
+    <div class="row">
+        <div class="col-md-12 main meetingDash">
+			<div class="meetingWrap" data-bind="foreach: meetings">	
+				<div class="row">
+					<div class="pull-left col-sm-6 col-md-8 col-xs-6">
+						<span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span>
+					</div>
+					<div data-bind="visible: status !== 'started'">
+						<button class="btn btn-info" data-bind="click: $root.downloadReport">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+							<span class="hidden-xs">Report</span>
+						</button>
+						<button class="btn btn-danger" data-bind="click: $root.deleteMeeting">
+							<i class="fa fa-ban" aria-hidden="true"></i> 
+							<span class="hidden-xs">Delete</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <iframe id="report_frame" style="display:none;"></iframe>
+</div>
