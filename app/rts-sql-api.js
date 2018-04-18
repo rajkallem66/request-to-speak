@@ -123,7 +123,8 @@ function getMeetings(filter) {
                 }
                 if (filter.meetingDate.gt) {
                     where += " meetingDate > @meetingDate";
-                    request.input("meetingDate", sql.DateTime, new Date(moment(filter.meetingDate.gt, "MMM Do YYYY").valueOf()));
+                    request.input("meetingDate", sql.DateTime,
+                        new Date(moment(filter.meetingDate.gt, "MMM Do YYYY").valueOf()));
                 }
             }
             meetingQuery += where;

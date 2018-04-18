@@ -6,18 +6,20 @@ let sql = require("mssql");
 let logger = null;
 let pool = null;
 
+let setupCompleted = function(err) {
+    if(err) {
+        logger.error(err);
+    } else {
+        logger.info("SIRE DB connected.");
+    }
+};
+
 /**
  * initialize SQL connection.
  * @param {config} config
  */
 function setupSql(config) {
-    pool = new sql.ConnectionPool(config, function(err) {
-        if(err) {
-            logger.error(err);
-        } else {
-            logger.info("SIRE DB connected.");
-        }
-    });
+    pool = new sql.ConnectionPool(config, setupCompleted);
     pool.on("error", function(err) {
         logger.error(err);
     });

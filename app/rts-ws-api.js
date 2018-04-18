@@ -62,12 +62,12 @@ function setupPrimus(primus) {
             default:
                 // bad client.
             }
-            logger.info("New connection.", {
+            logger.info(spark.address.ip + " New connection.", {
                 type: spark.query.clientType,
                 identity: spark.id
             });
             spark.on("data", function(message) {
-                logger.info("Message received %s.", message);
+                logger.info(spark.address.ip + " Message received %s.", message);
 
                 if(message == "ping") {
                     primus.write({reply: "pong"});
@@ -126,6 +126,18 @@ function setupPrimus(primus) {
                 }});
             break;
         }
+        logger.info(spark.address.ip + " Connection terminated.", {
+            type: spark.query.clientType,
+            identity: spark.id
+        });
+    });
+
+    primus.on("error", function(spark) {
+        logger.error(spark.address.ip + " A websocket error occured.");
+    });
+
+    primus.on("close", function(spark) {
+        logger.info(spark.address.ip + " Connection closed. May attempt to reconnect.");
     });
 }
 

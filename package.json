@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
+    "callsite": "^1.0.0",
     "config": "^1.25.1",
     "cookie-parser": "^1.4.3",
     "errorhandler": "^1.5.0",
@@ -59,11 +60,11 @@
     "passport-saml": "^0.31.0",
     "path": "^0.12.7",
     "phantomjs-prebuilt": "^2.1.14",
-    "primus": "^7.0.0",
+    "primus": "^7.2.0",
     "serve-favicon": "^2.4.2",
     "solr-client": "^0.6.0",
     "uuid": "^3.0.1",
-    "winston": "^2.3.1",
+    "winston": "^2.4.1",
     "winston-syslog": "^1.2.6",
     "xml2js": "^0.4.19"
   }

@@ -1,27 +1,6 @@
 /* global __dirname, require, process */
-"use strict";
-let winston = require("winston");
 let config = require("config");
-let logTransports = config.get("rts.log.transports");
-let logOptions = {
-    transports: [],
-    levels: config.get("rts.log.levels"),
-    level: config.get("rts.log.level")
-};
-logTransports.forEach(function(t) {
-    switch(t.name) {
-    case "console":
-        logOptions.transports.push(new winston.transports.Console(t.options));
-        break;
-    case "syslog":
-        require("winston-syslog").Syslog;
-        logOptions.transports.push(new winston.transports.Syslog(t.options));
-        break;
-    }
-});
-
-let logger = new winston.Logger(logOptions);
-winston.addColors(config.get("rts.log.colors"));
+let logger = require("./app/logger");
 
 // Sometimes things to awry.
 process.on("uncaughtException", function(err) {
