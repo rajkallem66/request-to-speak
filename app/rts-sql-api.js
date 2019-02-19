@@ -353,7 +353,7 @@ function getRequests(meetingId) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
         let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
-            "official, agency, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
+            "official, agency, offAgenda, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
             "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
             "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId";
 
@@ -385,6 +385,7 @@ function addRequest(newRequest) {
         request.input("official", newRequest.official);
         request.input("agency", newRequest.agency);
         request.input("item", newRequest.item.itemId);
+        request.input("offAgenda", newRequest.offAgenda);
         request.input("subTopic", newRequest.subTopic);
         request.input("stance", newRequest.stance);
         request.input("notes", newRequest.notes);
@@ -420,6 +421,7 @@ function updateRequest(updateRequest) {
         request.input("official", updateRequest.official);
         request.input("agency", updateRequest.agency);
         request.input("item", updateRequest.item.itemId);
+        request.input("offAgenda", updateRequest.offAgenda);
         request.input("subTopic", updateRequest.subTopic);
         request.input("stance", updateRequest.stance);
         request.input("notes", updateRequest.notes);
@@ -498,7 +500,7 @@ function getActiveMeeting() {
                 logger.debug("There is an active meeting: " + meeting.meetingId);
                 meeting.requests = [];
                 let requestQuery = "SELECT meetingId, requestId, dateAdded, firstName, lastName, official, agency, " +
-                    "item, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
+                    "item, offAgenda, subTopic, stance, notes, phone, email, address, timeToSpeak, status, " +
                     "approvedForDisplay FROM Request WHERE meetingId = @meetingId";
                 logger.debug("Statement: " + query);
                 let requestRequest = pool.request();
