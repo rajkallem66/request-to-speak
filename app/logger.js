@@ -52,4 +52,11 @@ logger.debug = function(...args) {
     return oldDebug.apply(this, args);
 };
 
+logger.emerg = function(...args) {
+    var site = stack()[1];
+    args[0] = "[" + (site.getFunctionName() || "anonymous") + ":" + path.basename(site.getFileName()) +
+    ":" + site.getLineNumber() + "] " + args[0];
+    return oldDebug.apply(this, args);
+}
+
 module.exports = logger;
