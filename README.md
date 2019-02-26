@@ -21,6 +21,8 @@ Deployments should be made through a ci/cd tool. The master branch shall be the
 version pushed to production.
 
 ## Contributing
+In order to get started with development on RTS you'll need a few things set up
+first. There are some database connections that must be made.
 Please read CONTRIBUTING.md for details on our code of conduct, and the process
 for submitting pull requests.
 

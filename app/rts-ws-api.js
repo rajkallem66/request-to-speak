@@ -460,12 +460,12 @@ module.exports = function(primus, log) {
 
     return {
         version: "1.0",
-        addRequest: addRequest,
-        updateRequest: updateRequest,
-        deleteRequest: deleteRequest,
-        activateRequest: activateRequest,
-        startMeeting: startMeeting,
-        endActiveMeeting: endActiveMeeting,
-        refreshWall: refreshWall
+        addRequest,
+        updateRequest,
+        deleteRequest,
+        activateRequest,
+        startMeeting,
+        endActiveMeeting,
+        refreshWall
     };
 };
