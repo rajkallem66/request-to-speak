@@ -281,7 +281,7 @@ router.get("/meeting", getMeeting);
 let getMeetingById = function(req, res) {
     let meetingId = req.params.meetingId;
     logger.info(ip(req) + " Retrieving meeting from database.");
-    rtsDbApi.getMeetings({meetingId: meetingId}).then(function(data) {
+    rtsDbApi.getMeetings({meetingId}).then(function(data) {
         res.send(data);
     }, function(err) {
         logger.error(ip(req) + " Error getting meeting from database.", err);
