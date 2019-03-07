@@ -1,72 +1,75 @@
 <div class="container-fluid boardHeader navbar-inverse navbar-fixed-top">
-  <div class="row">
-  	<div class="col-md-12">
-		<div class="col-md-6 col-sm-5 col-xs-6">
-			<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining">0</span><span>mins</span> 
-		</div>
-		<div class="active col-md-3 col-sm-3 col-xs-2 pull-right">
-			<span data-bind="visible: isConnected"><i class="fa fa-circle greenDot" aria-hidden="true"></i><span class="status">Connected</span></span>
-			<span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connected</span></span>
+	<div class="row">
+			<div class="col-md-12">
+				<div class="col-md-3 col-sm-5 col-xs-6">
+						<span>Total Remaining Time: </span><span data-bind="text: totalTimeRemaining">0</span><span>mins</span> 
+				</div>
+				<div class="col-md-3 col-sm-5 col-xs-6 pull-left">
+					<span>Total Remaining Speakers: </span><span data-bind="text: requests.length">0</span>
+				</div>
+				<div class="active col-md-3 col-sm-3 col-xs-2 pull-right">
+						<span data-bind="visible: isConnected"><i class="fa fa-circle greenDot" aria-hidden="true"></i><span class="status">Connected</span></span>
+						<span data-bind="visible: !isConnected"><i class="fa fa-circle redDot" aria-hidden="true"></i> <span class="status">Not Connected</span></span>
+				</div>
 		</div>
 	</div>
-  </div>
 </div>
 
 <div class="container-fluid boardInfoWrap">
-    <div class="row">
-        <div class="col-md-12 main dashboard">
-			<div data-bind="visible: !isMeetingActive">
-				<span>There is currently no active meeting.</span>
-			</div>
-			<div data-bind="foreach: items">
-				<div data-bind="visible: requests.length > 0">
-					<div class="row">
-						<div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
-						<div class="itemName pull-left" data-bind="text: itemName"></div>
-						<div class="pull-right itemTime">Total Speakers: 	
-							<span class="" data-bind="text: requests.length"></span>
+		<div class="row">
+				<div class="col-md-12 main dashboard">
+						<div data-bind="visible: !isMeetingActive">
+								<span>There is currently no active meeting.</span>
 						</div>
-						<div class="pull-right itemTime">Time Remaining: 	
-							<span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
-						</div>
-					</div>
-					<div class="row itemInfoWrap" data-bind="foreach: requests">
-							<div class="itemInfo">
-								<div class="col-md-8 nameNotesWrap">
-									<div class="infoName">
-										<span data-bind="text: firstName"></span>
-										<span data-bind="text: lastName"></span>
-									</div>
-									<div class="agency" data-bind="visible: agency !== ''">
-										<span>Agency: </span><span data-bind="text: agency"></span>
-									</div>
-	<!-- 								<div class="group" data-bind="visible: group !== undefined">
-										<span>Group: </span><span data-bind="text: group"></span>
-									</div>-->
-									<div class="notes" data-bind="visible: notes !== ''">
-										<span>Notes: </span><span data-bind="text: notes"></span>
-									</div>
+						<div data-bind="foreach: items">
+								<div data-bind="visible: requests.length > 0">
+										<div class="row">
+												<div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
+												<!-- <div class="itemName pull-left" data-bind="text: itemName"></div> -->
+												<div class="pull-right itemTime">Speakers: 	
+														<span class="" data-bind="text: requests.length"></span>
+												</div>
+												<div class="pull-right itemTime">Time Remaining: 	
+														<span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
+												</div>
+										</div>
+										<div class="row itemInfoWrap" data-bind="foreach: requests">
+														<div class="itemInfo">
+																<div class="col-md-8 nameNotesWrap">
+																		<div class="infoName">
+																				<span data-bind="text: firstName"></span>
+																				<span data-bind="text: lastName"></span>
+																		</div>
+																		<div class="agency" data-bind="visible: agency !== ''">
+																				<span>Agency: </span><span data-bind="text: agency"></span>
+																		</div>
+		<!-- 								<div class="group" data-bind="visible: group !== undefined">
+																				<span>Group: </span><span data-bind="text: group"></span>
+																		</div>-->
+																		<!-- <div class="notes" data-bind="visible: notes !== ''">
+																				<span>Notes: </span><span data-bind="text: notes"></span>
+																		</div> -->
+																</div>
+																<div class="col-md-4">
+																		<div class="stance" >
+																				<span data-bind="text: stance"></span>
+																		</div>
+																		<!-- <div class="date" >
+																				<span>Submitted:</span> <span data-bind="text: $root.format(dateAdded)"></span>
+																		</div> -->
+																</div>
+																<div class="clearfix"></div>
+														</div>
+														<hr/>
+												</div>
+										</div>
 								</div>
-								<div class="col-md-4">
-									<div class="stance" >
-										<span data-bind="text: stance"></span>
-									</div>
-									<div class="date" >
-										<span>Submitted:</span> <span data-bind="text: $root.format(dateAdded)"></span>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<hr/>
-						</div>
-					</div>
-				</div>
 <!-- 				<div class="row" data-bind="foreach: messages">
-					<div class="col-sm-6 col-md-3">
-						<span href="#" class="thumbnail" data-bind="text: message">
-						</span>
-					</div>
-				</div>
+										<div class="col-sm-6 col-md-3">
+												<span href="#" class="thumbnail" data-bind="text: message">
+												</span>
+										</div>
+								</div>
  -->			</div>
+				</div>
 		</div>
-	</div>
