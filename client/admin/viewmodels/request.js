@@ -14,6 +14,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
             this.connectedKiosks = 0;
             this.connectedAdmins = 0;
             this.connectedBoards = 0;
+            this.connectedChairs = 0;
             this.primus = null;
 
             this.activate = function () {
@@ -177,6 +178,9 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     case "board":
                         this.connectedBoards = message.count;
                         break;
+                    case "chair":
+                        this.connectedChairs = message.count;
+                        break;
                     case "admin":
                         this.connectedAdmins = message.count;
                         break;
@@ -199,6 +203,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 this.connectedAdmins = message.connectedAdmins;
                 this.connectedKiosks = message.connectedKiosks;
                 this.connectedBoards = message.connectedBoards;
+                this.connectedChairs = message.connectedChairs;
             };
             this.meetingMessage = function (message) {
                 if (message.event === "started") {
