@@ -383,6 +383,11 @@ let getReport = function(req, res) {
                 displayName: "Notes",
                 headerStyle: styles.headerDark,
                 width: "20"
+            },
+            dateAdded:{
+                displayName:"Submitted Date",
+                headerStyle:styles.headerDark,
+                width:"10"
             }
         };
 

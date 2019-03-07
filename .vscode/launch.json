@@ -28,6 +28,13 @@
             "webRoot": "${workspaceRoot}/client"
         },
         {
+            "name": "Launch Chair",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/chair.html",
+            "webRoot": "${workspaceRoot}/client"
+        },
+        {
             "name": "Launch Kiosk",
             "type": "chrome",
             "request": "launch",
