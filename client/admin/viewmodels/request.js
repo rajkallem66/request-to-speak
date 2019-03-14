@@ -52,7 +52,8 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 } else {
                     request.status = "approved";
                 }
-                request.offAgenda = request.itemName === "Off Agenda" ? true : false;
+                if (request.offAgenda == null && request.item)
+                    request.offAgenda = request.item.itemName === "Off Agenda";
                 // update with changes.
                 http.put(app.apiLocation + "request", request).then(function () {
                 }, function (err) {
@@ -68,7 +69,8 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     request.status = "display";
                     request.approvedForDisplay = true;
                 }
-                request.offAgenda = request.itemName === "Off Agenda" ? true : false;
+                if (request.offAgenda == null && request.item)
+                    request.offAgenda = request.item.itemName === "Off Agenda";
                 // update with changes.
                 http.put(app.apiLocation + "request", request).then(function () {
                 }, function (err) {
@@ -248,7 +250,8 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 this.requests.forEach(function (r) {
                     if (r.status !== "approved" && r.status !== "display" && r.status !== "active") {
                         r.status = "approved";
-                        r.offAgenda = r.itemName === "Off Agenda" ? true : false;
+                        if (r.offAgenda == null && r.item)
+                            r.offAgenda = r.item.itemName === "Off Agenda";
                         http.put(app.apiLocation + "request", r).then(function () {
                         }, function (err) {
                             app.showMessage("Unable to update changes. Please refresh.");
