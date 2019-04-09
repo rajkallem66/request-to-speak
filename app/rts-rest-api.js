@@ -146,7 +146,7 @@ let deleteRequest = function(req, res) {
 
     logger.trace("Delete request with DbApi");
     rtsDbApi.deleteRequest(requestId).then(function() {
-        logger.trace("Notify WS clients of new request");
+        logger.trace("Notify WS clients of deleted request");
         rtsWsApi.deleteRequest(requestId).then(function() {
             logger.info(ip(req) + " Request deleted: " + requestId);
             res.status(204).end();

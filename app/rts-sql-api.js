@@ -355,7 +355,8 @@ function getRequests(meetingId) {
         let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
             "case when official = 1 then 'Yes' else 'No' End as official, agency, offAgenda, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
             "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
-            "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId";
+            "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId " +
+            "ORDER BY Item.itemId";
 
         logger.debug("Request statement: " + requestQuery);
         request.input("meetingId", meetingId);
