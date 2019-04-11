@@ -139,12 +139,12 @@ define(["durandal/app", "plugins/observable", "eventHandler", "moment", "plugins
                 });
                 if (item) {
                     var itemRequest = item.requests.find(function (r) {
-                        return r.requestId === requestId;
+                        return r.requestId == requestId;
                     });
                 }
                 if (itemRequest) {
                     item.requests.splice(item.requests.findIndex(function (f) {
-                        return f.requestId === toRemove.requestId;
+                        return f.requestId == toRemove.requestId;
                     }), 1);
                 }
             }
