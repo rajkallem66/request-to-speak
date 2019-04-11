@@ -332,7 +332,8 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     i.timeRemaining = 0;
                     if (i.requests) {
                         i.requests.forEach(function (r) {
-                            i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                            if (r.status != 'new')// Change to show only approved requests time 
+                                i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
                         });
                     }
                 });

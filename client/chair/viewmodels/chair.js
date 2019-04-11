@@ -139,12 +139,12 @@ define(["durandal/app", "plugins/observable", "eventHandler", "moment", "plugins
                 });
                 if (item) {
                     var itemRequest = item.requests.find(function (r) {
-                        return r.requestId === requestId;
+                        return r.requestId == requestId;
                     });
                 }
                 if (itemRequest) {
                     item.requests.splice(item.requests.findIndex(function (f) {
-                        return f.requestId === toRemove.requestId;
+                        return f.requestId == toRemove.requestId;
                     }), 1);
                 }
             }
@@ -180,7 +180,8 @@ define(["durandal/app", "plugins/observable", "eventHandler", "moment", "plugins
                 i.timeRemaining = 0;
                 if (i.requests) {
                     i.requests.forEach(function (r) {
-                        i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                        if (r.status != 'new')// Change to show only approved requests time 
+                            i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
                     });
                 }
             });
