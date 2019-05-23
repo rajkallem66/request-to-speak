@@ -146,7 +146,7 @@ let deleteRequest = function(req, res) {
 
     logger.trace("Delete request with DbApi");
     rtsDbApi.deleteRequest(requestId).then(function() {
-        logger.trace("Notify WS clients of new request");
+        logger.trace("Notify WS clients of deleted request");
         rtsWsApi.deleteRequest(requestId).then(function() {
             logger.info(ip(req) + " Request deleted: " + requestId);
             res.status(204).end();
@@ -383,6 +383,11 @@ let getReport = function(req, res) {
                 displayName: "Notes",
                 headerStyle: styles.headerDark,
                 width: "20"
+            },
+            dateAdded:{
+                displayName:"Submitted Date",
+                headerStyle:styles.headerDark,
+                width:"10"
             }
         };
 

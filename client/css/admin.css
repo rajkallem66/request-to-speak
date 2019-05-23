@@ -210,6 +210,10 @@ font-weight:bold;
 		display: block;
 	}
 
+	.reportbutton{
+		padding-right: 125px;
+	}
+
 	label.activeChk {
 	  display: block;
 	  position: relative;

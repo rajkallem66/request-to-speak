@@ -162,7 +162,7 @@ function(http, app, observable, Items, event, $) {
     }.bind(ret);
 
     ret.selectItem = function(data) {
-        this.request.offAgenda = data.itemName === "Off Agenda" ? true : false;
+        this.request.offAgenda = data.itemName === "Off Agenda";
         this.request.item = data;
         this.request.timeToSpeak = data.timeToSpeak;
         this.itemSelector = false;

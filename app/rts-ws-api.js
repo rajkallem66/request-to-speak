@@ -7,124 +7,157 @@ let wallSpark = null;
 let adminSparks = [];
 let kioskSparks = [];
 let boardSparks = [];
+let chairSparks = [];
 
 /**
  * Function to attach to Primus events
  * @param {Primus} primus - The primus instance used for this app.
  */
 function setupPrimus(primus) {
-    primus.on("connection", function(spark) {
-        if(spark.query.clientType) {
-            switch(spark.query.clientType) {
-            case "kiosk":
-                kioskSparks.push(spark);
-                notify("admins", {
-                    "messageType": "device",
-                    "message": {
-                        "deviceType": "kiosk",
-                        "event": "connected",
-                        "count": kioskSparks.length
-                    }});
-                initializeKiosk(spark);
-                break;
-            case "wall":
-                wallSpark = spark;
-                notify("admins", {
-                    "messageType": "device",
-                    "message": {
-                        "deviceType": "wall",
-                        "event": "connected"
-                    }});
-                initializeWall(spark);
-                break;
-            case "board":
-                boardSparks.push(spark);
-                notify("admins", {
-                    "messageType": "device",
-                    "message": {
-                        "deviceType": "board",
-                        "event": "connected",
-                        "count": boardSparks.length
-                    }});
-                initializeBoard(spark);
-                break;
-            case "admin":
-                adminSparks.push(spark);
-                notify("admins", {
-                    "messageType": "device",
-                    "message": {
-                        "deviceType": "admin",
-                        "event": "connected",
-                        "count": adminSparks.length
-                    }});
-                initializeAdmin(spark);
-                break;
-            default:
+    primus.on("connection", function (spark) {
+        if (spark.query.clientType) {
+            switch (spark.query.clientType) {
+                case "kiosk":
+                    kioskSparks.push(spark);
+                    notify("admins", {
+                        "messageType": "device",
+                        "message": {
+                            "deviceType": "kiosk",
+                            "event": "connected",
+                            "count": kioskSparks.length
+                        }
+                    });
+                    initializeKiosk(spark);
+                    break;
+                case "wall":
+                    wallSpark = spark;
+                    notify("admins", {
+                        "messageType": "device",
+                        "message": {
+                            "deviceType": "wall",
+                            "event": "connected"
+                        }
+                    });
+                    initializeWall(spark);
+                    break;
+                case "board":
+                    boardSparks.push(spark);
+                    notify("admins", {
+                        "messageType": "device",
+                        "message": {
+                            "deviceType": "board",
+                            "event": "connected",
+                            "count": boardSparks.length
+                        }
+                    });
+                    initializeBoard(spark);
+                    break;
+                case "chair":
+                    chairSparks.push(spark);
+                    notify("admins", {
+                        "messageType": "device",
+                        "message": {
+                            "deviceType": "chair",
+                            "event": "connected",
+                            "count": chairSparks.length
+                        }
+                    });
+                    initializeChair(spark);
+                    break;
+                case "admin":
+                    adminSparks.push(spark);
+                    notify("admins", {
+                        "messageType": "device",
+                        "message": {
+                            "deviceType": "admin",
+                            "event": "connected",
+                            "count": adminSparks.length
+                        }
+                    });
+                    initializeAdmin(spark);
+                    break;
+                default:
                 // bad client.
             }
             logger.info(spark.address.ip + " New connection.", {
                 type: spark.query.clientType,
                 identity: spark.id
             });
-            spark.on("data", function(message) {
+            spark.on("data", function (message) {
                 logger.info(spark.address.ip + " Message received %s.", message);
 
-                if(message == "ping") {
-                    primus.write({reply: "pong"});
+                if (message == "ping") {
+                    primus.write({ reply: "pong" });
                 }
             });
-            spark.on("heartbeat", function() {
+            spark.on("heartbeat", function () {
                 logger.trace("Hearbeat.");
             });
         }
     });
 
-    primus.on("disconnection", function(spark) {
-        switch(spark.query.clientType) {
-        case "wall":
-            if(spark === wallSpark) {
-                wallSpark = null;
-                notify("admins", {"messageType": "device", "message": {"deviceType": "wall", "event": "disconnected"}});
-            } else {
-                // wall out of sync!!!
-            }
-            break;
-        case "admin":
-            adminSparks = adminSparks.filter(function(adminSpark) {
-                return adminSpark.id !== spark.id;
-            });
-            notify("admins", {
-                "messageType": "device",
-                "message": {
-                    "deviceType": "admin",
-                    "event": "disconnected",
-                    "count": adminSparks.length
-                }});
-            break;
-        case "kiosk":
-            kioskSparks = kioskSparks.filter(function(kioskSpark) {
-                return kioskSpark.id !== spark.id;
-            });
-            notify("admins", {
-                "messageType": "device",
-                "message": {
-                    "deviceType": "kiosk",
-                    "event": "disconnected",
-                    "count": kioskSparks.length
-                }});
-            break;
-        case "board":
-            boardSparks = boardSparks.filter(function(boardSpark) {
-                return boardSpark.id !== spark.id;
-            });
-            notify("admins", {
-                "messageType": "device",
-                "message": {
-                    "deviceType": "board",
-                    "event": "disconnected",
-                    "count": boardSparks.length
-                }});
-            break;
+    primus.on("disconnection", function (spark) {
+        switch (spark.query.clientType) {
+            case "wall":
+                if (spark === wallSpark) {
+                    wallSpark = null;
+                    notify("admins", { "messageType": "device", "message": { "deviceType": "wall", "event": "disconnected" } });
+                } else {
+                    // wall out of sync!!!
+                }
+                break;
+            case "admin":
+                adminSparks = adminSparks.filter(function (adminSpark) {
+                    return adminSpark.id !== spark.id;
+                });
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "admin",
+                        "event": "disconnected",
+                        "count": adminSparks.length
+                    }
+                });
+                break;
+            case "kiosk":
+                kioskSparks = kioskSparks.filter(function (kioskSpark) {
+                    return kioskSpark.id !== spark.id;
+                });
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "kiosk",
+                        "event": "disconnected",
+                        "count": kioskSparks.length
+                    }
+                });
+                break;
+            case "board":
+                boardSparks = boardSparks.filter(function (boardSpark) {
+                    return boardSpark.id !== spark.id;
+                });
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "board",
+                        "event": "disconnected",
+                        "count": boardSparks.length
+                    }
+                });
+                break;
+            case "chair":
+                chairSparks = chairSparks.filter(function (chairSpark) {
+                    return chairSpark.id !== spark.id;
+                });
+                notify("admins", {
+                    "messageType": "device",
+                    "message": {
+                        "deviceType": "chair",
+                        "event": "disconnected",
+                        "count": chairSparks.length
+                    }
+                });
+                break;
         }
         logger.info(spark.address.ip + " Connection terminated.", {
             type: spark.query.clientType,
@@ -132,11 +165,11 @@ function setupPrimus(primus) {
         });
     });
 
-    primus.on("error", function(spark) {
+    primus.on("error", function (spark) {
         logger.error(spark.address.ip + " A websocket error occured.");
     });
 
-    primus.on("close", function(spark) {
+    primus.on("close", function (spark) {
         logger.info(spark.address.ip + " Connection closed. May attempt to reconnect.");
     });
 }
@@ -148,35 +181,40 @@ function setupPrimus(primus) {
  */
 function notify(group, data) {
     let sparks = [];
-    switch(group) {
-    case "wall":
-        if(wallSpark) {
-            sparks.push(wallSpark);
-        }
-        break;
-    case "kiosks" :
-        sparks = kioskSparks;
-        break;
-    case "admins":
-        sparks = adminSparks;
-        break;
-    case "boards":
-        sparks = boardSparks;
-        break;
-    case "all":
-        sparks.push.apply(sparks, kioskSparks);
-        sparks.push.apply(sparks, adminSparks);
-        sparks.push.apply(sparks, boardSparks);
-        if(wallSpark) {
-            sparks.push(wallSpark);
-        }
-        break;
-    case "watchers":
-        sparks.push.apply(sparks, adminSparks);
-        sparks.push.apply(sparks, boardSparks);
-        break;
+    switch (group) {
+        case "wall":
+            if (wallSpark) {
+                sparks.push(wallSpark);
+            }
+            break;
+        case "kiosks":
+            sparks = kioskSparks;
+            break;
+        case "admins":
+            sparks = adminSparks;
+            break;
+        case "boards":
+            sparks = boardSparks;
+            break;
+        case "chairs":
+            sparks = chairSparks;
+            break;
+        case "all":
+            sparks.push.apply(sparks, kioskSparks);
+            sparks.push.apply(sparks, adminSparks);
+            sparks.push.apply(sparks, boardSparks);
+            sparks.push.apply(sparks, chairSparks);
+            if (wallSpark) {
+                sparks.push(wallSpark);
+            }
+            break;
+        case "watchers":
+            sparks.push.apply(sparks, adminSparks);
+            sparks.push.apply(sparks, boardSparks);
+            sparks.push.apply(sparks, chairSparks);
+            break;
     }
-    sparks.forEach(function(spark) {
+    sparks.forEach(function (spark) {
         spark.write(data);
     });
 }
@@ -195,6 +233,7 @@ function initializeAdmin(spark) {
             "connectedKiosks": kioskSparks.length,
             "connectedAdmins": adminSparks.length,
             "connectedBoards": boardSparks.length,
+            "connectedChairs": chairSparks.length,
             "wallConnected": (wallSpark !== null)
         }
     });
@@ -245,6 +284,21 @@ function initializeBoard(spark) {
     });
 }
 
+
+/**
+ * @param {Spark} spark
+ * initialize chair state.
+ */
+function initializeChair(spark) {
+    logger.debug("initializing Chair.");
+
+    spark.write({
+        "messageType": "initialize",
+        "message": {
+            "meeting": meeting
+        }
+    });
+}
 // Public functions
 
 /**
@@ -255,7 +309,7 @@ function initializeBoard(spark) {
 function addRequest(request) {
     logger.debug("Adding request.");
 
-    return new Promise(function(fulfill, reject) {
+    return new Promise(function (fulfill, reject) {
         meeting.requests.push(request);
         notify("watchers", {
             "messageType": "request",
@@ -276,11 +330,11 @@ function addRequest(request) {
 function updateRequest(request) {
     logger.debug("Updating request.");
 
-    return new Promise(function(fulfill, reject) {
-        let old = meeting.requests.find(function(r) {
+    return new Promise(function (fulfill, reject) {
+        let old = meeting.requests.find(function (r) {
             return r.requestId == request.requestId;
         });
-        if(old) {
+        if (old) {
             meeting.requests.splice(meeting.requests.indexOf(old), 1, request);
             notify("watchers", {
                 "messageType": "request",
@@ -290,10 +344,10 @@ function updateRequest(request) {
                 }
             });
         }
-        let oldDisplay = displayRequests.find(function(r) {
+        let oldDisplay = displayRequests.find(function (r) {
             return r.requestId === request.requestId;
         });
-        if(oldDisplay) {
+        if (oldDisplay) {
             displayRequests.splice(displayRequests.indexOf(oldDisplay), 1, request);
             notify("wall", {
                 "messageType": "refresh",
@@ -315,12 +369,12 @@ function updateRequest(request) {
 function deleteRequest(requestId) {
     logger.debug("Delete request.");
 
-    return new Promise(function(fulfill, reject) {
+    return new Promise(function (fulfill, reject) {
         var rId = requestId;
-        let old = meeting.requests.find(function(r) {
+        let old = meeting.requests.find(function (r) {
             return (r.requestId == rId);
         });
-        if(old) {
+        if (old) {
             meeting.requests.splice(meeting.requests.indexOf(old), 1);
             notify("watchers", {
                 "messageType": "request",
@@ -331,10 +385,10 @@ function deleteRequest(requestId) {
             });
         }
 
-        let oldDisplay = displayRequests.find(function(r) {
+        let oldDisplay = displayRequests.find(function (r) {
             return (r.requestId == rId);
         });
-        if(oldDisplay) {
+        if (oldDisplay) {
             displayRequests.splice(displayRequests.indexOf(oldDisplay), 1);
             notify("wall", {
                 "messageType": "request",
@@ -356,24 +410,33 @@ function deleteRequest(requestId) {
 function activateRequest(request) {
     logger.debug("Activating request.");
 
-    return new Promise(function(fulfill, reject) {
-        meeting.requests.splice(meeting.requests.findIndex(function(r) {
+    return new Promise(function (fulfill, reject) {
+        meeting.requests.splice(meeting.requests.findIndex(function (r) {
             return r.requestId == request.requestId;
         }), 1, request);
 
         // If displayRequests includes then splice. otherwise push
-        let oldDisplay = displayRequests.find(function(r) {
+        let oldDisplay = displayRequests.find(function (r) {
             return r.requestId == request.requestId;
         });
 
-        if(oldDisplay) {
+        if (oldDisplay) {
             displayRequests.splice(displayRequests.indexOf(oldDisplay), 1, request);
 
-            notify("wall", {
+            notify("all", {
                 "messageType": "refresh",
                 "message": {
                     "meeting": meeting,
                     "requests": displayRequests
+                }
+            });
+
+
+            notify("watchers", {
+                "messageType": "request",
+                "message": {
+                    "event": "update",
+                    "request": request
                 }
             });
         }
@@ -389,12 +452,12 @@ function activateRequest(request) {
 function startMeeting(newMeeting) {
     logger.debug("Starting meeting.");
 
-    return new Promise(function(fulfill, reject) {
+    return new Promise(function (fulfill, reject) {
         meeting = Object.assign({}, newMeeting);
 
         // This API keeps track of active meeting and active requests.
         // We need to remove previous requests that were deleted or removed.
-        meeting.requests = meeting.requests.filter(function(r) {
+        meeting.requests = meeting.requests.filter(function (r) {
             return (r.status !== "removed" && r.status != "deleted");
         });
 
@@ -416,7 +479,7 @@ function startMeeting(newMeeting) {
 function endActiveMeeting() {
     logger.debug("Ending active meeting.");
 
-    return new Promise(function(fulfill, reject) {
+    return new Promise(function (fulfill, reject) {
         meeting = {};
 
         notify("all", {
@@ -435,8 +498,8 @@ function endActiveMeeting() {
  */
 function refreshWall() {
     logger.debug("Refreshing wall.");
-    return new Promise(function(fulfill, reject) {
-        displayRequests = meeting.requests.filter(function(r) {
+    return new Promise(function (fulfill, reject) {
+        displayRequests = meeting.requests.filter(function (r) {
             return (r.status === "display" || r.status === "active");
         });
 
@@ -453,7 +516,7 @@ function refreshWall() {
     });
 }
 
-module.exports = function(primus, log) {
+module.exports = function (primus, log) {
     logger = log;
 
     setupPrimus(primus);

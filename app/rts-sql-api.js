@@ -352,10 +352,11 @@ function getRequest(requestId) {
 function getRequests(meetingId) {
     return new Promise(function(fulfill, reject) {
         let request = pool.request();
-        let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
-            "official, agency, offAgenda, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
-            "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
-            "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId";
+            let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
+                "case when official = 1 then 'Yes' else 'No' End as official, agency, offAgenda, subTopic, stance, notes, phone, email, address, Request.timeToSpeak, " +
+                "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
+                "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId " +
+                "ORDER BY Item.itemOrder asc, official desc,  Request.dateAdded asc";
 
         logger.debug("Request statement: " + requestQuery);
         request.input("meetingId", meetingId);
