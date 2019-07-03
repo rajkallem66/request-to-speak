@@ -259,6 +259,25 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     }
                 });
             };
+            this.displayAll = function(){
+                this.requests.forEach(function(request){
+                    if (request.status === "display" || request.status === "active") {
+                        request.status = "approved";
+                        request.status = "display";
+                        request.approvedForDisplay = false;
+                    } else {
+                        request.status = "display";
+                        request.approvedForDisplay = true;
+                    }
+                    if (request.offAgenda == null && request.item)
+                        request.offAgenda = request.item.itemName === "Off Agenda";
+                    // update with changes.
+                    http.put(app.apiLocation + "request", request).then(function () {
+                    }, function (err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                })
+            };
 
             // List management
             this.addToList = function (addList) {
