@@ -24,7 +24,9 @@
 						<div data-bind="foreach: items">
 								<div data-bind="visible: requests.length > 0">
 										<div class="row">
-												<div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
+												<div class="itemOrder pull-left">Item: 
+													<span data-bind="text: itemOrder"></span>
+												</div>
 												<!-- <div class="itemName pull-left" data-bind="text: itemName"></div> -->
 												<div class="pull-right itemTime">Speakers: 	
 														<span class="" data-bind="text: requests.length"></span>

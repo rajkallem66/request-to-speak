@@ -349,6 +349,11 @@ let getReport = function(req, res) {
                 headerStyle: styles.headerDark,
                 width: "10"
             },
+            concluded: {
+                displayName: "Concluded",
+                headerStyle: styles.headerDark,
+                width: "10"
+            },
             official: {
                 displayName: "Official",
                 headerStyle: styles.headerDark,
