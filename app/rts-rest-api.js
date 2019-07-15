@@ -268,6 +268,7 @@ router.post("/refreshWall", refreshWall);
 let getMeeting = function(req, res) {
     logger.info(ip(req) + " Retrieving meetings from database.");
     rtsDbApi.getMeetings(req.query).then(function(data) {
+        logger.debug("Result data" , data);
         logger.info(ip(req) + " Meetings retrieved successfully.");
         res.send(data);
     }, function(err) {
@@ -305,6 +306,22 @@ let postItem = function(req, res) {
     });
 };
 router.post("/item", postItem);
+
+// Post Sub Item
+let postSubItem = function(req, res) {
+    let item = req.body;
+    logger.info(ip(req) + " Adding sub item.");
+    logger.debug(ip(req) + " Adding sub item: ", item);
+    rtsDbApi.addSubItem(item).then(function(id) {
+        res.status(200).send({
+            subItemId: id
+        });
+    }, function(err) {
+        logger(ip() + " Error adding sub item.", err);
+        res.status(500).send(err);
+    });
+};
+router.post("/subitem", postSubItem);
 
 // Get Report
 let getReport = function(req, res) {

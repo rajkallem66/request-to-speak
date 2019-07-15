@@ -1,20 +1,22 @@
 <div class="container boardInfoWrap">
-    <div class="row">
-        <div class="col-md-12 main dashboard">
-            <div class="row">
-				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2" data-bind="css: { 'notice-success': isMeetingActive === true, 'notice-danger': isMeetingActive === false }">
+	<div class="row">
+		<div class="col-md-12 main dashboard">
+			<div class="row">
+				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2"
+					data-bind="css: { 'notice-success': isMeetingActive === true, 'notice-danger': isMeetingActive === false }">
 					<div>Meeting</div>
 				</div>
-				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2" data-bind="css: { 'notice-success': wallConnected === true, 'notice-danger': wallConnected === false }">
+				<div class="notice pull-left col-xs-6 col-sm-3 col-md-2"
+					data-bind="css: { 'notice-success': wallConnected === true, 'notice-danger': wallConnected === false }">
 					<div>Display Wall</div>
 				</div>
-				<div class="notice notice-info pull-left col-xs-6 col-sm-3 col-md-2">				
+				<div class="notice notice-info pull-left col-xs-6 col-sm-3 col-md-2">
 					<div>Kiosks: <span data-bind="text: connectedKiosks"></span></div>
 				</div>
 				<div class="notice notice-info pull-left col-xs-6 col-sm-3 col-md-2">
 					<div>Admins: <span data-bind="text: connectedAdmins"></span></div>
 				</div>
-				
+
 				<div class="notice notice-info pull-left col-xs-6 col-sm-3 col-md-2">
 					<div>Board Views: <span data-bind="text: connectedBoards"></span></div>
 				</div>
@@ -23,8 +25,8 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-            
-			<div data-bind="visible: isMeetingActive">    
+
+			<div data-bind="visible: isMeetingActive">
 				<div class="pull-right endMeeting">
 					<button class="btn btn-info" data-bind="click: refreshWall">
 						<i class="fa fa-refresh"></i>
@@ -38,24 +40,28 @@
 				<div data-bind="visible: isMeetingActive, with: meeting">
 					<div class="row meetingName">
 						<small>CURRENT MEETING:</small>
-						<h3><span data-bind="text: meetingName"></span><span> - </span><span data-bind="text: $root.format(meetingDate)"></span></h3>
+						<h3><span data-bind="text: meetingName"></span><span> - </span><span
+								data-bind="text: $root.format(meetingDate)"></span></h3>
 					</div>
 					<div class="row ">
 						<div class="col-xs-3">
 							<div class="form-inline">
 								<label for="exampleSelect1">Sort</label>
-								<select data-bind="options: $root.sorts, value: $root.selectedSort" class="form-control" id="exampleSelect1">
+								<select data-bind="options: $root.sorts, value: $root.selectedSort" class="form-control"
+									id="exampleSelect1">
 								</select>
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="pull-right">
-								<span><span>Time Remaining: </span><span data-bind="text: $root.totalTimeRemaining"></span></span>
+								<span><span>Time Remaining: </span><span
+										data-bind="text: $root.totalTimeRemaining"></span></span>
 							</div>
 						</div>
 						<div class="col-xs-2">
 							<div class="pull-right">
-								<span><span>Total Requests: </span><span data-bind="text: requests.length"></span></span>
+								<span><span>Total Requests: </span><span
+										data-bind="text: requests.length"></span></span>
 							</div>
 						</div>
 						<div class="col-xs-2">
@@ -87,14 +93,14 @@
 									<span data-bind="text: requests.length"></span>
 								</div>
 								<div class="col-md-2">
-										<span>Speaker Time: </span>
-										<span data-bind="text: timeRemaining"></span>
+									<span>Speaker Time: </span>
+									<span data-bind="text: timeRemaining"></span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-8">
 									<span data-bind="text: itemName" class="itemNameText">
-								</div>		
+								</div>
 							</div>
 							<div class="adminNamesWrap" data-bind="foreach: requests">
 								<div class="row">
@@ -109,10 +115,11 @@
 										<div data-bind="visible: official">
 											<span data-bind="text: agency"></span>
 										</div>
-<!-- 										<div>
-											<span data-bind="text: item.itemName"></span>
-										</div>
- -->										<div data-bind="visible: subTopic">
+										<!-- 										<div>
+													<span data-bind="text: item.itemName"></span>
+												</div>
+		 -->
+										<div data-bind="visible: subTopic">
 											<span data-bind="text: subTopic"></span>
 										</div>
 										<div data-bind="visible: notes">
@@ -122,33 +129,41 @@
 									<div class="col-xs-3 col-sm-3 col-md-5 btns">
 										<div class="col-md-3">
 											<button class="btn btn-primary" data-bind="click: $root.editRequest">
-												<i class="fa fa-pencil"></i> 
+												<i class="fa fa-pencil"></i>
 												<span class="hidden-xs">Edit</span>
 											</button>
 										</div>
 										<div class="col-md-3" data-bind="visible: status !== 'active'">
-											<button class="btn btn-danger" data-bind="click: function() { $root.deleteRequest($data); }">
+											<button class="btn btn-danger"
+												data-bind="click: function() { $root.deleteRequest($data); }">
 												<i class="fa fa-trash"></i>
 												<span class="hidden-xs">Delete</span>
 											</button>
 										</div>
 										<div class="col-md-3" data-bind="visible: status === 'active'">
-											<button class="btn btn-danger" data-bind="click: function() { $root.removeRequest($data); }">
+											<button class="btn btn-danger"
+												data-bind="click: function() { $root.removeRequest($data); }">
 												<i class="fa fa-minus"></i>
 												<span class="hidden-xs">Concluded</span>
 											</button>
 										</div>
 										<div class="col-md-3 col-xs-5">
-											<label data-toggle="tooltip" data-placement="top" title="ACTIVE" class="activeChk">
-											<input type="checkbox" data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest"/>
-											<i></i>
-											</label>
-											<label ata-toggle="tooltip" data-placement="top" title="DISPLAY" class="displayChk">
-												<input type="checkbox" data-bind="enable: status !== 'active', checked: (status === 'display' || status === 'active'), click: $root.displayRequest"/>
+											<label data-toggle="tooltip" data-placement="top" title="ACTIVE"
+												class="activeChk">
+												<input type="checkbox"
+													data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest" />
 												<i></i>
-											</label>	
- 											<label ata-toggle="tooltip" data-placement="top" title="APPROVED" class="approvedChk">
-												<input type="checkbox" data-bind="enable: (status !== 'active' && status !== 'display'), checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest"/>
+											</label>
+											<label ata-toggle="tooltip" data-placement="top" title="DISPLAY"
+												class="displayChk">
+												<input type="checkbox"
+													data-bind="enable: status !== 'active', checked: (status === 'display' || status === 'active'), click: $root.displayRequest" />
+												<i></i>
+											</label>
+											<label ata-toggle="tooltip" data-placement="top" title="APPROVED"
+												class="approvedChk">
+												<input type="checkbox"
+													data-bind="enable: (status !== 'active' && status !== 'display'), checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest" />
 												<i></i>
 											</label>
 										</div>
@@ -156,10 +171,127 @@
 								</div>
 							</div>
 						</div>
+
+
+
+						<div data-bind="foreach: subItems">
+							<div class="adminItemsWrap" data-bind="visible: requests.length > 0">
+									<div class="row"> 
+											<div class="col-md-1">
+													<span>Item: </span>
+													<span data-bind="text: $parent.itemOrder">
+												</div>
+												<div class="col-md-7">
+														<span>Sub Item: </span>
+														<span data-bind="text: subItemOrder">
+													</div>
+													<div class="col-md-2">
+															<span>Requests: </span>
+															<span data-bind="text: requests.length"></span>
+														</div>
+														<div class="col-md-2">
+															<span>Speaker Time: </span>
+															<span data-bind="text: timeRemaining"></span>
+														</div>
+									</div>
+								<!-- <div class="row"> 
+										<div class="col-md-8">
+												<span data-bind="text: $parent.itemName" class="itemNameText">
+											</div>
+								</div> -->
+							
+								<div class="row">
+									<div class="col-md-8">
+										<span data-bind="text: subItemName" class="itemNameText">
+									</div>
+								</div>
+								<div class="adminNamesWrap" data-bind="foreach: requests">
+									<div class="row">
+										<div class="pull-left col-xs-9 col-sm-9 col-md-7">
+											<div>
+												<span data-bind="text: firstName"></span>
+												<span data-bind="text: lastName"></span>
+												|
+												<small class="time" data-bind="text: stance"></small>
+												<small class="time"
+													data-bind="text: $root.formatTime(dateAdded)"></small>
+											</div>
+											<div data-bind="visible: official">
+												<span data-bind="text: agency"></span>
+											</div>
+											<!-- 										<div>
+												<span data-bind="text: item.itemName"></span>
+											</div>
+	 -->
+											<div data-bind="visible: subTopic">
+												<span data-bind="text: subTopic"></span>
+											</div>
+											<div data-bind="visible: notes">
+												<span data-bind="text: notes" class="notesText"></span>
+											</div>
+										</div>
+										<div class="col-xs-3 col-sm-3 col-md-5 btns">
+											<div class="col-md-3">
+												<button class="btn btn-primary" data-bind="click: $root.editRequest">
+													<i class="fa fa-pencil"></i>
+													<span class="hidden-xs">Edit</span>
+												</button>
+											</div>
+											<div class="col-md-3" data-bind="visible: status !== 'active'">
+												<button class="btn btn-danger"
+													data-bind="click: function() { $root.deleteRequest($data); }">
+													<i class="fa fa-trash"></i>
+													<span class="hidden-xs">Delete</span>
+												</button>
+											</div>
+											<div class="col-md-3" data-bind="visible: status === 'active'">
+												<button class="btn btn-danger"
+													data-bind="click: function() { $root.removeRequest($data); }">
+													<i class="fa fa-minus"></i>
+													<span class="hidden-xs">Concluded</span>
+												</button>
+											</div>
+											<div class="col-md-3 col-xs-5">
+												<label data-toggle="tooltip" data-placement="top" title="ACTIVE"
+													class="activeChk">
+													<input type="checkbox"
+														data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest" />
+													<i></i>
+												</label>
+												<label ata-toggle="tooltip" data-placement="top" title="DISPLAY"
+													class="displayChk">
+													<input type="checkbox"
+														data-bind="enable: status !== 'active', checked: (status === 'display' || status === 'active'), click: $root.displayRequest" />
+													<i></i>
+												</label>
+												<label ata-toggle="tooltip" data-placement="top" title="APPROVED"
+													class="approvedChk">
+													<input type="checkbox"
+														data-bind="enable: (status !== 'active' && status !== 'display'), checked: (status === 'approved' || status === 'display' || status === 'active'), click: $root.approveRequest" />
+													<i></i>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+
+
+
+
+
+
+
+
+
+
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="row" data-bind="foreach: messages">
+			<!-- 			<div class="row" data-bind="foreach: messages">
 				<div class="col-sm-6 col-md-3">
 					<span href="#" class="thumbnail" data-bind="text: message">
 					</span>

@@ -1,6 +1,6 @@
 <div class="modal fade meetingDialog editMeetingDialog">
     <div role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 1000px !important">
             <div class="modal-header">
                 <h5 class="modal-title">Edit Meeting Configuration</h5>
             </div>
@@ -37,10 +37,10 @@
                                 <label class="col-sm-2 col-form-label">
                                     <div>Item Name</div>
                                 </label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-4">
                                     <input data-bind="textInput: itemName" type="text"></input>
                                 </div>
-                                <label class="col-sm-3 col-form-label">
+                                <label class="col-sm-2 col-form-label">
                                     <div>Time to Speak</div>
                                 </label>
                                 <div class="col-sm-1">
@@ -51,8 +51,34 @@
                                         <i class="fa fa-ban" aria-hidden="true"></i> 
                                     </button>
                                 </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" data-bind="click: $root.addSubItem">Add Sub Item</button>
+                                </div>
                             </div>
-                           
+                            <div data-bind="foreach: $data.subItems">
+                                    <div class="row">
+                                            <div class="col-sm-1">
+                                                </div>
+                                            <label class="col-sm-2 col-form-label">
+                                                <div>Sub Item Name</div>
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input data-bind="textInput: subItemName" type="text"></input>
+                                            </div>
+                                            <label class="col-sm-2 col-form-label">
+                                                <div>Time to Speak</div>
+                                            </label>
+                                            <div class="col-sm-1">
+                                                <input data-bind="textInput: timeToSpeak" type="text"></input>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button class="btn btn-danger"  data-bind="click: $root.deleteSubItem">
+                                                    <i class="fa fa-ban" aria-hidden="true"></i> 
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                </div>
                         </div>
                     </div>
                 </div>
