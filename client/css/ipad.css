@@ -1054,6 +1054,14 @@ input[type=text]::-ms-clear {
 margin: 10px;
 }
 
+.display-none{
+  display : none;
+}
+
+.padding-left-40{
+  padding-left:40px !important;
+}
+
 .agendaItems div.itemSelection .itemName:hover{
 	cursor:pointer;
 	transition: background .3s;

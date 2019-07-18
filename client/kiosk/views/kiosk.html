@@ -41,7 +41,7 @@
 								</span>
 							</div>
 							<div data-bind="style: { display: official === 'official' ? 'block' : 'none' }"
-								class="showInput" style="display: none">
+								class="showInput display-none">
 								<input type="text" id="q3c" placeholder="Agency Name" data-bind="textInput: agency">
 							</div>
 						</div>
@@ -184,7 +184,7 @@
 					<div class="itemName col-md-11" data-bind="text: itemName, click: $root.selectItem"></div>
 				</div>
 				<div data-bind="foreach: subItems">
-					<div class="itemSelection row" style="padding-left:40px !important">
+					<div class="itemSelection row padding-left-40">
 						<div class="itemNum col-md-1" data-bind="text: subItemOrder"></div>
 						<div class="itemName col-md-11" data-bind="text: subItemName, click: $root.selectSubItem($parent,$data)"></div>
 					</div>

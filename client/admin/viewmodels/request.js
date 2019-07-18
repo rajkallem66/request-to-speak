@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
-    function (http, observable, app, event, Edit, moment) {
+define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "dialog/editRequest", "moment", "toastr"],
+    function (http, observable, app, event, Edit, moment, toastr) {
         var ctor = function () {
             this.displayName = "Request";
             this.isConnected = false;
@@ -235,6 +235,9 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     case "add":
                         this.meeting.requests.push(message.request);
                         this.addToList([message.request]);
+                        toastr.options.closeButton = true;
+                        toastr.options.positionClass = 'toast-bottom-right';
+                        toastr.success('New Request added('+ message.request.firstName +')');
                         break;
                     case "remove":
                         this.removeFromList(message.requestId);
@@ -269,6 +272,9 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 this.requests.forEach(function (request) {
                     if (request.status !== "active") {
                         if (request.status === "display") {
+
+                            //updated just for the animation purpose.
+
                             request.status = "approved";
                             request.status = "display";
                             request.approvedForDisplay = false;
@@ -508,3 +514,6 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
 
         return ctor;
     });
+
+
+
