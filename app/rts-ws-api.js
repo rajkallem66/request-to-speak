@@ -461,6 +461,8 @@ function startMeeting(newMeeting) {
             return (r.status !== "removed" && r.status != "deleted");
         });
 
+        logger.debug("meeting object", meeting);
+
         notify("all", {
             "messageType": "meeting",
             "message": {

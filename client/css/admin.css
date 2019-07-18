@@ -767,6 +767,15 @@ padding: 10px;
 		font-size: 18px;
 	}
 
+	.editmeeting-modal{
+		width: 1000px !important;
+	}
+
+	.activeSpeaker{
+		background: grey;
+		padding: 15px;
+	}
+
 	/* Media Queries */
 
 	@media all and (min-width: 768px) and (max-width: 1024px) {

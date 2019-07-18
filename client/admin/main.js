@@ -11,7 +11,8 @@ requirejs.config({
         "primus": "../primus/primus",
         "eventHandler": "../lib/rts/eventHandler",
         "dialog": "./viewmodels/dialog",
-        "moment": "../lib/moment/moment.min"
+        "moment": "../lib/moment/moment.min",
+        "toastr": "../lib/rts/toastr"
     },
     shim: {
         "bootstrap": {
