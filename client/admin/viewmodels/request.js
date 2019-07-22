@@ -196,10 +196,16 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     message.meeting.items.forEach(function (i) {
                         i.requests = [];
                         i.timeRemaining = 0;
-                        i.subItems.forEach(function (si) {
-                            si.requests = [];
-                            si.timeRemaining = 0;
-                        });
+                        if (i.subItems) {
+                            i.subItems.forEach(function (si) {
+                                si.requests = [];
+                                si.timeRemaining = 0;
+                            });
+                        }
+                        else
+                        {
+                            i.subItems=[];
+                        }
                     });
                     message.meeting.items = message.meeting.items;
 
@@ -237,7 +243,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                         this.addToList([message.request]);
                         toastr.options.closeButton = true;
                         toastr.options.positionClass = 'toast-bottom-right';
-                        toastr.success('New Request added('+ message.request.firstName +')');
+                        toastr.success('New Request added(' + message.request.firstName + ')');
                         break;
                     case "remove":
                         this.removeFromList(message.requestId);
@@ -369,7 +375,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                             });
 
                             if (old) {
-                                i.requests.splice(si.requests.indexOf(old), 1);
+                                i.requests.splice(i.requests.indexOf(old), 1);
                             }
                         }
 
