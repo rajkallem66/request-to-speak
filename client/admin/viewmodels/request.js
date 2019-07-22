@@ -369,7 +369,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                             });
 
                             if (old) {
-                                i.requests.splice(si.requests.indexOf(old), 1);
+                                i.requests.splice(i.requests.indexOf(old), 1);
                             }
                         }
 
