@@ -270,7 +270,7 @@ font-weight:bold;
 	}
 	label.activeChk input:checked + i:before {
 	  /* border-color: #89461f; */
-	  background: #ff792c;
+	  background: yellow;
 	  /* border: 2px solid #fff; */
 	  /* box-shadow: 1px 1px 0px #222; */
 	  padding-left: 7.75px;
