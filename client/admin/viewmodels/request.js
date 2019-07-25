@@ -202,9 +202,8 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                                 si.timeRemaining = 0;
                             });
                         }
-                        else
-                        {
-                            i.subItems=[];
+                        else {
+                            i.subItems = [];
                         }
                     });
                     message.meeting.items = message.meeting.items;
@@ -437,8 +436,10 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                                 si.requests.forEach(function (r) {
                                     {
                                         if (r.status != 'new')// Change to show only approved requests time 
+                                        {
                                             si.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
-                                        totalTime += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                                            totalTime += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                                        }
                                     }
                                 });
                             }
