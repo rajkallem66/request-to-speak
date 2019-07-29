@@ -242,41 +242,6 @@ function updateMeeting(meetingId, meeting) {
     return new Promise(function (fulfill, reject) {
         let transaction = new sql.Transaction(pool);
         transaction.begin().then(function () {
-            // update items.
-
-
-
-
-
-
-            // const tvp = new sql.Table();
-
-            // // Columns must correspond with type we have created in database.
-            // tvp.columns.add("meetingId", sql.Int);
-            // tvp.columns.add("itemOrder", sql.Int);
-            // tvp.columns.add("itemName", sql.VarChar(100));  // eslint-disable-line new-cap
-            // tvp.columns.add("timeToSpeak", sql.Int);
-
-            // const tvpSi = new sql.Table();
-
-            // tvpSi.columns.add("meetingId", sql.Int);
-            // tvpSi.columns.add("itemId", sql.Int);
-            // tvpSi.columns.add("subItemOrder", sql.Int);
-            // tvpSi.columns.add("subItemName", sql.VarChar(150));  // eslint-disable-line new-cap
-            // tvpSi.columns.add("timeToSpeak", sql.Int);
-
-            // Add rows
-            // meeting.items.forEach(function (i) {
-            //     logger.debug("item", i);
-            //     logger.debug("subitem", i.subItems);
-            //     tvp.rows.add(i.meetingId, i.itemOrder, i.itemName, i.timeToSpeak); // Values are in same order as columns.
-            //     //Raj
-            //     if (i.subItems)
-            //         i.subItems.forEach(function (si) {
-            //             tvpSi.rows.add(si.meetingId, si.itemId, si.subItemOrder, si.subItemName, si.timeToSpeak);
-            //         });
-
-            // });
 
             let request = new sql.Request(transaction);
             request.input("meetingId", meetingId);
@@ -292,7 +257,7 @@ function updateMeeting(meetingId, meeting) {
 
                 meeting.items.forEach(function (i) {
                     var newItem = {
-                        meetingId: i.meetingId,
+                        meetingId: meetingId,
                         itemName: i.itemName,
                         itemOrder: i.itemOrder,
                         timeToSpeak: i.timeToSpeak,
@@ -304,7 +269,7 @@ function updateMeeting(meetingId, meeting) {
                         if (i.subItems) {
                             i.subItems.forEach(function (si) {
                                 var newSubItem = {
-                                    meetingId: si.meetingId,
+                                    meetingId: meetingId,
                                     itemId: result,
                                     subItemName: si.subItemName,
                                     subItemOrder: si.subItemOrder,
