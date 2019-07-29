@@ -392,10 +392,15 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 var old = this.meeting.requests.find(function (r) {
                     return r.requestId === updatedRequest.requestId;
                 });
-                // splice updated one in
-                this.meeting.requests.splice(this.meeting.requests.findIndex(function (r) {
-                    return r.requestId === updatedRequest.requestId;
-                }), 1, updatedRequest);
+                if (old) {
+                    // splice updated one in
+                    this.meeting.requests.splice(this.meeting.requests.findIndex(function (r) {
+                        return r.requestId === updatedRequest.requestId;
+                    }), 1);
+
+                    this.meeting.requests.push(updatedRequest);
+
+                }
                 // find old item
                 var item = this.meeting.items.find(function (i) {
                     return i.itemId === old.item.itemId;
@@ -406,20 +411,30 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     var subItem = item.subItems.find(function (si) {
                         return si.subItemId === old.subItem;
                     });
+                    if (subItem) {
+                        subItem.requests.splice(subItem.requests.findIndex(function (k) {
+                            return k.requestId === updatedRequest.requestId;
+                        }), 1);
 
-                    subItem.requests.splice(subItem.requests.findIndex(function (k) {
-                        return k.requestId === updatedRequest.requestId;
-                    }), 1);
+                        subItem.requests.push(updatedRequest);
+                    }
                 }
                 else {
                     // remove old from old item
                     item.requests.splice(item.requests.findIndex(function (f) {
                         return f.requestId === updatedRequest.requestId;
                     }), 1);
+
+                    item.requests.push(updatedRequest);
                 }
 
+                this.sortAll();
+                this.timeTotal();
                 // add the new one in.
-                this.addToList([updatedRequest]);
+                //this.addToList([updatedRequest]);
+
+
+
             }.bind(this);
 
             this.timeTotal = function () {
@@ -487,6 +502,11 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 var self = this;
                 this.meeting.items.forEach(function (i) {
                     i.requests = i.requests.sort(self.requestSort);
+                    if (i.subItems && i.subItems.length > 0) {
+                        i.subItems.forEach(function (si) {
+                            si.requests = si.requests.sort(self.requestSort);
+                        });
+                    }
                 });
             }.bind(this);
 
