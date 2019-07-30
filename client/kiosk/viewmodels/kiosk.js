@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items", "eventHandler", "jquery"],
-    function (http, app, observable, Items, event, $) {
+define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items", "eventHandler", "jquery","knockout"],
+    function (http, app, observable, Items, event, $, ko) {
         var ret = {
             isConnected: false,
             isMeetingActive: false,
@@ -12,6 +12,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
             itemSelector: false,
             messages: [],
             primus: null,
+            displayItem : ko.observable(),
+            displaySubItem : ko.observable(),
             disconnected: function () {
                 location.reload();
             },
@@ -49,6 +51,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
                 this.request = this.newRequest();
             },
             initializeMessage: function (message) {
+                this.displayItem("");
+                this.displaySubItem("");
                 console.log("Initializing kiosk");
                 this.meeting = message.meetingData;
                 if (message.meetingData.status === "started") {
@@ -86,7 +90,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
                     lastName: "",
                     official: false,
                     agency: "",
-                    item: {subItem: []},
+                    item: { subItem: [] },
                     offAgenda: false,
                     subTopic: "",
                     stance: "",
@@ -96,7 +100,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
                     address: "",
                     timeToSpeak: 0,
                     status: "new",
-                    subItem:"",
+                    subItem: "",
                     approvedForDisplay: false
                 };
                 observable.defineProperty(req, "name", {
@@ -145,6 +149,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
 
         ret.constituentClick = function () {
             if (this.step === 1) {
+                this.displayItem("");
+                this.displaySubItem("");
                 this.nextStep();
             }
             this.request.agency = "";
@@ -167,6 +173,7 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
                 this.request.item = data;
                 this.request.timeToSpeak = data.timeToSpeak;
                 this.itemSelector = false;
+                this.displayItem(this.request.item.itemOrder + ": " + this.request.item.itemName);
             }
         }.bind(ret);
         ret.selectSubItem = function (item, subItem) {
@@ -177,23 +184,27 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
             this.request.subItem = subItem.subItemId
             this.request.timeToSpeak = subItem.timeToSpeak;
             this.itemSelector = false;
+            this.displayItem(this.request.item.itemOrder + ": " + this.request.item.itemName);
+            this.displaySubItem(this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName);
         }.bind(ret);
 
-        observable.defineProperty(ret, "displayItem", function () {
-            if (this.request.item && this.request.item.itemName) {
-                return this.request.item.itemOrder + ": " + this.request.item.itemName;
-            } else {
-                return "";
-            }
-        });
+        // observable.defineProperty(ret, "displayItem", function () {
+        //     if (this.request.item && this.request.item.itemName) {
+        //         console.log("displayItem", this.request.item.itemOrder + ": " + this.request.item.itemName);
+        //         return this.request.item.itemOrder + ": " + this.request.item.itemName;
+        //     } else {
+        //         return "";
+        //     }
+        // });
 
-        observable.defineProperty(ret, "displaySubItem", function () {
-            if (this.request.item.subItem && this.request.item.subItem.subItemName) {
-                return this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName;
-            } else {
-                return "";
-            }
-        });
+        // observable.defineProperty(ret, "displaySubItem", function () {
+        //     if (this.request.item.subItem && this.request.item.subItem.subItemName) {
+        //         console.log("displaySubItem", this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName);
+        //         return this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName;
+        //     } else {
+        //         return "";
+        //     }
+        // });
 
         observable.defineProperty(ret, "notesCharsRemaining", function () {
             return 250 - this.request.notes.length;
@@ -205,7 +216,6 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
             var official = this.request.official;
             var agency = this.request.agency;
             var stance = this.request.stance;
-
             switch (step) {
                 case 0:
                     return (name.trim().length > 2);
