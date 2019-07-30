@@ -81,8 +81,9 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
 
             if (r.subItem) {
                 items.forEach(function (i) {
+                    var subItem;
                     if (i.subItems && i.subItems.length > 0) {
-                        var subItem = i.subItems.find(function (si) {
+                        subItem = i.subItems.find(function (si) {
                             return si.subItemId === r.subItem
                         })
                     }

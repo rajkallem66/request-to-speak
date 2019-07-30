@@ -48,6 +48,11 @@ function(http, router, app, Import, Edit, moment) {
                         itemName: "Off Agenda",
                         timeToSpeak: 3
                     });
+
+                    response.items.forEach(function (i) {
+                        i.subItems = [];
+                    });
+                    
                     // Since it is an import, format the date.
                     response.meetingDate = self.format(response.meetingDate);
                     // Make sure not already in list
