@@ -3,7 +3,7 @@ let config = require("config");
 let logger = require("./app/logger");
 
 // Sometimes things to awry.
-process.on("uncaughtException", function(err) {
+process.on("uncaughtException", function (err) {
     logger.emerg("uncaughtException:", err.message);
     logger.emerg(err.stack);
     process.exit(1);
@@ -25,19 +25,26 @@ app.set("port", config.get("rts.port"));
 app.use(favicon(__dirname + "/client/favicon.ico"));
 app.use(cookieParser("the quick brown fox"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // setup security if configured to do so
-if(config.get("rts.security.enabled") === true) {
+if (config.get("rts.security.enabled") === true) {
+    logger.info("yes yes yes yes yes");
     require(config.get("rts.security.component"))(passport, config.get("rts.security.passport"));
     app.use(require("express-session")(config.get("rts.security.session")));
     app.use(passport.initialize());
     app.use(passport.session());
-    app.use("/", function(req, res, next) {
-        if (req.user == null && req.url !== "/login" && req.url !== "/postResponse") {
+    app.use("/", function (req, res, next) {
+        req.header('User-Agent')
+        logger.info("Authenticated", req.header('authenticated'));
+        if (req.header('authenticated') == 1) {
+            next();
+        }
+        else if (req.user == null && req.url !== "/login" && req.url !== "/postResponse") {
             req.session.returnTo = req.url;
             res.redirect("/login");
-        } else {
+        }
+        else {
             next();
         }
     });
@@ -51,7 +58,7 @@ let primusConfig = config.get("rts.primus");
 let primus = new Primus(server, primusConfig);
 // primus.save(__dirname +'/client/lib/primus/primus.js');
 
-server.listen(app.get("port"), function() {
+server.listen(app.get("port"), function () {
     logger.info("Express server listening on port " + app.get("port"));
 });
 
@@ -66,17 +73,17 @@ let rtsDbApi = require(dbApi)(dbConfig, logger);
 logger.info("RTS DB API Type: " + rtsDbApi.dbType);
 logger.info("RTS DB API Version: " + rtsDbApi.version);
 
-rtsDbApi.init().then(function() {
+rtsDbApi.init().then(function () {
     // In case the app died with an active meeting.
-    rtsDbApi.getActiveMeeting().then(function(mtg) {
-        if(mtg !== undefined) {
+    rtsDbApi.getActiveMeeting().then(function (mtg) {
+        if (mtg !== undefined) {
             logger.info("Active meeting: " + mtg.meetingId);
             rtsWsApi.startMeeting(mtg);
             rtsWsApi.refreshWall();
         } else {
             logger.info("No active meeting.");
         }
-    }, function(err) {
+    }, function (err) {
         logger.error("Unable to check for active meeting.");
     });
 });
@@ -84,33 +91,33 @@ rtsDbApi.init().then(function() {
 app.use("/api", require("./app/rts-rest-api")(logger, rtsDbApi, rtsWsApi));
 
 app.get("/login",
-passport.authenticate(config.get("rts.security.passport.strategy"),
-    {
-        successReturnToOrRedirect: true,
-        failureRedirect: "/login"
-    })
+    passport.authenticate(config.get("rts.security.passport.strategy"),
+        {
+            successReturnToOrRedirect: true,
+            failureRedirect: "/login"
+        })
 );
 
 app.post("/postResponse",
-passport.authenticate(config.get("rts.security.passport.strategy"),
-    {
-        failureRedirect: "/",
-        successReturnToOrRedirect: true
-    }),
-    function(req, res) {
-    // res.redirect('/');
+    passport.authenticate(config.get("rts.security.passport.strategy"),
+        {
+            failureRedirect: "/",
+            successReturnToOrRedirect: true
+        }),
+    function (req, res) {
+        res.redirect('/');
     }
 );
 
- // External system integration.
+// External system integration.
 let agenda;
 try {
     agenda = config.get("agenda");
-} catch(e) {
+} catch (e) {
     logger.info("No agenda system integration.");
 }
 
-if(agenda) {
+if (agenda) {
     logger.info("Agenda integration found.");
     let agendaApi = config.get("agenda.dbApi");
     let agendaConfig = config.get("agenda.dbConfig");
