@@ -26,13 +26,13 @@ define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable", 
             }.bind(this);
             this.addSubItem = function (item) {
                 var order;
-                var f
-                f = this.meeting.items.find(function (i) {
+                var itemToAdd;
+                itemToAdd = this.meeting.items.find(function (i) {
                     return item.itemName === i.itemName
                 });
 
-                if (f.subItems && f.subItems.length > 0) {
-                    order = f.subItems.length;
+                if (itemToAdd.subItems && itemToAdd.subItems.length > 0) {
+                    order = itemToAdd.subItems.length;
                 }
                 else {
                     order = 0;
@@ -47,9 +47,9 @@ define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable", 
                 var self = this;
                 http.post(app.apiLocation + "subitem", newSubItem).then(function (result) {
                     newSubItem.subItemId = result.subItemId;
-                    if (!f.subItems || f.subItems.length == 0)
-                        f.subItems = [];
-                    f.subItems.push(newSubItem);
+                    if (!itemToAdd.subItems || itemToAdd.subItems.length == 0)
+                    itemToAdd.subItems = [];
+                    itemToAdd.subItems.push(newSubItem);
                 }, function (err) {
                     app.showMessage("Unable to add item.\n" + JSON.stringify(err));
                 });
