@@ -29,7 +29,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // setup security if configured to do so
 if (config.get("rts.security.enabled") === true) {
-    logger.info("yes yes yes yes yes");
     require(config.get("rts.security.component"))(passport, config.get("rts.security.passport"));
     app.use(require("express-session")(config.get("rts.security.session")));
     app.use(passport.initialize());
