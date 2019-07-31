@@ -76,6 +76,14 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
 
     ret.setDisplay = function () {
         var items = this.items;
+        items.forEach(function (i) {
+            i.requests = [];
+            if (i.subItems && i.subItems.length > 0) {
+                i.subItems.forEach(function (si) {
+                    si.requests = [];
+                });
+            }
+        });
         var self = this;
         this.requests.forEach(function (r) {
 
@@ -90,7 +98,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                     if (subItem) {
                         subItem.displayItemOrder = r.item.itemOrder + " - " + subItem.subItemOrder + " : " + subItem.subItemName;
                         subItem.requests.push(r);
-                        subItem.requests = subItem.requests.sort(function(a, b) {
+                        subItem.requests = subItem.requests.sort(function (a, b) {
                             var aVal = (a.status === "active" ? "0" : "1");
                             var bVal = (b.status === "active" ? "0" : "1");
                             aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
@@ -99,7 +107,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                             bVal += ((b.official) ? "0" : "1");
                             aVal += moment(a.dateAdded).valueOf().toString();
                             bVal += moment(b.dateAdded).valueOf().toString();
-                
+
                             return parseInt(aVal) - parseInt(bVal);
                         }).slice(0, 10);
                     }
@@ -114,7 +122,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                 if (item) {
                     item.displayItemOrder = r.item.itemOrder + " : " + r.item.itemName;
                     item.requests.push(r);
-                    item.requests = item.requests.sort(function(a, b) {
+                    item.requests = item.requests.sort(function (a, b) {
                         var aVal = (a.status === "active" ? "0" : "1");
                         var bVal = (b.status === "active" ? "0" : "1");
                         aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
@@ -123,7 +131,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                         bVal += ((b.official) ? "0" : "1");
                         aVal += moment(a.dateAdded).valueOf().toString();
                         bVal += moment(b.dateAdded).valueOf().toString();
-            
+
                         return parseInt(aVal) - parseInt(bVal);
                     }).slice(0, 10);
                 }

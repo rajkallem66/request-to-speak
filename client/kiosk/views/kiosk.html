@@ -54,10 +54,10 @@
 									data-bind="click: $parent.openItemSelector">Choose Item here <i
 										class="fa fa-hand-pointer-o" aria-hidden="true"></i></button>
 								<p
-									data-bind="text: $parent.displayItem, css: { agendaText: $parent.displayItem !== ''}">
+									data-bind="text: $parent.displayItem, css: { agendaText: $parent.displayItem() !== ''}">
 								</p>
 								<p
-									data-bind="text: $parent.displaySubItem, css: { agendaText: $parent.displaySubItem !== ''}">
+									data-bind="text: $parent.displaySubItem, css: { agendaText: $parent.displaySubItem() !== ''}">
 								</p>
 							</section>
 						</div>
