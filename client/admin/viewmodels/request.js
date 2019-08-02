@@ -115,12 +115,49 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
             this.removeRequest = function (request) {
                 var self = this;
                 var next = null;
+
                 if (request.status === "active") {
+
                     var orderedDisplayed = this.meeting.requests.filter(function (r) {
                         return r.status === "display";
                     }).sort(this.requestSort);
+
                     if (orderedDisplayed.length > 0) {
-                        next = orderedDisplayed[0];
+
+                        var requestItem = this.meeting.items.find(function (item) {
+                            return item.itemId === request.item.itemId
+                        });
+
+                        if (request.subItem && request.subItem > 0) {
+
+                            var requestItemSubItem = requestItem.subItems.find(function(subItem){
+                                return subItem.subItemId === request.subItem;
+                            });
+
+                            var orderedSubItemRequests = requestItemSubItem.requests.filter(function (sr) {
+                                return sr.status === "display";
+                            }).sort(this.requestSort);
+
+                            if (orderedSubItemRequests.length > 0) {
+                                next = orderedSubItemRequests[0];
+                            }
+
+                        }
+                        else if (!next) {
+
+                            var orderedItemRequests = requestItem.requests.filter(function (ir) {
+                                return ir.status === "display";
+                            }).sort(this.requestSort);
+                            
+                            if (orderedItemRequests.length > 0) {
+                                next = orderedItemRequests[0];
+                            }
+                        }
+                       if (!next) {
+                            next = orderedDisplayed[0];
+                        }
+
+
                     }
                 }
                 request.status = "removed";
@@ -438,7 +475,6 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
             }.bind(this);
 
             this.timeTotal = function () {
-                // sum time to speak
                 this.totalTimeRemaining = 0;
                 var totalTime = 0;
                 this.meeting.items.forEach(function (i) {
