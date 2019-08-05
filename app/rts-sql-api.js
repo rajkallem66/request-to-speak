@@ -533,13 +533,14 @@ function getRequest(requestId) {
 function getRequests(meetingId) {
     return new Promise(function (fulfill, reject) {
         let request = pool.request();
-        let requestQuery = "SELECT requestId, item.itemOrder, item.itemName, dateAdded, firstName, lastName, " +
-            "case when official = 1 then 'Yes' else 'No' End as official, agency, offAgenda, subTopic, stance," +
-            "case when Request.status = 'removed' then 'Yes' else 'No' End as concluded ," +
-            "notes, phone, email, address, Request.timeToSpeak, " +
-            "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
-            "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId " +
-            "ORDER BY Item.itemOrder asc, official desc,  Request.dateAdded asc";
+        let requestQuery = "SELECT requestId, item.itemOrder,SubItem.subItemOrder, item.itemName,SubItem.subItemName, dateAdded, firstName, lastName, " +
+        "case when official = 1 then 'Yes' else 'No' End as official, agency, offAgenda, subTopic, stance," +
+        "case when Request.status = 'removed' then 'Yes' else 'No' End as concluded ," +
+        "notes, phone, email, address, Request.timeToSpeak, " +
+        "Request.status, approvedForDisplay FROM Request INNER JOIN Item ON Request.item = Item.itemId " +
+        "LEFT JOIN SubItem ON Request.subItem = SubItem.subItemId "+
+        "INNER JOIN Meeting on Request.meetingId = Meeting.meetingId WHERE Meeting.meetingId = @meetingId " +
+        "ORDER BY Item.itemOrder asc,SubItem.subItemOrder asc, official desc,  Request.dateAdded asc";
 
         logger.debug("Request statement: " + requestQuery);
         request.input("meetingId", meetingId);
