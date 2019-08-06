@@ -84,6 +84,8 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
                 });
             },
             newRequest: function () {
+                this.displayItem("");
+                this.displaySubItem("");
                 var req = {
                     meetingId: this.meeting ? this.meeting.meetingId : "",
                     firstName: "",
@@ -187,24 +189,6 @@ define(["plugins/http", "durandal/app", "plugins/observable", "kioskDialog/items
             this.displayItem(this.request.item.itemOrder + ": " + this.request.item.itemName);
             this.displaySubItem(this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName);
         }.bind(ret);
-
-        // observable.defineProperty(ret, "displayItem", function () {
-        //     if (this.request.item && this.request.item.itemName) {
-        //         console.log("displayItem", this.request.item.itemOrder + ": " + this.request.item.itemName);
-        //         return this.request.item.itemOrder + ": " + this.request.item.itemName;
-        //     } else {
-        //         return "";
-        //     }
-        // });
-
-        // observable.defineProperty(ret, "displaySubItem", function () {
-        //     if (this.request.item.subItem && this.request.item.subItem.subItemName) {
-        //         console.log("displaySubItem", this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName);
-        //         return this.request.item.subItem.subItemOrder + ": " + this.request.item.subItem.subItemName;
-        //     } else {
-        //         return "";
-        //     }
-        // });
 
         observable.defineProperty(ret, "notesCharsRemaining", function () {
             return 250 - this.request.notes.length;

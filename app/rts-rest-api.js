@@ -356,6 +356,11 @@ let getReport = function(req, res) {
                 headerStyle: styles.headerDark,
                 width: "4"
             },
+            subItemOrder: {
+                displayName: "Sub Item",
+                headerStyle: styles.headerDark,
+                width: "4"
+            },
             firstName: {
                 displayName: "First Name",
                 headerStyle: styles.headerDark,
