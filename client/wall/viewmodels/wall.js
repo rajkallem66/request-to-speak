@@ -8,6 +8,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
         displayRequests: [],
         messages: [],
         primus: null,
+        selectedSort: "Time Entered",
         disconnected: function () {
             location.reload();
         },
@@ -62,6 +63,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
             });
             this.requests = message.requests;
             this.items = message.meeting.items;
+            this.selectedSort = message.meeting.selectedSort;
             this.setDisplay();
         },
         requestMessage: function (message) {
@@ -76,6 +78,7 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
 
     ret.setDisplay = function () {
         var items = this.items;
+        var sort = this.selectedSort;
         items.forEach(function (i) {
             i.requests = [];
             if (i.subItems && i.subItems.length > 0) {
@@ -101,12 +104,18 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                         subItem.requests = subItem.requests.sort(function (a, b) {
                             var aVal = (a.status === "active" ? "0" : "1");
                             var bVal = (b.status === "active" ? "0" : "1");
-                            aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
-                            bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
+                            // aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
+                            // bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
                             aVal += ((a.official) ? "0" : "1");
                             bVal += ((b.official) ? "0" : "1");
-                            aVal += moment(a.dateAdded).valueOf().toString();
-                            bVal += moment(b.dateAdded).valueOf().toString();
+                            if (sort === "Stance") {
+                                aVal += a.stance.charCodeAt(0).toString();
+                                bVal += b.stance.charCodeAt(0).toString();
+                            }
+                            else {
+                                aVal += moment(a.dateAdded).valueOf().toString();
+                                bVal += moment(b.dateAdded).valueOf().toString();
+                            }
 
                             return parseInt(aVal) - parseInt(bVal);
                         }).slice(0, 10);
@@ -125,13 +134,18 @@ define(["durandal/app", "eventHandler", "moment"], function (app, event, moment)
                     item.requests = item.requests.sort(function (a, b) {
                         var aVal = (a.status === "active" ? "0" : "1");
                         var bVal = (b.status === "active" ? "0" : "1");
-                        aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
-                        bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
+                        // aVal += ("0000" + ((parseInt(a.item.itemOrder) === 0) ? 1000 : parseInt(a.item.itemOrder)).toString()).slice(-4);
+                        // bVal += ("0000" + ((parseInt(b.item.itemOrder) === 0) ? 1000 : parseInt(b.item.itemOrder)).toString()).slice(-4);
                         aVal += ((a.official) ? "0" : "1");
                         bVal += ((b.official) ? "0" : "1");
-                        aVal += moment(a.dateAdded).valueOf().toString();
-                        bVal += moment(b.dateAdded).valueOf().toString();
-
+                        if (sort === "Stance") {
+                            aVal += a.stance.charCodeAt(0).toString();
+                            bVal += b.stance.charCodeAt(0).toString();
+                        }
+                        else {
+                            aVal += moment(a.dateAdded).valueOf().toString();
+                            bVal += moment(b.dateAdded).valueOf().toString();
+                        }
                         return parseInt(aVal) - parseInt(bVal);
                     }).slice(0, 10);
                 }

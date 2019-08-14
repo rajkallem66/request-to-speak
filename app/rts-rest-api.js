@@ -254,15 +254,16 @@ router.post("/endMeeting/:meetingId", endMeeting);
 
 // Refresh Wall
 let refreshWall = function(req, res) {
+    let selectedSort = req.params.selectedSort;
     logger.info(ip(req) + " Refreshing display wall.");
-    rtsWsApi.refreshWall().then(function() {
+    rtsWsApi.refreshWall(selectedSort).then(function() {
         res.status(204).end();
     }, function(err) {
         logger.error(ip(req) + " Error refreshing wall.", err);
         res.status(500).send(err);
     });
 };
-router.post("/refreshWall", refreshWall);
+router.post("/refreshWall/:selectedSort", refreshWall);
 
 // Get Meeting
 let getMeeting = function(req, res) {
