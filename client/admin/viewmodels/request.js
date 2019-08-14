@@ -172,7 +172,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 return true;
             };
             this.refreshWall = function () {
-                http.post(app.apiLocation + "refreshWall").then(function () {
+                http.post(app.apiLocation + "refreshWall/"+ this.selectedSort).then(function () {
                 }, function (err) {
                     // do error stuff
                     console.log(err);

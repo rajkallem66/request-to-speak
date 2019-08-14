@@ -502,12 +502,14 @@ function endActiveMeeting() {
  * Send updated list of requests to the wall
  * @return {Promise}
  */
-function refreshWall() {
+function refreshWall(selectedSort) {
     logger.debug("Refreshing wall.");
     return new Promise(function (fulfill, reject) {
         displayRequests = meeting.requests.filter(function (r) {
             return (r.status === "display" || r.status === "active");
         });
+
+        meeting.selectedSort = selectedSort;
 
         logger.trace("Refreshing wall with", displayRequests);
 
