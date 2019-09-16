@@ -54,7 +54,7 @@
 						</div>
 						<div class="col-xs-3">
 							<div class="pull-right">
-								<span><span>Time Remaining: </span><span
+								<span><span>Total Time Remaining: </span><span
 										data-bind="text: $root.totalTimeRemaining"></span></span>
 							</div>
 						</div>
@@ -70,6 +70,15 @@
 								<button class="btn btn-success" data-bind="click: $root.approveAll">
 									<i class="fa fa-check"></i>
 									<span class="hidden-xs">Approve All</span>
+								</button>
+							</div>
+						</div>
+
+						<div class="col-md-2">
+							<div class="pull-left">
+								<button class="btn btn-info" data-bind="click: $root.displayAll">
+									<i class="fa fa-eye"></i>
+									<span class="hidden-xs">Display All</span>
 								</button>
 							</div>
 						</div>
@@ -145,7 +154,7 @@
 											<button class="btn btn-danger"
 												data-bind="click: function() { $root.removeRequest($data); }">
 												<i class="fa fa-minus"></i>
-												<span class="hidden-xs">Concluded</span>
+												<span class="hidden-xs">Speaking</span>
 											</button>
 										</div>
 										<div class="col-md-3 col-xs-5">
@@ -257,7 +266,7 @@
 												<button class="btn btn-danger"
 													data-bind="click: function() { $root.removeRequest($data); }">
 													<i class="fa fa-minus"></i>
-													<span class="hidden-xs">Concluded</span>
+													<span class="hidden-xs">Speaking</span>
 												</button>
 											</div>
 											<div class="col-md-3 col-xs-5">

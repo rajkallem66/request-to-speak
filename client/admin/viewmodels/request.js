@@ -562,7 +562,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
         };
 
         ctor.prototype.formatTime = function (date) {
-            return moment(date).format("HH:mm:ss A");
+            return moment(date).format("hh:mm:ss A");
         };
 
         ctor.prototype.format = function (date) {

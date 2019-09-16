@@ -88,7 +88,7 @@ function itemRequest(meetingId, item, transaction) {
     request.input("meetingId", meetingId);
     request.input("itemOrder", item.itemOrder);
     request.input("itemName", item.itemName);
-    request.input("timeToSpeak", 3);
+    request.input("timeToSpeak", 2);
     request.output("id");
     return request.execute("InsertItem");
 }
@@ -107,7 +107,7 @@ function subItemRequest(meetingId, subItem, transaction) {
     request.input("meetingId", meetingId);
     request.input("subItemOrder", subItem.subItemOrder);
     request.input("subItemName", subItem.subItemName);
-    request.input("timeToSpeak", 3);
+    request.input("timeToSpeak", 2);
     request.input("itemId", subItem.itemId);
     request.output("id");
     return request.execute("InsertSubItem");

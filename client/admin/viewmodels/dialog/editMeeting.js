@@ -13,7 +13,7 @@ define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable", 
                     meetingId: this.meeting.meetingId,
                     itemName: "",
                     itemOrder: this.meeting.items.length + 1,
-                    timeToSpeak: 3,
+                    timeToSpeak: 2,
                     subItems: []
                 };
                 var self = this;
@@ -42,7 +42,7 @@ define(["plugins/http", "durandal/app", "plugins/dialog", "plugins/observable", 
                     subItemName: "",
                     itemId: item.itemId ? item.itemId : null,
                     subItemOrder: order,
-                    timeToSpeak: 3
+                    timeToSpeak: 2
                 };
                 var self = this;
                 http.post(app.apiLocation + "subitem", newSubItem).then(function (result) {
