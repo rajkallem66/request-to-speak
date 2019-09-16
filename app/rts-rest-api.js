@@ -373,9 +373,9 @@ let getReport = function(req, res) {
                 width: "10"
             },
             concluded: {
-                displayName: "Concluded",
+                displayName: "Addressed the Board",
                 headerStyle: styles.headerDark,
-                width: "10"
+                width: "20"
             },
             official: {
                 displayName: "Official",

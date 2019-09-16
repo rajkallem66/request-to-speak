@@ -46,7 +46,7 @@ function(http, router, app, Import, Edit, moment) {
                     response.items.push({
                         itemOrder: 0,
                         itemName: "Off Agenda",
-                        timeToSpeak: 3
+                        timeToSpeak: 2
                     });
 
                     response.items.forEach(function (i) {
