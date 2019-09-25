@@ -310,6 +310,24 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     }
                 });
             };
+
+            this.displayApproved = function(){
+                this.requests.forEach(function (request) {
+                    if (request.status !== "active") {
+                        if (request.status === "approved") {
+                            request.status = "display";
+                        } 
+                    }
+                    if (request.offAgenda == null && request.item)
+                        request.offAgenda = request.item.itemName === "Off Agenda";
+                    // update with changes.
+                    http.put(app.apiLocation + "request", request).then(function () {
+                    }, function (err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                }) 
+            };
+
             this.displayAll = function () {
                 this.requests.forEach(function (request) {
                     if (request.status !== "active") {
