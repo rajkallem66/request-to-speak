@@ -130,7 +130,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
 
                         if (request.subItem && request.subItem > 0) {
 
-                            var requestItemSubItem = requestItem.subItems.find(function(subItem){
+                            var requestItemSubItem = requestItem.subItems.find(function (subItem) {
                                 return subItem.subItemId === request.subItem;
                             });
 
@@ -148,12 +148,12 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                             var orderedItemRequests = requestItem.requests.filter(function (ir) {
                                 return ir.status === "display";
                             }).sort(this.requestSort);
-                            
+
                             if (orderedItemRequests.length > 0) {
                                 next = orderedItemRequests[0];
                             }
                         }
-                       if (!next) {
+                        if (!next) {
                             next = orderedDisplayed[0];
                         }
 
@@ -172,7 +172,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 return true;
             };
             this.refreshWall = function () {
-                http.post(app.apiLocation + "refreshWall/"+ this.selectedSort).then(function () {
+                http.post(app.apiLocation + "refreshWall/" + this.selectedSort).then(function () {
                 }, function (err) {
                     // do error stuff
                     console.log(err);
@@ -310,6 +310,22 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     }
                 });
             };
+
+            this.displayApproved = function () {
+                this.requests.forEach(function (request) {
+                    if (request.status === "approved") {
+                        request.status = "display";
+                    }
+                    if (request.offAgenda == null && request.item)
+                        request.offAgenda = request.item.itemName === "Off Agenda";
+                    // update with changes.
+                    http.put(app.apiLocation + "request", request).then(function () {
+                    }, function (err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                })
+            };
+
             this.displayAll = function () {
                 this.requests.forEach(function (request) {
                     if (request.status !== "active") {
