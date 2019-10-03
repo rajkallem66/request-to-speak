@@ -2,6 +2,9 @@
     <div data-bind="visible: !showSubTopics">
         <div data-bind="foreach: items">
             <span class="agendaItem" data-bind="text: itemName"></span>
+            <div data-bind="foreach: subItems">
+                    <span class="agendaItem" data-bind="text: subItemName"></span>
+            </div>
         </div>
     </div>
     <div data-bind="visible: showSubTopics">

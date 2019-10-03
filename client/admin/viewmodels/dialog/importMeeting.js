@@ -14,6 +14,15 @@ define(["plugins/http", "plugins/dialog", "durandal/app", "moment"], function(ht
         this.selectedMeeting = null,
         this.selectMeeting = function(data) {
             this.selectedMeeting = data;
+            var self = this;
+            http.get(app.agendaLocation + "item/" +
+            this.selectedMeeting.sireId).then(function(data) {
+                self.selectedMeeting.items = data;
+                dialog.close(self, self.selectedMeeting);
+            }, function(err) {
+                console.log(err);
+                app.showMessage("Error retrieving meeting items.");
+            });
         }.bind(this),
         this.confirmSelection = function() {
             var self = this;

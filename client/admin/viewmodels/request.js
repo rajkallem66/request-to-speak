@@ -1,6 +1,6 @@
 /* eslint no-console: "off" */
-define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "dialog/editRequest", "moment"],
-    function (http, observable, app, event, Edit, moment) {
+define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "dialog/editRequest", "moment", "toastr"],
+    function (http, observable, app, event, Edit, moment, toastr) {
         var ctor = function () {
             this.displayName = "Request";
             this.isConnected = false;
@@ -115,12 +115,49 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
             this.removeRequest = function (request) {
                 var self = this;
                 var next = null;
+
                 if (request.status === "active") {
+
                     var orderedDisplayed = this.meeting.requests.filter(function (r) {
                         return r.status === "display";
                     }).sort(this.requestSort);
+
                     if (orderedDisplayed.length > 0) {
-                        next = orderedDisplayed[0];
+
+                        var requestItem = this.meeting.items.find(function (item) {
+                            return item.itemId === request.item.itemId
+                        });
+
+                        if (request.subItem && request.subItem > 0) {
+
+                            var requestItemSubItem = requestItem.subItems.find(function (subItem) {
+                                return subItem.subItemId === request.subItem;
+                            });
+
+                            var orderedSubItemRequests = requestItemSubItem.requests.filter(function (sr) {
+                                return sr.status === "display";
+                            }).sort(this.requestSort);
+
+                            if (orderedSubItemRequests.length > 0) {
+                                next = orderedSubItemRequests[0];
+                            }
+
+                        }
+                        else if (!next) {
+
+                            var orderedItemRequests = requestItem.requests.filter(function (ir) {
+                                return ir.status === "display";
+                            }).sort(this.requestSort);
+
+                            if (orderedItemRequests.length > 0) {
+                                next = orderedItemRequests[0];
+                            }
+                        }
+                        if (!next) {
+                            next = orderedDisplayed[0];
+                        }
+
+
                     }
                 }
                 request.status = "removed";
@@ -135,7 +172,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 return true;
             };
             this.refreshWall = function () {
-                http.post(app.apiLocation + "refreshWall").then(function () {
+                http.post(app.apiLocation + "refreshWall/" + this.selectedSort).then(function () {
                 }, function (err) {
                     // do error stuff
                     console.log(err);
@@ -194,9 +231,20 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 if (message.meeting.status === "started") {
                     this.isMeetingActive = true;
                     message.meeting.items.forEach(function (i) {
-                        i.requests = []; i.timeRemaining = 0;
+                        i.requests = [];
+                        i.timeRemaining = 0;
+                        if (i.subItems) {
+                            i.subItems.forEach(function (si) {
+                                si.requests = [];
+                                si.timeRemaining = 0;
+                            });
+                        }
+                        else {
+                            i.subItems = [];
+                        }
                     });
-                    message.meeting.items = message.meeting.items.sort(this.itemSort);
+                    message.meeting.items = message.meeting.items;
+
                     this.meeting = message.meeting;
                     this.addToList(message.meeting.requests);
                 } else {
@@ -216,7 +264,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     this.meeting.items.forEach(function (i) {
                         i.requests = []; i.timeRemaining = 0;
                     });
-                    message.meeting.items = message.meeting.items.sort(this.itemSort);
+                    message.meeting.items = message.meeting.items;
                     this.addToList(message.meeting.requests);
                 } else {
                     this.isMeetingActive = false;
@@ -229,6 +277,9 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                     case "add":
                         this.meeting.requests.push(message.request);
                         this.addToList([message.request]);
+                        toastr.options.closeButton = true;
+                        toastr.options.positionClass = 'toast-bottom-right';
+                        toastr.success('New Request added(' + message.request.firstName + ')');
                         break;
                     case "remove":
                         this.removeFromList(message.requestId);
@@ -260,26 +311,85 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 });
             };
 
+            this.displayApproved = function () {
+                this.requests.forEach(function (request) {
+                    if (request.status === "approved") {
+                        request.status = "display";
+                    }
+                    if (request.offAgenda == null && request.item)
+                        request.offAgenda = request.item.itemName === "Off Agenda";
+                    // update with changes.
+                    http.put(app.apiLocation + "request", request).then(function () {
+                    }, function (err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                })
+            };
+
+            this.displayAll = function () {
+                this.requests.forEach(function (request) {
+                    if (request.status !== "active") {
+                        if (request.status === "display") {
+
+                            //updated just for the animation purpose.
+
+                            request.status = "approved";
+                            request.status = "display";
+                            request.approvedForDisplay = false;
+                        } else {
+                            request.status = "display";
+                            request.approvedForDisplay = true;
+                        }
+                    }
+                    if (request.offAgenda == null && request.item)
+                        request.offAgenda = request.item.itemName === "Off Agenda";
+                    // update with changes.
+                    http.put(app.apiLocation + "request", request).then(function () {
+                    }, function (err) {
+                        app.showMessage("Unable to update changes. Please refresh.");
+                    });
+                })
+            };
+
             // List management
             this.addToList = function (addList) {
                 var items = this.meeting.items;
                 var self = this;
                 // add new requests
                 addList.forEach(function (r) {
-                    var item = items.find(function (i) {
-                        if (r.item)
-                            return i.itemId === r.item.itemId;
-                        else
-                            return i.itemId === r.itemId
-                    });
-                    if (item) {
-                        item.requests.push(r);
-                        item.requests = item.requests.sort(self.requestSort);
-                    } else {
-                        // problem!
-                    }
-                });
+                    var item;
+                    //new
+                    if (r.subItem) {
+                        items.forEach(function (i) {
 
+                            if (i.subItems && i.subItems.length > 0) {
+                                var subItem = i.subItems.find(function (si) {
+                                    return si.subItemId === r.subItem
+                                })
+                            }
+                            if (subItem) {
+                                subItem.requests.push(r);
+                                subItem.requests = subItem.requests.sort(self.requestSort);
+                            }
+
+                        });
+                    }
+                    else if (r.item) {
+                        var item = items.find(function (i) {
+                            return i.itemId === r.item.itemId;
+                        });
+
+                        if (item) {
+                            item.requests.push(r);
+                            item.requests = item.requests.sort(self.requestSort);
+                        }
+                    }
+                    else {
+                        //Something wrong with request
+                    }
+
+                });
+                //  var test = items;
                 this.timeTotal();
             }.bind(this);
 
@@ -292,14 +402,39 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
 
                     var items = this.meeting.items;
                     // remove removeRequests.
-                    var item = items.find(function (i) {
-                        return i.itemId === toRemove.item.itemId;
-                    });
-                    if (item) {
-                        item.requests.splice(item.requests.indexOf(toRemove), 1);
-                    } else {
-                        // problem!
+
+                    var old;
+
+                    items.forEach(function (i) {
+                        if (i.subItems && i.subItems.length > 0) {
+                            i.subItems.forEach(function (si) {
+                                if (si.requests && si.requests.length > 0) {
+                                    old = si.requests.find(function (r) {
+                                        return (r.requestId == requestId);
+                                    });
+
+                                    if (old) {
+                                        si.requests.splice(si.requests.indexOf(old), 1);
+                                    }
+                                }
+                            }
+                            );
+                        }
+
+                        if (!old && i.requests && i.requests.length > 0) {
+                            old = i.requests.find(function (r) {
+                                return (r.requestId == requestId);
+                            });
+
+                            if (old) {
+                                i.requests.splice(i.requests.indexOf(old), 1);
+                            }
+                        }
+
                     }
+                    );
+
+
                 }
 
                 this.timeTotal();
@@ -310,37 +445,88 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 var old = this.meeting.requests.find(function (r) {
                     return r.requestId === updatedRequest.requestId;
                 });
-                // splice updated one in
-                this.meeting.requests.splice(this.meeting.requests.findIndex(function (r) {
-                    return r.requestId === updatedRequest.requestId;
-                }), 1, updatedRequest);
+                if (old) {
+                    // splice updated one in
+                    this.meeting.requests.splice(this.meeting.requests.findIndex(function (r) {
+                        return r.requestId === updatedRequest.requestId;
+                    }), 1);
+
+                    this.meeting.requests.push(updatedRequest);
+
+                }
                 // find old item
                 var item = this.meeting.items.find(function (i) {
                     return i.itemId === old.item.itemId;
                 });
-                // remove old from old item
-                item.requests.splice(item.requests.findIndex(function (f) {
-                    return f.requestId === updatedRequest.requestId;
-                }), 1);
+
+                if (item && item.subItems && item.subItems.length > 0) {
+                    //remove from sub item 
+                    var subItem = item.subItems.find(function (si) {
+                        return si.subItemId === old.subItem;
+                    });
+                    if (subItem) {
+                        subItem.requests.splice(subItem.requests.findIndex(function (k) {
+                            return k.requestId === updatedRequest.requestId;
+                        }), 1);
+
+                        subItem.requests.push(updatedRequest);
+                    }
+                }
+                else {
+                    // remove old from old item
+                    item.requests.splice(item.requests.findIndex(function (f) {
+                        return f.requestId === updatedRequest.requestId;
+                    }), 1);
+
+                    item.requests.push(updatedRequest);
+                }
+
+                this.sortAll();
+                this.timeTotal();
                 // add the new one in.
-                this.addToList([updatedRequest]);
+                //this.addToList([updatedRequest]);
+
+
+
             }.bind(this);
 
             this.timeTotal = function () {
-                // sum time to speak
+                this.totalTimeRemaining = 0;
+                var totalTime = 0;
                 this.meeting.items.forEach(function (i) {
                     i.timeRemaining = 0;
-                    if (i.requests) {
+
+                    if (i.subItems && i.subItems.length > 0) {
+                        i.subItems.forEach(function (si) {
+                            si.timeRemaining = 0;
+                            if (si.requests) {
+                                si.requests.forEach(function (r) {
+                                    {
+                                        if (r.status != 'new')// Change to show only approved requests time 
+                                        {
+                                            si.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                                            totalTime += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else if (i.requests) {
                         i.requests.forEach(function (r) {
                             if (r.status != 'new')// Change to show only approved requests time 
+                            {
                                 i.timeRemaining += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                                totalTime += isNaN(parseInt(r.timeToSpeak)) ? 0 : parseInt(r.timeToSpeak);
+                            }
                         });
+                    }
+                    else {
+                        //something wrong
                     }
                 });
 
-                this.totalTimeRemaining = this.meeting.items.reduce(function (p, c) {
-                    return (p.timeRemaining === undefined ? p : p.timeRemaining) + c.timeRemaining;
-                }, 0);
+                this.totalTimeRemaining = totalTime;
             }.bind(this);
 
             this.itemSort = function (a, b) {
@@ -368,6 +554,11 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
                 var self = this;
                 this.meeting.items.forEach(function (i) {
                     i.requests = i.requests.sort(self.requestSort);
+                    if (i.subItems && i.subItems.length > 0) {
+                        i.subItems.forEach(function (si) {
+                            si.requests = si.requests.sort(self.requestSort);
+                        });
+                    }
                 });
             }.bind(this);
 
@@ -387,7 +578,7 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
         };
 
         ctor.prototype.formatTime = function (date) {
-            return moment(date).format("HH:mm:ss A");
+            return moment(date).format("hh:mm:ss A");
         };
 
         ctor.prototype.format = function (date) {
@@ -402,3 +593,6 @@ define(["plugins/http", "plugins/observable", "durandal/app", "eventHandler", "d
 
         return ctor;
     });
+
+
+

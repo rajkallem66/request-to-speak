@@ -148,7 +148,7 @@ font-weight:bold;
 	}
 	.itemOrder {
 		font-size: 33px;
-		width: 1.5em;
+		width: 4.5em;
 		height: 1.5em;
 		background: #3A5067;
 		border: 0.1em solid #c7c7c7;
@@ -270,7 +270,7 @@ font-weight:bold;
 	}
 	label.activeChk input:checked + i:before {
 	  /* border-color: #89461f; */
-	  background: #ff792c;
+	  background: yellow;
 	  /* border: 2px solid #fff; */
 	  /* box-shadow: 1px 1px 0px #222; */
 	  padding-left: 7.75px;
@@ -765,6 +765,15 @@ padding: 10px;
 	}
 	.meetingDash .btn {
 		font-size: 18px;
+	}
+
+	.editmeeting-modal{
+		width: 1000px !important;
+	}
+
+	.activeSpeaker{
+		background: green;
+		padding: 15px;
 	}
 
 	/* Media Queries */

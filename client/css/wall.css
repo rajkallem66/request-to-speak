@@ -97,11 +97,11 @@ a:hover, a:focus {
 }
 .itemOrder {
 	font-size: 33px;
-	width: 3.8em;
+	/* width: 3.8em; */
 	height: 1.658em;
 	background: #545454;
 	color: #fff;
-	text-align: center;
+	text-align: left;
 	line-height: 1.55em;
 	box-sizing: content-box;
 	font-weight: bold;

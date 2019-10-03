@@ -1,4 +1,4 @@
-<div class="container-fluid boardHeader navbar-inverse navbar-fixed-top">
+<div class="container-fluid boardHeader navbar-inverse navbar-fixed-top height-auto">
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-3 col-sm-5 col-xs-6">
@@ -26,17 +26,19 @@
             <div data-bind="foreach: items">
                 <div data-bind="visible: requests.length > 0">
                     <div class="row">
-                        <div class="itemOrder pull-left" data-bind="text: itemOrder"></div>
+                        <div class="itemOrder pull-left  col-md-8">Item: 
+                            <span data-bind="text: itemOrder"></span>
+                        </div>
                         <!-- <div class="itemName pull-left" data-bind="text: itemName"></div> -->
-                        <div class="pull-right itemTime">Speakers:
+                        <div class="pull-right itemTime col-md-2">Speakers:
                             <span class="" data-bind="text: requests.length"></span>
                         </div>
-                        <div class="pull-right itemTime">Time Remaining: 	
+                        <div class="pull-right itemTime col-md-2">Time Remaining: 	
                               <span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
                           </div>
                     </div>
                     <div class="row itemInfoWrap" data-bind="foreach: requests">
-                        <div class="itemInfo">
+                        <div id="divItemInfo" data-bind="css:  status === 'active' ?  'activeSpeaker' : 'itemInfo'">
                             <div class="col-md-8 nameNotesWrap">
                                 <div class="infoName">
                                     <span data-bind="text: firstName"></span>
@@ -50,10 +52,10 @@
                                       </div>-->
                                 <!-- <div>
                                           <a href="#" data-bind="text: $root.toggleNotes() style="color:blue">Notes</a>
-                                      </div>
+                                      </div>-->
                                       <div id="divNotes" class="notes" data-bind="visible: notes !== ''">
                                           <span>Notes: </span><span data-bind="text: notes"></span>
-                                      </div> -->
+                                      </div> 
                             </div>
                             <div class="col-md-3">
                                 <div class="stance">
@@ -76,6 +78,65 @@
                         <hr />
                     </div>
                 </div>
+                <div data-bind="foreach:subItems">
+                        <div data-bind="visible: requests.length > 0">
+                            <div class="row col-md-12 padding-bottom-25">
+                                <div class="itemOrder pull-left">Item:
+                                    <span data-bind="text: $parent.itemOrder"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="subItemOrder pull-left col-md-8">Sub Item:
+                                    <span data-bind="text: subItemName"></span>
+                                </div>
+                                <!-- <div class="itemName pull-left" data-bind="text: itemName"></div> -->
+                                <div class="pull-right itemTime col-md-2">Speakers:
+                                    <span class="" data-bind="text: requests.length"></span>
+                                </div>
+                                <div class="pull-right itemTime col-md-2">Time Remaining:
+                                    <span class="" data-bind="text: timeRemaining"></span> <span>mins</span>
+                                </div>
+                            </div>
+                            <div class="row itemInfoWrap" data-bind="foreach: requests">
+                                <div  data-bind="css:  status === 'active' ?  'activeSpeaker' : 'itemInfo'">
+                                    <div class="col-md-8 nameNotesWrap">
+                                        <div class="infoName">
+                                            <span data-bind="text: firstName"></span>
+                                            <span data-bind="text: lastName"></span>
+                                        </div>
+                                        <div class="agency" data-bind="visible: agency !== ''">
+                                            <span>Agency: </span><span data-bind="text: agency"></span>
+                                        </div>
+                                        <!-- 								<div class="group" data-bind="visible: group !== undefined">
+                                                    <span>Group: </span><span data-bind="text: group"></span>
+                                            </div>-->
+                                            <div id="divNotes" class="notes" data-bind="visible: notes !== ''">
+                                                    <span>Notes: </span><span data-bind="text: notes"></span>
+                                                </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stance">
+                                            <span data-bind="text: stance"></span>
+                                        </div>
+                                        <!-- <div class="date" >
+                                                    <span>Submitted:</span> <span data-bind="text: $root.format(dateAdded)"></span>
+                                            </div> -->
+                                    </div>
+                                    <div class="col-md-1">
+                                            <label data-toggle="tooltip" data-placement="top" title="ACTIVE" class="activeChk">
+                                                <input type="checkbox"
+                                                    data-bind="enable: (status === 'active' || status === 'display'), checked: (status === 'active'), click: $root.activateRequest" />
+                                                <i></i>
+                                            </label>
+                                        </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+
             </div>
             <!-- 				<div class="row" data-bind="foreach: messages">
                       <div class="col-sm-6 col-md-3">

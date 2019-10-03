@@ -69,7 +69,7 @@ function getItems(meetingId) {
                 let depth = levelResult.recordset[0].level_number;
                 if(depth === 3) {
                     itemQuery = "SELECT ROW_NUMBER() OVER(ORDER BY SL.second_order, item.item_index) as itemOrder, " +
-                    "item.item_id as itemId, item.caption as itemName, 3 as timeToSpeak " +
+                    "item.item_id as itemId, item.caption as itemName, 2 as timeToSpeak " +
                     "FROM [sire].[alpha].[ans_meetings] meet " +
                     "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
                     "INNER JOIN (" +
@@ -91,7 +91,7 @@ function getItems(meetingId) {
                         ") SL on item.parent_id = SL.second_id";
                 } else if(depth === 2) {
                     itemQuery = "SELECT ROW_NUMBER() OVER(ORDER BY FL.first_order, item.item_index) as itemOrder, " +
-                    "item.item_id as itemId, item.caption as itemName, 3 as timeToSpeak " +
+                    "item.item_id as itemId, item.caption as itemName, 2 as timeToSpeak " +
                     "FROM [sire].[alpha].[ans_meetings] meet " +
                     "INNER JOIN [alpha].[ans_meet_items] item ON item.meet_id = meet.meet_id " +
                     "INNER JOIN (" +

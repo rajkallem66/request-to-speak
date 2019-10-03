@@ -411,9 +411,22 @@ function activateRequest(request) {
     logger.debug("Activating request.");
 
     return new Promise(function (fulfill, reject) {
-        meeting.requests.splice(meeting.requests.findIndex(function (r) {
+
+        let old = meeting.requests.find(function (r) {
             return r.requestId == request.requestId;
-        }), 1, request);
+        });
+
+        if (old) {
+            meeting.requests.splice(meeting.requests.indexOf(old), 1, request);
+            logger.debug("watchers");
+            notify("watchers", {
+                "messageType": "request",
+                "message": {
+                    "event": "update",
+                    "request": request
+                }
+            });
+        }
 
         // If displayRequests includes then splice. otherwise push
         let oldDisplay = displayRequests.find(function (r) {
@@ -423,20 +436,11 @@ function activateRequest(request) {
         if (oldDisplay) {
             displayRequests.splice(displayRequests.indexOf(oldDisplay), 1, request);
 
-            notify("all", {
+            notify("wall", {
                 "messageType": "refresh",
                 "message": {
                     "meeting": meeting,
                     "requests": displayRequests
-                }
-            });
-
-
-            notify("watchers", {
-                "messageType": "request",
-                "message": {
-                    "event": "update",
-                    "request": request
                 }
             });
         }
@@ -460,6 +464,8 @@ function startMeeting(newMeeting) {
         meeting.requests = meeting.requests.filter(function (r) {
             return (r.status !== "removed" && r.status != "deleted");
         });
+
+        logger.debug("meeting object", meeting);
 
         notify("all", {
             "messageType": "meeting",
@@ -496,12 +502,14 @@ function endActiveMeeting() {
  * Send updated list of requests to the wall
  * @return {Promise}
  */
-function refreshWall() {
+function refreshWall(selectedSort) {
     logger.debug("Refreshing wall.");
     return new Promise(function (fulfill, reject) {
         displayRequests = meeting.requests.filter(function (r) {
             return (r.status === "display" || r.status === "active");
         });
+
+        meeting.selectedSort = selectedSort;
 
         logger.trace("Refreshing wall with", displayRequests);
 
